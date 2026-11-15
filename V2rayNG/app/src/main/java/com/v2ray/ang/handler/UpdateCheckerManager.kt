@@ -96,7 +96,7 @@ object UpdateCheckerManager {
             ?: release.assets.firstOrNull { it.name.endsWith(".apk", ignoreCase = true) }
 
         return asset?.browserDownloadUrl
-            ?: release.htmlUrl
+            ?: release.htmlUrl.takeIf { it.isNotBlank() }
             ?: "https://github.com/ANT1VEN0M/BunkerVPN/releases/latest"
     }
 }
