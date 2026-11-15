@@ -3,6 +3,7 @@ package com.v2ray.ang.ui.main
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,12 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.ui.compose.AppDivider
 import com.v2ray.ang.ui.compose.verticalScrollbar
+import com.v2ray.ang.util.Utils
 
 enum class MainDestination(@DrawableRes val iconRes: Int, @StringRes val labelRes: Int) {
     Subscriptions(R.drawable.ic_subscriptions_24dp, R.string.title_sub_setting),
@@ -39,7 +43,8 @@ enum class MainDestination(@DrawableRes val iconRes: Int, @StringRes val labelRe
     Routing(R.drawable.ic_routing_24dp, R.string.routing_settings_title),
     UserAssets(R.drawable.ic_file_24dp, R.string.title_user_asset_setting),
     Settings(R.drawable.ic_settings_24dp, R.string.title_settings),
-    Promotion(R.drawable.ic_telegram_24dp, R.string.title_pref_promotion),
+    CustomTheme(R.drawable.ic_image_24dp, R.string.title_pref_custom_theme),
+    Promotion(R.drawable.ic_idea_24dp, R.string.title_pref_promotion),
     Logcat(R.drawable.ic_logcat_24dp, R.string.title_logcat),
     CheckUpdate(R.drawable.ic_check_update_24dp, R.string.update_check_for_update),
     BackupRestore(R.drawable.ic_restore_24dp, R.string.title_configuration_backup_restore),
@@ -55,6 +60,7 @@ private val primaryDrawerItems = listOf(
 )
 
 private val drawerItems = primaryDrawerItems + listOf(
+    MainDestination.CustomTheme,
     MainDestination.Promotion,
     MainDestination.Logcat,
     MainDestination.CheckUpdate,
@@ -65,6 +71,7 @@ private val drawerItems = primaryDrawerItems + listOf(
 @Composable
 fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) -> Unit) {
     val drawerScrollState = rememberScrollState()
+    val context = LocalContext.current
 
     ModalDrawerSheet(
         drawerState = drawerState,
@@ -94,6 +101,7 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                         modifier = Modifier
                             .size(96.dp)
                             .clip(CircleShape)
+                            .clickable { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -103,9 +111,10 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "@k0tlux",
+                        text = "@bunker_kota",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
                     )
                 }
             }

@@ -304,7 +304,8 @@
     <string name="title_translators">Translators</string>
     <string name="title_tg_channel">Telegram channel</string>
 
-    <string name="title_pref_promotion">Telegram @k0tlux</string>
+    <string name="title_pref_promotion">Suggest an idea 💡</string>
+    <string name="title_pref_custom_theme">Custom Wallpaper &amp; Theme 🎨</string>
 
     <string name="title_pref_auto_update_subscription">Automatically update subscriptions</string>
     <string name="summary_pref_auto_update_subscription">Update your subscriptions automatically at set intervals in the background. Depending on the device, this feature may not always work</string>

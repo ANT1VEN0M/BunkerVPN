@@ -1,7 +1,10 @@
 package com.v2ray.ang.ui.compose
 
 import android.app.Activity
+import android.graphics.BitmapFactory
 import android.os.Build
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +19,11 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -26,6 +32,7 @@ import com.v2ray.ang.handler.MmkvManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.io.File
 
 private val LightColor = lightColorScheme(
     primary = Color(0xFF000000), // Black
@@ -131,6 +138,11 @@ object ThemeManager {
     )
     val dynamicColorEnabled: StateFlow<Boolean> = _dynamicColorEnabled.asStateFlow()
 
+    private val _customWallpaper = MutableStateFlow(
+        MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
+    )
+    val customWallpaper: StateFlow<String?> = _customWallpaper.asStateFlow()
+
     fun setThemeMode(mode: String) {
         MmkvManager.encodeSettings(AppConfig.PREF_UI_MODE_NIGHT, mode)
         _themeMode.value = mode
@@ -141,11 +153,46 @@ object ThemeManager {
         _dynamicColorEnabled.value = enabled
     }
 
+    fun setCustomWallpaper(path: String?) {
+        MmkvManager.encodeSettings(AppConfig.PREF_CUSTOM_WALLPAPER, path ?: "")
+        _customWallpaper.value = path?.takeIf { it.isNotBlank() }
+    }
+
     fun refresh() {
         _themeMode.value =
             MmkvManager.decodeSettingsString(AppConfig.PREF_UI_MODE_NIGHT, "0") ?: "0"
         _dynamicColorEnabled.value =
             MmkvManager.decodeSettingsBool(AppConfig.PREF_DYNAMIC_COLOR, true)
+        _customWallpaper.value =
+            MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
+    }
+}
+
+@Composable
+fun WallpaperBackground(wallpaperPath: String) {
+    val bitmap = remember(wallpaperPath) {
+        try {
+            val file = File(wallpaperPath)
+            if (file.exists() && file.length() > 0) {
+                BitmapFactory.decodeFile(file.absolutePath)?.asImageBitmap()
+            } else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        // Dark translucent AMOLED scrim for high contrast readability
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xB30B0912))
+        )
     }
 }
 
@@ -167,8 +214,11 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val dynamicColor by ThemeManager.dynamicColorEnabled.collectAsState()
+    val wallpaperPath by ThemeManager.customWallpaper.collectAsState()
+    val hasWallpaper = !wallpaperPath.isNullOrBlank()
+
     val context = LocalContext.current
-    val colorScheme = when {
+    val baseColorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
@@ -176,6 +226,18 @@ fun AppTheme(
         darkTheme -> DarkColor
         else -> LightColor
     }
+
+    val colorScheme = if (hasWallpaper) {
+        baseColorScheme.copy(
+            background = Color.Transparent,
+            surface = if (darkTheme) Color(0xCC120F1D) else Color(0xCCFFFFFF),
+            surfaceVariant = if (darkTheme) Color(0xD9201B30) else Color(0xD9E7E0EC),
+            surfaceContainer = if (darkTheme) Color(0xCC161224) else Color(0xCCF1F1F1)
+        )
+    } else {
+        baseColorScheme
+    }
+
     val snackbarController = rememberAppSnackbarController()
 
     val view = LocalView.current
@@ -198,6 +260,9 @@ fun AppTheme(
             colorScheme = colorScheme
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
+                if (hasWallpaper && wallpaperPath != null) {
+                    WallpaperBackground(wallpaperPath = wallpaperPath!!)
+                }
                 AppSnackbarBridge(controller = snackbarController)
                 content()
                 AppSnackbarHost(hostState = snackbarController.hostState)

@@ -576,4 +576,5 @@
     <string name="sub_info_traffic" translatable="false">%1$s / %2$s</string>
     <string name="sub_info_unlimited">Limitsiz</string>
 
+    <string name="title_pref_custom_theme">Custom Wallpaper &amp; Theme 🎨</string>
 </resources>

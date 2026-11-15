@@ -1,6 +1,7 @@
 package com.v2ray.ang.ui.main
 
 import android.content.Intent
+import android.net.Uri
 import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
@@ -8,7 +9,27 @@ import android.view.KeyEvent
 import androidx.activity.compose.BackHandler
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.v2ray.ang.AngApplication
 import com.v2ray.ang.AppConfig
@@ -29,6 +50,7 @@ import com.v2ray.ang.ui.AboutActivity
 import com.v2ray.ang.ui.backup.BackupActivity
 import com.v2ray.ang.ui.base.HelperBaseComponentActivity
 import com.v2ray.ang.ui.checkupdate.CheckUpdateActivity
+import com.v2ray.ang.ui.compose.ThemeManager
 import com.v2ray.ang.ui.logcat.LogcatActivity
 import com.v2ray.ang.ui.perappproxy.PerAppProxyActivity
 import com.v2ray.ang.ui.routing.RoutingSettingActivity
@@ -53,12 +75,39 @@ import com.v2ray.ang.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class MainActivity : HelperBaseComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModel.Factory(application, MainRepository(application as AngApplication))
     }
+
+    private var showThemeDialog by mutableStateOf(false)
+
+    private val wallpaperPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val destFile = File(filesDir, "custom_wallpaper.jpg")
+                        contentResolver.openInputStream(uri)?.use { input ->
+                            destFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            ThemeManager.setCustomWallpaper(destFile.absolutePath)
+                            toastSuccess("Фон успешно установлен! ✨")
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            toastError("Ошибка установки фона: ${e.message}")
+                        }
+                    }
+                }
+            }
+        }
 
     private val requestVpnPermission =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -124,6 +173,21 @@ class MainActivity : HelperBaseComponentActivity() {
             },
             onNavigate = { route -> navigateTo(route) },
         )
+
+        if (showThemeDialog) {
+            CustomThemeDialog(
+                onDismiss = { showThemeDialog = false },
+                onPickWallpaper = {
+                    showThemeDialog = false
+                    wallpaperPickerLauncher.launch("image/*")
+                },
+                onResetWallpaper = {
+                    showThemeDialog = false
+                    ThemeManager.setCustomWallpaper(null)
+                    toastSuccess("Фон сброшен на стандартный Cyber Purple")
+                }
+            )
+        }
     }
 
     private fun shareToClipboard(guid: String): Boolean =
@@ -156,6 +220,10 @@ class MainActivity : HelperBaseComponentActivity() {
             MainDestination.CheckUpdate -> Intent(this, CheckUpdateActivity::class.java)
             MainDestination.BackupRestore -> Intent(this, BackupActivity::class.java)
             MainDestination.About -> Intent(this, AboutActivity::class.java)
+            MainDestination.CustomTheme -> {
+                showThemeDialog = true
+                return
+            }
             MainDestination.Promotion -> {
                 Utils.openUri(this, AppConfig.TG_K0TLUX_URL)
                 return
@@ -291,4 +359,54 @@ class MainActivity : HelperBaseComponentActivity() {
         }
         return super.onKeyDown(keyCode, event)
     }
+}
+
+@Composable
+private fun CustomThemeDialog(
+    onDismiss: () -> Unit,
+    onPickWallpaper: () -> Unit,
+    onResetWallpaper: () -> Unit
+) {
+    val wallpaperPath by ThemeManager.customWallpaper.collectAsState()
+    val hasWallpaper = !wallpaperPath.isNullOrBlank()
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Свои обои и темы 🎨", style = MaterialTheme.typography.titleLarge) },
+        text = {
+            Column {
+                Text(
+                    text = if (hasWallpaper) "Сейчас установлен собственный фон. Вы можете выбрать другое изображение или вернуть стандартную тему Cyber Purple."
+                    else "Вы можете установить любое изображение или фото из галереи в качестве фона для приложения с адаптивной прозрачностью.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                FilledTonalButton(
+                    onClick = onPickWallpaper,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(painterResource(R.drawable.ic_image_24dp), contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Выбрать обои из галереи 🖼️")
+                }
+                if (hasWallpaper) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = onResetWallpaper,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "Сбросить обои (AMOLED) 🔄")
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.btn_cancel))
+            }
+        }
+    )
 }
