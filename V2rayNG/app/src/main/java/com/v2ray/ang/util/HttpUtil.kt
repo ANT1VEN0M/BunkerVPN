@@ -18,7 +18,12 @@ import java.net.MalformedURLException
 import java.net.Proxy
 import java.net.URI
 import java.net.URL
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 object HttpUtil {
 
@@ -31,13 +36,18 @@ object HttpUtil {
      * @return The URL string with the domain part converted to ASCII-compatible (Punycode) format.
      */
     fun toIdnUrl(str: String): String {
-        val url = URL(str)
-        val host = url.host
-        val asciiHost = IDN.toASCII(url.host, IDN.ALLOW_UNASSIGNED)
-        if (host != asciiHost) {
-            return str.replace(host, asciiHost)
-        } else {
-            return str
+        return try {
+            val clean = str.trim()
+            val url = URL(clean)
+            val host = url.host
+            val asciiHost = IDN.toASCII(host, IDN.ALLOW_UNASSIGNED)
+            if (host != asciiHost) {
+                clean.replace(host, asciiHost)
+            } else {
+                clean
+            }
+        } catch (_: Exception) {
+            str.trim()
         }
     }
 
@@ -149,15 +159,22 @@ object HttpUtil {
         request: UrlContentRequest,
         onResponseHeaders: ((Headers) -> Unit)? = null
     ): String {
-        var currentUrl = request.url
+        var currentUrl = request.url?.trim()
         var redirects = 0
-        val maxRedirects = 3
+        val maxRedirects = 10
 
         while (redirects++ < maxRedirects) {
-            if (currentUrl == null) continue
-            val client = buildOkHttpClient(request.timeout, request.httpPort, request.proxyUsername, request.proxyPassword, followRedirects = false)
+            if (currentUrl.isNullOrBlank()) continue
+            val client = buildOkHttpClient(
+                request.timeout,
+                request.httpPort,
+                request.proxyUsername,
+                request.proxyPassword,
+                followRedirects = false,
+                trustAll = true
+            )
             val finalUserAgent = if (request.userAgent.isNullOrBlank()) {
-                "v2rayNG/${BuildConfig.VERSION_NAME}"
+                "v2rayNG/1.9.29"
             } else {
                 request.userAgent
             }
@@ -230,13 +247,30 @@ object HttpUtil {
         httpPort: Int,
         proxyUsername: String?,
         proxyPassword: String?,
-        followRedirects: Boolean
+        followRedirects: Boolean,
+        trustAll: Boolean = true
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .connectTimeout(timeout.toLong(), TimeUnit.MILLISECONDS)
             .readTimeout(timeout.toLong(), TimeUnit.MILLISECONDS)
             .followRedirects(followRedirects)
             .followSslRedirects(followRedirects)
+
+        if (trustAll) {
+            try {
+                val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                    override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                    override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                    override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+                })
+                val sslContext = SSLContext.getInstance("TLS")
+                sslContext.init(null, trustAllCerts, SecureRandom())
+                builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+                builder.hostnameVerifier { _, _ -> true }
+            } catch (e: Exception) {
+                LogUtil.e(AppConfig.TAG, "Failed to configure trust-all SSL", e)
+            }
+        }
 
         if (httpPort != 0) {
             builder.proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress(LOOPBACK, httpPort)))

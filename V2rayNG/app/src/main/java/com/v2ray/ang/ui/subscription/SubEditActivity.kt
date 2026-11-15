@@ -86,14 +86,13 @@ class SubEditActivity : BaseComponentActivity() {
     }
 
     private fun saveServer(subItem: SubscriptionItem): Boolean {
+        subItem.url = subItem.url.trim()
+        subItem.remarks = subItem.remarks.trim()
         if (TextUtils.isEmpty(subItem.remarks)) {
             return false
         }
         if (subItem.url.isNotEmpty()) {
             if (!Utils.isValidUrl(subItem.url)) {
-                return false
-            }
-            if (!Utils.isValidSubUrl(subItem.url) && !subItem.allowInsecureUrl) {
                 return false
             }
         }
@@ -185,9 +184,8 @@ fun SubEditScreen(
                     }
                     IconButton(onClick = {
                         val remarksErr = remarks.isBlank()
-                        val urlErr = url.isNotEmpty() && (
-                            !Utils.isValidUrl(url) || (!Utils.isValidSubUrl(url) && !allowInsecureUrl)
-                        )
+                        val cleanUrl = url.trim()
+                        val urlErr = cleanUrl.isNotEmpty() && !Utils.isValidUrl(cleanUrl)
                         val intervalErr = autoUpdate && updateInterval.toLongEx() < AppConfig.SUBSCRIPTION_MIN_INTERVAL_MINUTES
 
                         isRemarksError = remarksErr

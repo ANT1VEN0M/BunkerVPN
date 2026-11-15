@@ -596,7 +596,8 @@ object SettingsManager {
                 remarks = "Бункер Кота ⚡",
                 url = AppConfig.BUNKER_DEFAULT_SUB_URL,
                 enabled = true,
-                autoUpdate = true
+                autoUpdate = true,
+                allowInsecureUrl = true
             )
             encodeSubscription(DEFAULT_SUBSCRIPTION_ID, defaultSub)
 

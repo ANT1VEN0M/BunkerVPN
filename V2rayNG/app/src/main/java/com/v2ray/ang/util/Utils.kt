@@ -81,7 +81,21 @@ object Utils {
      * @return The decoded string, or an empty string if decoding fails.
      */
     fun decode(text: String?): String {
-        return tryDecodeBase64(text) ?: text?.trimEnd('=')?.let { tryDecodeBase64(it) }.orEmpty()
+        if (text.isNullOrBlank()) return ""
+        val clean = text.trim()
+        val direct = tryDecodeBase64(clean)
+        if (!direct.isNullOrBlank()) return direct
+
+        // Add padding if missing (base64 length must be multiple of 4)
+        val padded = when (clean.length % 4) {
+            2 -> "$clean=="
+            3 -> "$clean="
+            else -> clean
+        }
+        val withPadding = tryDecodeBase64(padded)
+        if (!withPadding.isNullOrBlank()) return withPadding
+
+        return tryDecodeBase64(clean.trimEnd('=')) ?: ""
     }
 
     /**
@@ -421,25 +435,14 @@ object Utils {
      * @return True if the string is a valid subscription URL, false otherwise.
      */
     fun isValidSubUrl(value: String?): Boolean {
-        if (value.isNullOrEmpty()) return false
-
-        try {
-            if (URLUtil.isHttpsUrl(value)) return true
-            if (URLUtil.isHttpUrl(value)) {
-                if (value.contains(LOOPBACK)) return true
-
-                //Check private ip address
-                val uri = URI(fixIllegalUrl(value))
-                if (isIpAddress(uri.host)) {
-                    AppConfig.PRIVATE_IP_LIST.forEach {
-                        if (isIpInCidr(uri.host, it)) return true
-                    }
-                }
-            }
+        if (value.isNullOrBlank()) return false
+        val clean = value.trim()
+        return try {
+            URLUtil.isHttpsUrl(clean) || URLUtil.isHttpUrl(clean) || clean.startsWith("http://", ignoreCase = true) || clean.startsWith("https://", ignoreCase = true)
         } catch (e: Exception) {
             LogUtil.e(AppConfig.TAG, "Failed to validate subscription URL", e)
+            false
         }
-        return false
     }
 
     /**

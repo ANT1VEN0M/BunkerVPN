@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.text.TextUtils
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.core.CoreConfigManager
+import com.v2ray.ang.core.CoreServiceManager
 import com.v2ray.ang.dto.SubscriptionUpdateResult
 import com.v2ray.ang.dto.UrlContentRequest
 import com.v2ray.ang.dto.entities.ProfileItem
@@ -219,12 +220,14 @@ object AngConfigManager {
      */
     private fun parseBatchSubscription(servers: String?): Int {
         try {
-            if (servers == null) {
+            if (servers.isNullOrBlank()) {
                 return 0
             }
 
             var count = 0
             servers.lines()
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
                 .distinct()
                 .forEach { str ->
                     if (Utils.isValidSubUrl(str)) {
@@ -248,7 +251,7 @@ object AngConfigManager {
      */
     private fun parseBatchConfig(servers: String?, subid: String, append: Boolean): Int {
         try {
-            if (servers == null) {
+            if (servers.isNullOrBlank()) {
                 return 0
             }
             val subItem = MmkvManager.decodeSubscription(subid)
@@ -258,6 +261,8 @@ object AngConfigManager {
             val v2raynLines = mutableListOf<String>()
 
             servers.lines()
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
                 .distinct()
                 .reversed()
                 .forEach {
@@ -497,7 +502,7 @@ object AngConfigManager {
                 return SubscriptionUpdateResult(skipCount = 1)
             }
 
-            val url = HttpUtil.toIdnUrl(it.subscription.url)
+            val url = HttpUtil.toIdnUrl(it.subscription.url.trim())
             if (!Utils.isValidUrl(url)) {
                 return SubscriptionUpdateResult(failureCount = 1)
             }
@@ -523,31 +528,36 @@ object AngConfigManager {
                 )
             }
 
-            var configText = try {
-                val httpPort = SettingsManager.getHttpPort()
-                HttpUtil.getUrlContentWithUserAgent(
-                    UrlContentRequest(
-                        url = url,
-                        userAgent = userAgent,
-                        requestHeaders = requestHeaders,
-                        timeout = 15000,
-                        httpPort = httpPort,
-                        proxyUsername = proxyUsername,
-                        proxyPassword = proxyPassword
-                    ),
-                    captureUsageInfo
-                )
-            } catch (e: Exception) {
-                LogUtil.e(AppConfig.ANG_PACKAGE, "Update subscription: proxy not ready or other error", e)
-                ""
+            var configText = ""
+            if (CoreServiceManager.isRunning()) {
+                configText = try {
+                    val httpPort = SettingsManager.getHttpPort()
+                    HttpUtil.getUrlContentWithUserAgent(
+                        UrlContentRequest(
+                            url = url,
+                            userAgent = userAgent,
+                            requestHeaders = requestHeaders,
+                            timeout = 10000,
+                            httpPort = httpPort,
+                            proxyUsername = proxyUsername,
+                            proxyPassword = proxyPassword
+                        ),
+                        captureUsageInfo
+                    )
+                } catch (e: Exception) {
+                    LogUtil.e(AppConfig.ANG_PACKAGE, "Update subscription: proxy attempt failed", e)
+                    ""
+                }
             }
+
             if (configText.isEmpty()) {
                 configText = try {
                     HttpUtil.getUrlContentWithUserAgent(
                         UrlContentRequest(
                             url = url,
                             userAgent = userAgent,
-                            requestHeaders = requestHeaders
+                            requestHeaders = requestHeaders,
+                            timeout = 15000
                         ),
                         captureUsageInfo
                     )
@@ -719,7 +729,12 @@ object AngConfigManager {
      * @return The number of configurations parsed.
      */
     private fun parseConfigViaSub(server: String?, subid: String, append: Boolean): Int {
-        var count = parseBatchConfig(Utils.decode(server), subid, append)
+        if (server.isNullOrBlank()) return 0
+        val decoded = Utils.decode(server)
+        var count = 0
+        if (decoded.isNotBlank()) {
+            count = parseBatchConfig(decoded, subid, append)
+        }
         if (count <= 0) {
             count = parseBatchConfig(server, subid, append)
         }
@@ -736,16 +751,30 @@ object AngConfigManager {
      * @return The number of subscriptions imported.
      */
     private fun importUrlAsSubscription(url: String): Int {
+        val cleanUrl = url.trim()
+        if (cleanUrl.isEmpty()) return 0
+
         val subscriptions = MmkvManager.decodeSubscriptions()
-        subscriptions.forEach {
-            if (it.subscription.url == url) {
-                return 0
-            }
+        val existing = subscriptions.firstOrNull { it.subscription.url.trim() == cleanUrl }
+        if (existing != null) {
+            existing.subscription.lastUpdated = 0
+            existing.subscription.allowInsecureUrl = true
+            MmkvManager.encodeSubscription(existing.guid, existing.subscription)
+            return 1
         }
-        val uri = URI(Utils.fixIllegalUrl(url))
-        val subItem = SubscriptionItem()
-        subItem.remarks = uri.fragment ?: "import sub"
-        subItem.url = url
+
+        val subRemarks = runCatching {
+            val uri = java.net.URI(Utils.fixIllegalUrl(cleanUrl))
+            uri.fragment?.takeIf { it.isNotBlank() }
+        }.getOrNull() ?: cleanUrl.substringAfterLast('#', "").takeIf { it.isNotBlank() } ?: "Бункер Подписка"
+
+        val subItem = SubscriptionItem().apply {
+            remarks = subRemarks
+            this.url = cleanUrl
+            allowInsecureUrl = true
+            enabled = true
+            autoUpdate = true
+        }
         MmkvManager.encodeSubscription("", subItem)
         return 1
     }

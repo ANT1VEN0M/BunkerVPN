@@ -552,7 +552,10 @@ class MainViewModel(
                             setupGroupTab(forceRefresh = true)
                         }
 
-                        countSub > 0 -> setupGroupTab(forceRefresh = true)
+                        countSub > 0 -> {
+                            toastSuccess(R.string.toast_success)
+                            setupGroupTab(forceRefresh = true)
+                        }
                         else -> toastError(R.string.toast_failure)
                     }
                 } catch (cancelled: CancellationException) {
