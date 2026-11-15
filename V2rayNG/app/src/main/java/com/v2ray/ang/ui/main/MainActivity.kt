@@ -405,7 +405,7 @@ private fun CustomThemeDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.btn_cancel))
+                Text(stringResource(android.R.string.cancel))
             }
         }
     )
