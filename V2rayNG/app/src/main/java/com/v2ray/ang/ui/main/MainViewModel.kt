@@ -18,6 +18,7 @@ import com.v2ray.ang.extension.delay
 import com.v2ray.ang.extension.isComplexType
 import com.v2ray.ang.extension.matchesPattern
 import com.v2ray.ang.extension.moveItem
+import com.v2ray.ang.handler.AngConfigManager
 import com.v2ray.ang.handler.SubscriptionInfoParser
 import com.v2ray.ang.ui.base.BaseViewModel
 import com.v2ray.ang.util.LogUtil
@@ -383,7 +384,10 @@ class MainViewModel(
     ): List<ServersCache> {
         val loadMutex = groupLoadMutexes.computeIfAbsent(groupId) { Mutex() }
         return loadMutex.withLock {
-            if (!forceRefresh) {
+            val changed = if (groupId.isNotEmpty()) {
+                AngConfigManager.ensureBunkerAutoPolicyGroup(groupId)
+            } else false
+            if (!forceRefresh && !changed) {
                 cacheMutex.withLock { groupDataCache[groupId]?.let { return@withLock it } }
             }
             val servers = buildServersCache(dataSource.getServerGuidList(groupId))

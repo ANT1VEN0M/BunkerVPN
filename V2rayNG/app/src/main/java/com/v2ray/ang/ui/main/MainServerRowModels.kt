@@ -2,6 +2,7 @@ package com.v2ray.ang.ui.main
 
 import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.dto.entities.ServersCache
+import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.extension.isComplexType
 import com.v2ray.ang.extension.nullIfBlank
 import com.v2ray.ang.handler.AngConfigManager
@@ -26,12 +27,17 @@ internal fun buildServerRowUiModel(
     subscriptionRemarks: String,
 ): ServerRowUiModel {
     val profile = server.profile
+    val stats = if (profile.configType == EConfigType.POLICYGROUP) {
+        "Все серверы подписки • Автоматический выбор"
+    } else {
+        profile.description.nullIfBlank()
+            ?: AngConfigManager.generateDescription(profile)
+    }
     return ServerRowUiModel(
         guid = server.guid,
         profile = profile,
         remarks = profile.remarks,
-        statistics = profile.description.nullIfBlank()
-            ?: AngConfigManager.generateDescription(profile),
+        statistics = stats,
         typeDescription = serverProtocolDescription(profile),
         testDelayMillis = server.testDelayMillis,
         subscriptionBadge = subscriptionRemarks.firstOrNull()?.toString().orEmpty(),
@@ -39,6 +45,9 @@ internal fun buildServerRowUiModel(
 }
 
 private fun serverProtocolDescription(profile: ProfileItem): String {
+    if (profile.configType == EConfigType.POLICYGROUP) {
+        return "⚡ Умный балансировщик (наименьший пинг)"
+    }
     if (profile.configType.isComplexType()) return profile.configType.name
     val parts = mutableListOf(profile.configType.name)
     profile.network?.let { network ->

@@ -12,6 +12,7 @@ import com.v2ray.ang.dto.entities.SubscriptionCache
 import com.v2ray.ang.dto.entities.SubscriptionItem
 import com.v2ray.ang.dto.entities.SubscriptionUsageInfo
 import com.v2ray.ang.enums.EConfigType
+import com.v2ray.ang.extension.isComplexType
 import com.v2ray.ang.extension.isNotNullEmpty
 import com.v2ray.ang.fmt.CustomFmt
 import com.v2ray.ang.fmt.CustomOutboundFmt
@@ -279,6 +280,9 @@ object AngConfigManager {
                     subid = subid,
                     append = append,
                 )
+                if (subid.isNotEmpty()) {
+                    ensureBunkerAutoPolicyGroup(subid)
+                }
             }
 
             return allConfigs.size
@@ -561,6 +565,7 @@ object AngConfigManager {
 
             val count = parseConfigViaSub(configText, it.guid, false)
             if (count > 0) {
+                ensureBunkerAutoPolicyGroup(it.guid)
                 it.subscription.lastUpdated = System.currentTimeMillis()
                 // Replaced on every successful update so the box disappears if the panel stops sending the headers.
                 it.subscription.usageInfo = usageInfo
@@ -577,6 +582,101 @@ object AngConfigManager {
         } catch (e: Exception) {
             LogUtil.e(AppConfig.TAG, "Failed to update config via subscription", e)
             return SubscriptionUpdateResult(failureCount = 1)
+        }
+    }
+
+    /**
+     * Ensures there is a single dynamic auto-select POLICYGROUP node for the subscription.
+     * Cleans up legacy numbered fake auto nodes and links all subscription servers
+     * to Xray's leastPing balancer with observatory.
+     *
+     * @return true if any modifications to profiles or server list were made.
+     */
+    fun ensureBunkerAutoPolicyGroup(subId: String): Boolean {
+        if (subId.isEmpty()) return false
+        try {
+            val serverGuids = MmkvManager.decodeServerList(subId).toMutableList()
+            if (serverGuids.isEmpty()) return false
+
+            var modified = false
+            val toRemove = mutableListOf<String>()
+            var existingPolicyGroupGuid: String? = null
+
+            for (guid in serverGuids) {
+                val profile = MmkvManager.decodeServerConfig(guid) ?: continue
+                val remarks = profile.remarks.trim()
+                // Remove legacy fake auto nodes (e.g. numbered "#01", "#02" or non-POLICYGROUP configs with auto name)
+                if (remarks.contains("АВТОВЫБОР #", ignoreCase = true) ||
+                    (profile.configType != EConfigType.POLICYGROUP &&
+                            (remarks.contains("АВТОВЫБОР", ignoreCase = true) || remarks.contains("⚡ AUTO", ignoreCase = true)))
+                ) {
+                    toRemove.add(guid)
+                } else if (profile.configType == EConfigType.POLICYGROUP &&
+                    (remarks.contains("АВТОВЫБОР", ignoreCase = true) || remarks.contains("BUNKER", ignoreCase = true) || remarks.contains("AUTO", ignoreCase = true))
+                ) {
+                    if (existingPolicyGroupGuid == null) {
+                        existingPolicyGroupGuid = guid
+                    } else {
+                        toRemove.add(guid) // remove duplicates
+                    }
+                }
+            }
+
+            if (toRemove.isNotEmpty()) {
+                MmkvManager.removeServers(toRemove, subId)
+                serverGuids.removeAll(toRemove.toSet())
+                modified = true
+            }
+
+            val normalServers = serverGuids.filter { guid ->
+                val p = MmkvManager.decodeServerConfig(guid)
+                p != null && !p.configType.isComplexType()
+            }
+            if (normalServers.isEmpty()) return modified
+
+            val policyProfile = if (existingPolicyGroupGuid != null) {
+                MmkvManager.decodeServerConfig(existingPolicyGroupGuid) ?: ProfileItem.create(EConfigType.POLICYGROUP)
+            } else {
+                ProfileItem.create(EConfigType.POLICYGROUP)
+            }
+
+            val targetRemarks = "⚡ АВТОВЫБОР | BUNKER ⚡"
+            if (policyProfile.remarks != targetRemarks ||
+                policyProfile.policyGroupSubscriptionId != subId ||
+                policyProfile.policyGroupType != "0" ||
+                policyProfile.policyGroupFilter != ""
+            ) {
+                policyProfile.remarks = targetRemarks
+                policyProfile.subscriptionId = subId
+                policyProfile.policyGroupSubscriptionId = subId
+                policyProfile.policyGroupFilter = ""
+                policyProfile.policyGroupType = "0" // leastPing
+                policyProfile.policyGroupTestOutbounds = true
+                policyProfile.policyGroupFallbackTag = ""
+                policyProfile.description = "⚡ Автовыбор лучшего сервера (наименьший пинг)"
+                modified = true
+            }
+
+            val finalGuid = MmkvManager.encodeServerConfig(existingPolicyGroupGuid ?: "", policyProfile)
+
+            val updatedList = MmkvManager.decodeServerList(subId).toMutableList()
+            if (updatedList.firstOrNull() != finalGuid) {
+                updatedList.remove(finalGuid)
+                updatedList.add(0, finalGuid)
+                MmkvManager.encodeServerList(updatedList, subId)
+                modified = true
+            }
+
+            val currentSelected = MmkvManager.getSelectServer()
+            if (currentSelected.isNullOrEmpty() || currentSelected in toRemove) {
+                MmkvManager.setSelectServer(finalGuid)
+                modified = true
+            }
+
+            return modified
+        } catch (e: Exception) {
+            LogUtil.e(AppConfig.TAG, "ensureBunkerAutoPolicyGroup failed", e)
+            return false
         }
     }
 

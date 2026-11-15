@@ -157,6 +157,10 @@ class MainActivity : HelperBaseComponentActivity() {
                 when (action) {
                     MainAction.ToggleService -> handleFabAction()
                     MainAction.TestCurrentServer -> handleLayoutTestClick()
+                    MainAction.TestRealAllServers -> {
+                        toastInfo("Замер пинга всех серверов...")
+                        mainViewModel.testAllRealPing()
+                    }
                     MainAction.ImportQRcode -> importQRcode()
                     MainAction.ImportClipboard -> importClipboard()
                     MainAction.ImportConfigLocal -> importConfigLocal()
@@ -251,7 +255,11 @@ class MainActivity : HelperBaseComponentActivity() {
 
     private fun handleLayoutTestClick() {
         if (mainViewModel.uiState.value.isRunning) {
+            toastInfo("Замер пинга текущего подключения...")
             mainViewModel.testCurrentServerRealPing()
+        } else {
+            toastInfo("Замер пинга всех серверов...")
+            mainViewModel.testAllRealPing()
         }
     }
 

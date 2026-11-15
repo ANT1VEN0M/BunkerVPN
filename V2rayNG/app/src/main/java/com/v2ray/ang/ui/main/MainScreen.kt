@@ -230,7 +230,7 @@ fun MainScreen(
                         isRunning = isRunning,
                         statusText = displayText,
                         onToggle = { onAction(MainAction.ToggleService) },
-                        onTestPing = { onAction(MainAction.TestCurrentServer) },
+                        onTestPing = { onAction(MainAction.TestRealAllServers) },
                         onUpdateSub = { onAction(MainAction.UpdateSubscriptions) }
                     )
 
