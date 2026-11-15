@@ -70,11 +70,13 @@ jobs:
 
     - name: Prepare Signing Keystore
       run: |
-        mkdir -p ${{ github.workspace }}/keystore
-        keytool -genkeypair -v -keystore ${{ github.workspace }}/keystore/bunker.jks \
-          -alias bunker -keyalg RSA -keysize 2048 -validity 10000 \
-          -storepass bunker123 -keypass bunker123 \
-          -dname "CN=BunkerVPN, OU=Bunker, O=BunkerKota, L=Bunker, ST=Bunker, C=RU"
+        if [ ! -f "${{ github.workspace }}/keystore/bunker.jks" ]; then
+          mkdir -p ${{ github.workspace }}/keystore
+          keytool -genkeypair -v -keystore ${{ github.workspace }}/keystore/bunker.jks \
+            -alias bunker -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass bunker123 -keypass bunker123 \
+            -dname "CN=BunkerVPN, OU=Bunker, O=BunkerKota, L=Bunker, ST=Bunker, C=RU"
+        fi
 
     - name: Build APK with Gradle
       run: |

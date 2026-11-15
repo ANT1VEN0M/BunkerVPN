@@ -55,7 +55,7 @@ object UpdateCheckerManager {
             return@withContext CheckUpdateResult(hasUpdate = false)
         }
 
-        val latestVersion = latestRelease.tagName.removePrefix("v")
+        val latestVersion = latestRelease.tagName.removePrefix("v").substringBefore("-").trim()
         LogUtil.i(
             AppConfig.TAG,
             "Found new version: $latestVersion (current: ${BuildConfig.VERSION_NAME})"
@@ -65,7 +65,7 @@ object UpdateCheckerManager {
             val downloadUrl = getDownloadUrl(latestRelease, Build.SUPPORTED_ABIS[0])
             CheckUpdateResult(
                 hasUpdate = true,
-                latestVersion = latestVersion,
+                latestVersion = latestRelease.tagName,
                 releaseNotes = latestRelease.body,
                 downloadUrl = downloadUrl,
                 isPreRelease = latestRelease.prerelease
@@ -76,31 +76,27 @@ object UpdateCheckerManager {
     }
 
     private fun compareVersions(version1: String, version2: String): Int {
-        val v1 = version1.split(".")
-        val v2 = version2.split(".")
+        val clean1 = version1.removePrefix("v").substringBefore("-").trim()
+        val clean2 = version2.removePrefix("v").substringBefore("-").trim()
+        val v1 = clean1.split(".")
+        val v2 = clean2.split(".")
 
         for (i in 0 until maxOf(v1.size, v2.size)) {
-            val num1 = if (i < v1.size) v1[i].toInt() else 0
-            val num2 = if (i < v2.size) v2[i].toInt() else 0
+            val num1 = if (i < v1.size) v1[i].filter { it.isDigit() }.toIntOrNull() ?: 0 else 0
+            val num2 = if (i < v2.size) v2[i].filter { it.isDigit() }.toIntOrNull() ?: 0 else 0
             if (num1 != num2) return num1 - num2
         }
         return 0
     }
 
     private fun getDownloadUrl(release: GitHubRelease, abi: String): String {
-        val fDroid = "fdroid"
-
-        val assetsByAbi = release.assets.filter {
-            (it.name.contains(abi, true))
-        }
-
-        val asset = if (BuildConfig.APPLICATION_ID.contains(fDroid, ignoreCase = true)) {
-            assetsByAbi.firstOrNull { it.name.contains(fDroid) }
-        } else {
-            assetsByAbi.firstOrNull { !it.name.contains(fDroid) }
-        }
+        val asset = release.assets.firstOrNull { it.name.contains(abi, ignoreCase = true) }
+            ?: release.assets.firstOrNull { it.name.contains("arm64", ignoreCase = true) }
+            ?: release.assets.firstOrNull { it.name.contains("universal", ignoreCase = true) }
+            ?: release.assets.firstOrNull { it.name.endsWith(".apk", ignoreCase = true) }
 
         return asset?.browserDownloadUrl
-            ?: throw IllegalStateException("No compatible APK found")
+            ?: release.htmlUrl
+            ?: "https://github.com/ANT1VEN0M/BunkerVPN/releases/latest"
     }
 }
