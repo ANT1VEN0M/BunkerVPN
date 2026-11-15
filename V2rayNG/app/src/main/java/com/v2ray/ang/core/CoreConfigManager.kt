@@ -460,7 +460,7 @@ object CoreConfigManager {
         if (v2rayConfig.routing.balancers.isNullOrEmpty()) {
             v2rayConfig.routing.rules.clear()
         } else {
-            v2rayConfig.routing.rules = v2rayConfig.routing.rules.filter { it.balancerTag.isNotNullEmpty() }.toMutableList()
+            v2rayConfig.routing.rules = ArrayList(v2rayConfig.routing.rules.filter { it.balancerTag.isNotNullEmpty() })
         }
         v2rayConfig.dns = null
         v2rayConfig.fakedns = null
