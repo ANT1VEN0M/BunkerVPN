@@ -2,10 +2,16 @@ name: Build Bunker VPN APK
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release Tag (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+        type: string
   push:
     branches:
-      - main
       - master
+      - main
 
 permissions:
   contents: write
@@ -20,14 +26,11 @@ jobs:
       with:
         fetch-depth: '0'
 
-    - name: Unpack project
-      run: |
-        if [ -f "BUNKER_VPN_Android_Project.zip" ]; then
-          unzip -o BUNKER_VPN_Android_Project.zip
-        fi
-        if [ ! -d "hev-socks5-tunnel/src" ]; then
-          git clone --depth 1 https://github.com/heiher/hev-socks5-tunnel.git hev-socks5-tunnel
-        fi
+    - name: Setup Java 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v4
@@ -46,23 +49,24 @@ jobs:
         \
             ndkVersion = "30.0.16248370"' ${{ github.workspace }}/V2rayNG/app/build.gradle.kts
 
+    - name: Setup hev-socks5-tunnel with submodules
+      run: |
+        rm -rf hev-socks5-tunnel
+        git clone --depth 1 --recurse-submodules https://github.com/heiher/hev-socks5-tunnel.git hev-socks5-tunnel
+
     - name: Build native libhevtun
       run: |
         chmod +x compile-hevtun.sh
-        bash compile-hevtun.sh || true
+        bash compile-hevtun.sh
         mkdir -p V2rayNG/app/libs
         cp -r libs/* V2rayNG/app/libs/ 2>/dev/null || true
 
     - name: Download Xray Core (libv2ray.aar)
       run: |
         mkdir -p V2rayNG/app/libs
-        curl -L -o V2rayNG/app/libs/libv2ray.aar https://github.com/2dust/AndroidLibXrayLite/releases/download/v26.11.9/libv2ray.aar
-
-    - name: Setup Java 21
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '21'
+        if [ ! -f "V2rayNG/app/libs/libv2ray.aar" ]; then
+          curl -L -o V2rayNG/app/libs/libv2ray.aar https://github.com/2dust/AndroidLibXrayLite/releases/download/v26.11.9/libv2ray.aar
+        fi
 
     - name: Prepare Signing Keystore
       run: |
@@ -90,14 +94,32 @@ jobs:
         find V2rayNG/app/build/outputs/apk -type f -name "*universal*.apk" -exec cp {} dist/BunkerVPN-universal.apk \;
         ls -la dist/
 
-    - name: Upload arm64 APK
+    - name: Upload arm64 APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: BunkerVPN-arm64-v8a
         path: dist/BunkerVPN-arm64-v8a.apk
 
-    - name: Upload Universal APK
+    - name: Upload Universal APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: BunkerVPN-universal
         path: dist/BunkerVPN-universal.apk
+
+    - name: Create GitHub Release
+      if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ inputs.release_tag }}
+        name: "Бункер VPN ${{ inputs.release_tag }}"
+        body: |
+          🐈‍⬛ **Официальный релиз Бункер VPN для Android!**
+          
+          - Вшита авто-подписка с проверенными серверами Бункера
+          - VLESS Reality, VMess, Trojan, Shadowsocks, Hysteria2
+          - Автовыбор самых быстрых нод
+          - Наш Telegram: https://t.me/BUNKER_KOTA
+          - Чат: https://t.me/BUNKER_K0TA
+        files: |
+          dist/BunkerVPN-arm64-v8a.apk
+          dist/BunkerVPN-universal.apk
