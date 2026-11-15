@@ -280,9 +280,6 @@ object AngConfigManager {
                     subid = subid,
                     append = append,
                 )
-                if (subid.isNotEmpty()) {
-                    ensureBunkerAutoPolicyGroup(subid)
-                }
             }
 
             return allConfigs.size
@@ -565,7 +562,11 @@ object AngConfigManager {
 
             val count = parseConfigViaSub(configText, it.guid, false)
             if (count > 0) {
-                ensureBunkerAutoPolicyGroup(it.guid)
+                try {
+                    ensureBunkerAutoPolicyGroup(it.guid)
+                } catch (e: Exception) {
+                    LogUtil.e(AppConfig.TAG, "ensureBunkerAutoPolicyGroup failed", e)
+                }
                 it.subscription.lastUpdated = System.currentTimeMillis()
                 // Replaced on every successful update so the box disappears if the panel stops sending the headers.
                 it.subscription.usageInfo = usageInfo
@@ -587,8 +588,8 @@ object AngConfigManager {
 
     /**
      * Ensures there is a single dynamic auto-select POLICYGROUP node for the subscription.
-     * Cleans up legacy numbered fake auto nodes and links all subscription servers
-     * to Xray's leastPing balancer with observatory.
+     * Links all subscription servers to Xray's leastPing balancer with observatory.
+     * NEVER deletes normal servers. Only removes duplicate POLICYGROUP nodes if any.
      *
      * @return true if any modifications to profiles or server list were made.
      */
@@ -599,32 +600,23 @@ object AngConfigManager {
             if (serverGuids.isEmpty()) return false
 
             var modified = false
-            val toRemove = mutableListOf<String>()
             var existingPolicyGroupGuid: String? = null
+            val duplicatePolicyGroups = mutableListOf<String>()
 
             for (guid in serverGuids) {
                 val profile = MmkvManager.decodeServerConfig(guid) ?: continue
-                val remarks = profile.remarks.trim()
-                // Remove legacy fake auto nodes (e.g. numbered "#01", "#02" or non-POLICYGROUP configs with auto name)
-                if (remarks.contains("АВТОВЫБОР #", ignoreCase = true) ||
-                    (profile.configType != EConfigType.POLICYGROUP &&
-                            (remarks.contains("АВТОВЫБОР", ignoreCase = true) || remarks.contains("⚡ AUTO", ignoreCase = true)))
-                ) {
-                    toRemove.add(guid)
-                } else if (profile.configType == EConfigType.POLICYGROUP &&
-                    (remarks.contains("АВТОВЫБОР", ignoreCase = true) || remarks.contains("BUNKER", ignoreCase = true) || remarks.contains("AUTO", ignoreCase = true))
-                ) {
+                if (profile.configType == EConfigType.POLICYGROUP) {
                     if (existingPolicyGroupGuid == null) {
                         existingPolicyGroupGuid = guid
                     } else {
-                        toRemove.add(guid) // remove duplicates
+                        duplicatePolicyGroups.add(guid)
                     }
                 }
             }
 
-            if (toRemove.isNotEmpty()) {
-                MmkvManager.removeServers(toRemove, subId)
-                serverGuids.removeAll(toRemove.toSet())
+            if (duplicatePolicyGroups.isNotEmpty()) {
+                MmkvManager.removeServers(duplicatePolicyGroups, subId)
+                serverGuids.removeAll(duplicatePolicyGroups.toSet())
                 modified = true
             }
 
@@ -632,7 +624,10 @@ object AngConfigManager {
                 val p = MmkvManager.decodeServerConfig(guid)
                 p != null && !p.configType.isComplexType()
             }
-            if (normalServers.isEmpty()) return modified
+            if (normalServers.size < 2) {
+                // No need for balancer if fewer than 2 normal servers
+                return modified
+            }
 
             val policyProfile = if (existingPolicyGroupGuid != null) {
                 MmkvManager.decodeServerConfig(existingPolicyGroupGuid) ?: ProfileItem.create(EConfigType.POLICYGROUP)
@@ -668,7 +663,7 @@ object AngConfigManager {
             }
 
             val currentSelected = MmkvManager.getSelectServer()
-            if (currentSelected.isNullOrEmpty() || currentSelected in toRemove) {
+            if (currentSelected.isNullOrEmpty() || currentSelected in duplicatePolicyGroups) {
                 MmkvManager.setSelectServer(finalGuid)
                 modified = true
             }
