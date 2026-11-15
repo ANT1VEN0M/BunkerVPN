@@ -226,6 +226,14 @@ fun MainScreen(
                         )
                     }
 
+                    BunkerHeroHeader(
+                        isRunning = isRunning,
+                        statusText = displayText,
+                        onToggle = { onAction(MainAction.ToggleService) },
+                        onTestPing = { onAction(MainAction.TestCurrentServer) },
+                        onUpdateSub = { onAction(MainAction.UpdateSubscriptions) }
+                    )
+
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
