@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
@@ -179,8 +180,17 @@ object NotificationHelper {
         }
 
         val displayTitle = title.ifEmpty { context.getString(R.string.app_name) }
+        val catBitmap = runCatching {
+            BitmapFactory.decodeResource(context.resources, R.drawable.bunker_logo)
+        }.getOrNull()
+
         return NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_stat_name)
+            .apply {
+                if (catBitmap != null) {
+                    setLargeIcon(catBitmap)
+                }
+            }
             .setContentTitle(displayTitle)
             .setContentText(content)
             .setOngoing(false)

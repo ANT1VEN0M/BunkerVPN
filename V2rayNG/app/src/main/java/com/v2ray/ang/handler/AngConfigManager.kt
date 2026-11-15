@@ -710,9 +710,16 @@ object AngConfigManager {
 
         val sorted = serverList
             .map { guid ->
+                val profile = MmkvManager.decodeServerConfig(guid)
+                val isPolicyGroup = profile?.configType == EConfigType.POLICYGROUP
                 val delay =
                     MmkvManager.decodeServerAffiliationInfo(guid)?.testDelayMillis ?: 0L
-                guid to if (delay <= 0L) Long.MAX_VALUE else delay
+                val sortKey = when {
+                    isPolicyGroup -> -1L // Always keep auto-select balancer at the top
+                    delay <= 0L -> Long.MAX_VALUE // Offline/untested at bottom
+                    else -> delay
+                }
+                guid to sortKey
             }
             .sortedBy { it.second }
             .map { it.first }

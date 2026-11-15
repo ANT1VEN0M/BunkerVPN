@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -91,8 +92,17 @@ object NotificationManager {
                 ""
             }
 
+        val catBitmap = runCatching {
+            BitmapFactory.decodeResource(service.resources, R.drawable.bunker_logo)
+        }.getOrNull()
+
         mBuilder = NotificationCompat.Builder(service, channelId)
             .setSmallIcon(R.drawable.ic_stat_name)
+            .apply {
+                if (catBitmap != null) {
+                    setLargeIcon(catBitmap)
+                }
+            }
             .setContentTitle(currentConfig?.remarks ?: service.getString(R.string.app_name))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
@@ -146,7 +156,7 @@ object NotificationManager {
         speedNotificationJob?.let {
             it.cancel()
             speedNotificationJob = null
-            updateNotification("", 0, 0)
+            updateNotification("", "", 0, 0)
         }
     }
 
@@ -173,11 +183,17 @@ object NotificationManager {
 
     /**
      * Updates the notification with the given content text and traffic data.
-     * @param contentText The content text.
+     * @param summaryText The compact summary line.
+     * @param bigText The detailed expanded text.
      * @param proxyTraffic The proxy traffic.
      * @param directTraffic The direct traffic.
      */
-    private fun updateNotification(contentText: String?, proxyTraffic: Long, directTraffic: Long) {
+    private fun updateNotification(
+        summaryText: String?,
+        bigText: String?,
+        proxyTraffic: Long,
+        directTraffic: Long
+    ) {
         if (mBuilder != null) {
             if (proxyTraffic < NOTIFICATION_ICON_THRESHOLD && directTraffic < NOTIFICATION_ICON_THRESHOLD) {
                 mBuilder?.setSmallIcon(R.drawable.ic_stat_name)
@@ -186,8 +202,10 @@ object NotificationManager {
             } else {
                 mBuilder?.setSmallIcon(R.drawable.ic_stat_direct)
             }
-            mBuilder?.setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
-            mBuilder?.setContentText(contentText)
+            if (!bigText.isNullOrEmpty()) {
+                mBuilder?.setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+            }
+            mBuilder?.setContentText(summaryText)
             getNotificationManager()?.notify(NOTIFICATION_ID, mBuilder?.build())
         }
     }
@@ -212,13 +230,12 @@ object NotificationManager {
      * @param down The downlink speed.
      */
     private fun appendSpeedString(text: StringBuilder, name: String?, up: Double, down: Double) {
-        var n = name ?: "no tag"
-        n = n.take(min(n.length, 6))
-        text.append(n)
-        for (i in n.length..6 step 2) {
-            text.append("\t")
+        val label = when (name) {
+            AppConfig.TAG_PROXY -> "⚡ Прокси"
+            AppConfig.TAG_DIRECT -> "🌐 Прямой"
+            else -> name ?: "Сеть"
         }
-        text.append("•  ${up.toLong().toSpeedString()}↑  ${down.toLong().toSpeedString()}↓\n")
+        text.append("$label:  ↑ ${up.toLong().toSpeedString()}  •  ↓ ${down.toLong().toSpeedString()}\n")
     }
 
     /**
@@ -267,19 +284,22 @@ object NotificationManager {
         val directTotal = directUplink + directDownlink
         val zeroSpeed = proxyTotal + directTotal == 0L
         if (!zeroSpeed || !lastZeroSpeed) {
-            val text = StringBuilder()
+            val pUp = (proxyUplink / sinceLastQueryInSeconds).toLong().toSpeedString()
+            val pDown = (proxyDownlink / sinceLastQueryInSeconds).toLong().toSpeedString()
+            val summary = "↑ $pUp  •  ↓ $pDown  •  Бункер активен 🛡"
+
+            val bigText = StringBuilder()
             appendSpeedString(
-                text, AppConfig.TAG_PROXY,
+                bigText, AppConfig.TAG_PROXY,
                 proxyUplink / sinceLastQueryInSeconds,
                 proxyDownlink / sinceLastQueryInSeconds
             )
-
             appendSpeedString(
-                text, AppConfig.TAG_DIRECT,
+                bigText, AppConfig.TAG_DIRECT,
                 directUplink / sinceLastQueryInSeconds,
                 directDownlink / sinceLastQueryInSeconds
             )
-            updateNotification(text.toString(), proxyTotal, directTotal)
+            updateNotification(summary, bigText.toString().trimEnd(), proxyTotal, directTotal)
         }
         lastQueryTime = queryTime
         return zeroSpeed

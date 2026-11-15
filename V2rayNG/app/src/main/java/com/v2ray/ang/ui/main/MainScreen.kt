@@ -231,6 +231,7 @@ fun MainScreen(
                         statusText = displayText,
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
+                        onSortByPing = { onAction(MainAction.SortByTestResults) },
                         onUpdateSub = { onAction(MainAction.UpdateSubscriptions) }
                     )
 

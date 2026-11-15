@@ -162,6 +162,10 @@ class MainActivity : HelperBaseComponentActivity() {
                         toastInfo("Замер пинга всех серверов...")
                         mainViewModel.testAllRealPing()
                     }
+                    MainAction.SortByTestResults -> {
+                        toastInfo("Сортировка по минимальному пингу ⚡")
+                        mainViewModel.onAction(action)
+                    }
                     MainAction.ImportQRcode -> importQRcode()
                     MainAction.ImportClipboard -> importClipboard()
                     MainAction.ImportConfigLocal -> importConfigLocal()
