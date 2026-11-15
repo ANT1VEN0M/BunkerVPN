@@ -186,6 +186,7 @@ object NotificationHelper {
 
         return NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_stat_name)
+            .setColor(0xFF7C3AED.toInt())
             .apply {
                 if (catBitmap != null) {
                     setLargeIcon(catBitmap)

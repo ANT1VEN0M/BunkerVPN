@@ -808,6 +808,11 @@ class MainViewModel(
         _uiState.update { it.copy(selectedGuid = guid) }
     }
 
+    fun getSelectedServerRemarks(): String? {
+        val guid = uiState.value.selectedGuid ?: return null
+        return dataSource.decodeServerConfig(guid)?.remarks
+    }
+
     fun refreshSelectedGuid() {
         _uiState.update { it.copy(selectedGuid = dataSource.getSelectServer()) }
     }

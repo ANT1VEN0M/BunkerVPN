@@ -6,8 +6,14 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -39,6 +45,22 @@ object NotificationManager {
     private var mBuilder: NotificationCompat.Builder? = null
     private var speedNotificationJob: Job? = null
     private var mNotificationManager: NotificationManager? = null
+
+    private fun getCircularCatBitmap(context: Context): Bitmap? {
+        return runCatching {
+            val src = BitmapFactory.decodeResource(context.resources, R.drawable.bunker_logo) ?: return null
+            val dim = min(src.width, src.height)
+            val output = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(output)
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            val rect = Rect(0, 0, dim, dim)
+            canvas.drawARGB(0, 0, 0, 0)
+            canvas.drawCircle(dim / 2f, dim / 2f, dim / 2f, paint)
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+            canvas.drawBitmap(src, rect, rect, paint)
+            output
+        }.getOrNull()
+    }
 
     /**
      * Starts the speed notification.
@@ -92,12 +114,11 @@ object NotificationManager {
                 ""
             }
 
-        val catBitmap = runCatching {
-            BitmapFactory.decodeResource(service.resources, R.drawable.bunker_logo)
-        }.getOrNull()
+        val catBitmap = getCircularCatBitmap(service)
 
         mBuilder = NotificationCompat.Builder(service, channelId)
             .setSmallIcon(R.drawable.ic_stat_name)
+            .setColor(0xFF7C3AED.toInt()) // Cyber Purple
             .apply {
                 if (catBitmap != null) {
                     setLargeIcon(catBitmap)
@@ -194,20 +215,24 @@ object NotificationManager {
         proxyTraffic: Long,
         directTraffic: Long
     ) {
-        if (mBuilder != null) {
-            if (proxyTraffic < NOTIFICATION_ICON_THRESHOLD && directTraffic < NOTIFICATION_ICON_THRESHOLD) {
-                mBuilder?.setSmallIcon(R.drawable.ic_stat_name)
-            } else if (proxyTraffic > directTraffic) {
-                mBuilder?.setSmallIcon(R.drawable.ic_stat_proxy)
-            } else {
-                mBuilder?.setSmallIcon(R.drawable.ic_stat_direct)
-            }
-            if (!bigText.isNullOrEmpty()) {
-                mBuilder?.setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
-            }
-            mBuilder?.setContentText(summaryText)
-            getNotificationManager()?.notify(NOTIFICATION_ID, mBuilder?.build())
+        val builder = mBuilder ?: return
+        if (proxyTraffic < NOTIFICATION_ICON_THRESHOLD && directTraffic < NOTIFICATION_ICON_THRESHOLD) {
+            builder.setSmallIcon(R.drawable.ic_stat_name)
+        } else if (proxyTraffic > directTraffic) {
+            builder.setSmallIcon(R.drawable.ic_stat_proxy)
+        } else {
+            builder.setSmallIcon(R.drawable.ic_stat_direct)
         }
+        val service = getService()
+        if (service != null) {
+            getCircularCatBitmap(service)?.let { builder.setLargeIcon(it) }
+        }
+        builder.setColor(0xFF7C3AED.toInt())
+        if (!bigText.isNullOrEmpty()) {
+            builder.setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+        }
+        builder.setContentText(summaryText)
+        getNotificationManager()?.notify(NOTIFICATION_ID, builder.build())
     }
 
     /**

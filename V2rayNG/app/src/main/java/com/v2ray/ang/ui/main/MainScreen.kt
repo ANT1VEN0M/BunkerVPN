@@ -229,6 +229,7 @@ fun MainScreen(
                     BunkerHeroHeader(
                         isRunning = isRunning,
                         statusText = displayText,
+                        currentServerRemark = mainViewModel.getSelectedServerRemarks(),
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },

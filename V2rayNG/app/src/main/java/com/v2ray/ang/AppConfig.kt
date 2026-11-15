@@ -19,6 +19,8 @@ object AppConfig {
     // Default subscription ID for ungrouped servers
     const val DEFAULT_SUBSCRIPTION_ID = "__bunker_subscription__"
     const val BUNKER_DEFAULT_SUB_URL = "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/BLWL_MIX.txt"
+    const val BUNKER_WHITELIST_SUB_ID = "__bunker_sub_whitelist__"
+    const val BUNKER_WHITELIST_SUB_URL = "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/WHITE_LIST.txt"
 
     /** Preferences mapped to MMKV storage. */
     const val PREF_SNIFFING_ENABLED = "pref_sniffing_enabled"

@@ -607,6 +607,17 @@ object SettingsManager {
                 MmkvManager.encodeSubsList(subsList)
             }
         }
+
+        if (decodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID) == null) {
+            val whiteListSub = SubscriptionItem(
+                remarks = "Бункер | Белый список (БС) 🛡",
+                url = AppConfig.BUNKER_WHITELIST_SUB_URL,
+                enabled = true,
+                autoUpdate = true,
+                allowInsecureUrl = true
+            )
+            encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, whiteListSub)
+        }
     }
 
 }

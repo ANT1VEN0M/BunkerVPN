@@ -1,6 +1,8 @@
 package com.v2ray.ang.ui.main
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,16 +33,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -93,7 +99,41 @@ fun GroupPagerPage(
         mainViewModel.serverGroupState(groupId)
     }
     val groupState by groupStateFlow.collectAsStateWithLifecycle()
-    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty()
+
+    var selectedCountryKey by rememberSaveable(groupId) { mutableStateOf<String?>(null) }
+
+    val countryFilters = remember(groupState.rows) {
+        if (groupState.rows.isEmpty()) emptyList()
+        else {
+            val counts = mutableMapOf<String, Int>()
+            groupState.rows.forEach { row ->
+                val key = CountryFilterHelper.extractFilterKey(row.remarks)
+                counts[key] = (counts[key] ?: 0) + 1
+            }
+            val sortedEntries = counts.entries.sortedWith(
+                compareBy<Map.Entry<String, Int>> { (key, _) ->
+                    when {
+                        key.contains("Авто") -> 0
+                        key.contains("Друг") || key.contains("Проч") -> 2
+                        else -> 1
+                    }
+                }.thenByDescending { it.value }
+            )
+            listOf("🌐 Все" to groupState.rows.size) + sortedEntries.map { it.key to it.value }
+        }
+    }
+
+    val displayedRows = remember(groupState.rows, selectedCountryKey) {
+        if (selectedCountryKey == null || selectedCountryKey == "🌐 Все") {
+            groupState.rows
+        } else {
+            groupState.rows.filter { row ->
+                CountryFilterHelper.extractFilterKey(row.remarks) == selectedCountryKey
+            }
+        }
+    }
+
+    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty() && (selectedCountryKey == null || selectedCountryKey == "🌐 Все")
     val actions = remember(
         onSelectServer,
         onEditServer,
@@ -124,33 +164,42 @@ fun GroupPagerPage(
         )
     }
 
-    Box(Modifier.fillMaxSize()) {
-        ServerListPage(
-            rows = groupState.rows,
-            selectedGuid = selectedGuid,
-            locateTarget = locateTarget?.takeIf { it.groupId == groupId },
-            canReorder = canReorder,
-            doubleColumnDisplay = doubleColumnDisplay,
-            groupId = groupId,
-            lazyListStates = lazyListStates,
-            lazyGridStates = lazyGridStates,
-            actions = actions,
-            onLocateHandled = { mainViewModel.onAction(MainAction.LocateHandled) },
-            onMoveServer = { fromIndex, toIndex ->
-                mainViewModel.moveServer(groupId, fromIndex, toIndex)
-            },
-            contentPadding = listPadding
-        )
-        if (usageInfo != null) {
-            SubscriptionInfoCard(
-                info = usageInfo,
-                fallbackTitle = groupTitle,
-                onOpenLink = onOpenLink,
-                onRefresh = { mainViewModel.onAction(MainAction.UpdateGroupSubscription(groupId)) },
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .onSizeChanged { infoHeightPx = it.height }
+    Column(Modifier.fillMaxSize()) {
+        if (countryFilters.size > 2) {
+            CountryFilterBar(
+                filters = countryFilters,
+                selectedFilter = selectedCountryKey,
+                onSelectFilter = { selectedCountryKey = it }
             )
+        }
+        Box(Modifier.weight(1f)) {
+            ServerListPage(
+                rows = displayedRows,
+                selectedGuid = selectedGuid,
+                locateTarget = locateTarget?.takeIf { it.groupId == groupId },
+                canReorder = canReorder,
+                doubleColumnDisplay = doubleColumnDisplay,
+                groupId = groupId,
+                lazyListStates = lazyListStates,
+                lazyGridStates = lazyGridStates,
+                actions = actions,
+                onLocateHandled = { mainViewModel.onAction(MainAction.LocateHandled) },
+                onMoveServer = { fromIndex, toIndex ->
+                    mainViewModel.moveServer(groupId, fromIndex, toIndex)
+                },
+                contentPadding = listPadding
+            )
+            if (usageInfo != null) {
+                SubscriptionInfoCard(
+                    info = usageInfo,
+                    fallbackTitle = groupTitle,
+                    onOpenLink = onOpenLink,
+                    onRefresh = { mainViewModel.onAction(MainAction.UpdateGroupSubscription(groupId)) },
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .onSizeChanged { infoHeightPx = it.height }
+                )
+            }
         }
     }
 }
@@ -343,11 +392,6 @@ private fun ServerListItem(
     doubleColumnDisplay: Boolean,
     actions: ServerRowActions
 ) {
-    val testResult = if (row.testDelayMillis == 0L) {
-        ""
-    } else {
-        stringResource(R.string.server_test_delay_value, row.testDelayMillis)
-    }
     val selectedStateDescription = if (isSelected) {
         stringResource(R.string.acc_selected_server)
     } else {
@@ -362,6 +406,10 @@ private fun ServerListItem(
             .background(
                 if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.16f)
                 else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
+            )
+            .then(
+                if (isSelected) Modifier.border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.75f), RoundedCornerShape(14.dp))
+                else Modifier
             )
             .semantics {
                 if (selectedStateDescription != null) {
@@ -424,7 +472,7 @@ private fun ServerListItem(
                 )
             }
             Spacer(modifier = Modifier.height(6.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     row.typeDescription,
                     modifier = Modifier.weight(1f, fill = false),
@@ -434,13 +482,27 @@ private fun ServerListItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    testResult,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (row.testDelayMillis < 0L) colorPingRed else colorPing,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (row.testDelayMillis != 0L) {
+                    val (badgeText, badgeColor, badgeBg) = when {
+                        row.testDelayMillis < 0L -> Triple("✕ Таймаут", Color(0xFFEF4444), Color(0xFFEF4444).copy(alpha = 0.16f))
+                        row.testDelayMillis <= 120L -> Triple("⚡ ${row.testDelayMillis} ms", Color(0xFF10B981), Color(0xFF10B981).copy(alpha = 0.16f))
+                        row.testDelayMillis <= 250L -> Triple("● ${row.testDelayMillis} ms", Color(0xFF06B6D4), Color(0xFF06B6D4).copy(alpha = 0.16f))
+                        else -> Triple("▲ ${row.testDelayMillis} ms", Color(0xFFF59E0B), Color(0xFFF59E0B).copy(alpha = 0.16f))
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(6.dp),
+                        color = badgeBg,
+                        border = BorderStroke(1.dp, badgeColor.copy(alpha = 0.35f))
+                    ) {
+                        Text(
+                            text = badgeText,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = badgeColor,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                    }
+                }
             }
         }
     }
