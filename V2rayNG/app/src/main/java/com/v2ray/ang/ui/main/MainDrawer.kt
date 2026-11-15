@@ -24,9 +24,14 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,27 +56,28 @@ enum class MainDestination(@DrawableRes val iconRes: Int, @StringRes val labelRe
     About(R.drawable.ic_about_24dp, R.string.title_about)
 }
 
-private val primaryDrawerItems = listOf(
-    MainDestination.Subscriptions,
+private val mainDrawerItems = listOf(
+    MainDestination.CustomTheme,
     MainDestination.PerAppProxy,
-    MainDestination.Routing,
-    MainDestination.UserAssets,
-    MainDestination.Settings
+    MainDestination.Settings,
+    MainDestination.Promotion,
+    MainDestination.CheckUpdate,
+    MainDestination.About
 )
 
-private val drawerItems = primaryDrawerItems + listOf(
-    MainDestination.CustomTheme,
-    MainDestination.Promotion,
-    MainDestination.Logcat,
-    MainDestination.CheckUpdate,
+private val advancedDrawerItems = listOf(
+    MainDestination.Subscriptions,
+    MainDestination.Routing,
+    MainDestination.UserAssets,
     MainDestination.BackupRestore,
-    MainDestination.About
+    MainDestination.Logcat
 )
 
 @Composable
 fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) -> Unit) {
     val drawerScrollState = rememberScrollState()
     val context = LocalContext.current
+    var showAdvanced by remember { mutableStateOf(false) }
 
     ModalDrawerSheet(
         drawerState = drawerState,
@@ -118,8 +124,8 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                     )
                 }
             }
-            drawerItems.forEachIndexed { index, item ->
-                if (index == primaryDrawerItems.size) AppDivider()
+
+            mainDrawerItems.forEach { item ->
                 NavigationDrawerItem(
                     label = { Text(stringResource(item.labelRes)) },
                     selected = false,
@@ -127,6 +133,35 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                     icon = { Icon(painterResource(item.iconRes), contentDescription = null) },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
+            }
+
+            AppDivider(modifier = Modifier.padding(vertical = 6.dp))
+
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.title_advanced_settings)) },
+                selected = showAdvanced,
+                onClick = { showAdvanced = !showAdvanced },
+                icon = { Icon(painterResource(R.drawable.ic_source_code_24dp), contentDescription = null) },
+                badge = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_expand_more_24dp),
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer { rotationZ = if (showAdvanced) 180f else 0f }
+                    )
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            )
+
+            if (showAdvanced) {
+                advancedDrawerItems.forEach { item ->
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(item.labelRes), style = MaterialTheme.typography.bodyMedium) },
+                        selected = false,
+                        onClick = { onNavigate(item) },
+                        icon = { Icon(painterResource(item.iconRes), contentDescription = null, modifier = Modifier.size(20.dp)) },
+                        modifier = Modifier.padding(start = 16.dp, end = 12.dp, top = 2.dp, bottom = 2.dp)
+                    )
+                }
             }
         }
     }

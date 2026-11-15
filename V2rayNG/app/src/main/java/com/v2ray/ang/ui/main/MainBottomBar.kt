@@ -33,7 +33,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -74,6 +76,7 @@ fun MainBottomBar(
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
     val rotationAnim = remember { Animatable(0f) }
     val textLayoutDirection = LocalLayoutDirection.current
 
@@ -153,6 +156,7 @@ fun MainBottomBar(
                 }
                 FloatingActionButton(
                     onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         if (!isRunning) {
                             scope.launch {
                                 rotationAnim.animateTo(

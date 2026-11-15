@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_advanced_settings">Расширенные настройки</string>
     <string name="app_name" translatable="false">Бункер VPN</string>
-    <string name="app_widget_name">v2rayNG</string>
-    <string name="app_tile_name">v2rayNG</string>
+    <string name="app_widget_name">Бункер VPN</string>
+    <string name="app_tile_name">Бункер VPN</string>
     <string name="app_tile_first_use">Добавьте профиль в приложении перед использованием этой функции.</string>
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
@@ -14,7 +15,7 @@
     <string name="pull_down_to_refresh">Потяните вниз для обновления!</string>
 
     <!-- Notifications -->
-    <string name="notification_channel_service">Служба v2rayNG</string>
+    <string name="notification_channel_service">Служба Бункер VPN</string>
     <string name="notification_channel_subscription_updates">Обновления подписок</string>
     <string name="notification_channel_connection_checks">Проверки соединения</string>
     <string name="notification_action_stop_v2ray">Остановить</string>
@@ -421,8 +422,8 @@
     <string name="connection_test_error">Ошибка проверки соединения: %s</string>
     <string name="connection_test_fail">Интернет недоступен</string>
     <string name="connection_test_error_status_code">Код ошибки: #%d</string>
-    <string name="connection_connected">Подключено.\nНажмите, чтобы проверить соединение.</string>
-    <string name="connection_not_connected">Нет соединения</string>
+    <string name="connection_connected">⚡ БУНКЕР АКТИВЕН • Нажмите для проверки</string>
+    <string name="connection_not_connected">🛡 ЗАЩИТА ОТКЛЮЧЕНА • Нажмите кнопку запуска</string>
     <string name="connection_running_task_left">Выполняется проверок: %s</string>
 
     <string name="import_subscription_success">Подписка импортирована</string>
