@@ -69,7 +69,12 @@ open class FmtBase {
         config.serviceName = queryParam["serviceName"]
         config.authority = queryParam["authority"]
         config.xhttpMode = queryParam["mode"]
-        config.xhttpExtra = queryParam["extra"]
+        val rawExtra = queryParam["extra"]
+        config.xhttpExtra = if (!rawExtra.isNullOrBlank() && (!rawExtra.startsWith("{") || rawExtra.endsWith("}"))) {
+            rawExtra
+        } else {
+            null
+        }
         config.finalMask = queryParam["fm"]
 
         config.security = queryParam["security"]

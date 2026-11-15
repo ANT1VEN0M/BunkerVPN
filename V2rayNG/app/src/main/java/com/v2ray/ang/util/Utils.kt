@@ -414,8 +414,20 @@ object Utils {
      * @return The URL string with illegal characters replaced.
      */
     fun fixIllegalUrl(str: String): String {
-        return str.replace(" ", "%20")
-            .replace("|", "%7C")
+        val hashIdx = str.indexOf('#')
+        if (hashIdx != -1) {
+            val base = str.substring(0, hashIdx).replace(" ", "%20").replace("|", "%7C")
+            val fragment = str.substring(hashIdx + 1)
+                .replace("#", "%23")
+                .replace(" ", "%20")
+                .replace("|", "%7C")
+                .replace("{", "%7B")
+                .replace("}", "%7D")
+                .replace("[", "%5B")
+                .replace("]", "%5D")
+            return "$base#$fragment"
+        }
+        return str.replace(" ", "%20").replace("|", "%7C")
     }
 
     /**
