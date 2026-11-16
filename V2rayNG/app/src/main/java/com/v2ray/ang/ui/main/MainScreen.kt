@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.ang.dto.entities.ProfileItem
+import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.ui.compose.LocalDarkTheme
 import com.v2ray.ang.ui.compose.QRCodeDialog
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -226,10 +227,29 @@ fun MainScreen(
                         )
                     }
 
+                    val activeGroup = groups.getOrNull(pagerState.currentPage.coerceIn(0, groups.lastIndex))
+                    val activeGroupId = activeGroup?.id.orEmpty()
+                    val activeGroupStateFlow = remember(activeGroupId) {
+                        mainViewModel.serverGroupState(activeGroupId)
+                    }
+                    val activeGroupState by activeGroupStateFlow.collectAsStateWithLifecycle()
+
+                    val realServers = remember(activeGroupState.servers) {
+                        activeGroupState.servers.filter { it.profile.configType != EConfigType.POLICYGROUP }
+                    }
+                    val totalServersCount = realServers.size
+                    val testedServersCount = realServers.count { it.testDelayMillis != 0L }
+                    val workingServersCount = realServers.count { it.testDelayMillis > 0L }
+
                     BunkerHeroHeader(
                         isRunning = isRunning,
                         statusText = displayText,
                         currentServerRemark = mainViewModel.getSelectedServerRemarks(),
+                        isTesting = uiState.isTesting,
+                        workingServersCount = workingServersCount,
+                        totalServersCount = totalServersCount,
+                        testedServersCount = testedServersCount,
+                        serversInGroup = realServers,
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },

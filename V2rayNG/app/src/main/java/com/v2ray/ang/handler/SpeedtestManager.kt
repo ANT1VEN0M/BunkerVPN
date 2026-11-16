@@ -31,6 +31,9 @@ object SpeedtestManager {
 
         try {
             socket = Socket()
+            socket.tcpNoDelay = true
+            socket.reuseAddress = true
+            socket.setSoLinger(true, 0)
             socket.connect(InetSocketAddress(url, port), timeoutMs)
 
             return System.currentTimeMillis() - start

@@ -252,6 +252,10 @@
     <string name="title_pref_dns_hosts">Сопоставления DNS (формат: domain:address,…)</string>
     <string name="summary_pref_dns_hosts">домен:адрес,…</string>
 
+    <string name="title_ping_test_settings">⚡ Проверка и пинг серверов</string>
+    <string name="title_ping_concurrency_preset">Скорость и потоки проверки</string>
+    <string name="summary_ping_concurrency_preset">Количество одновременных потоков для быстрого пинга</string>
+    <string name="title_ping_concurrency_custom">Точное число потоков (1–128)</string>
     <string name="title_pref_delay_test_url">Сервис проверки реальной задержки</string>
     <string name="summary_pref_delay_test_url" translatable="false">URL</string>
     <string name="title_pref_real_ping_concurrency">Параллельные тесты реальной задержки</string>

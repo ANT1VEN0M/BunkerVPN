@@ -49,16 +49,139 @@ import androidx.compose.ui.unit.sp
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.core.CoreServiceManager
+import com.v2ray.ang.dto.entities.ServersCache
 import com.v2ray.ang.extension.toSpeedString
 import com.v2ray.ang.ui.compose.colorFabActive
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+
+data class BunkerServiceItem(
+    val id: String,
+    val name: String,
+    val icon: String,
+    val color: Color,
+    val isAvailable: Boolean
+)
+
+private fun hasServiceToken(remark: String?, token: String, altKeywords: List<String>): Boolean {
+    if (remark.isNullOrBlank()) return false
+    val upper = remark.uppercase()
+    val pattern = Regex("""(^|[\s|×+,;\-_])${Regex.escape(token.uppercase())}([\s|×+,;\-_]|$)""")
+    if (pattern.containsMatchIn(upper)) return true
+    for (alt in altKeywords) {
+        if (upper.contains(alt.uppercase())) return true
+    }
+    return false
+}
+
+private fun detectBunkerServices(
+    currentRemark: String?,
+    serversInGroup: List<ServersCache>,
+    isRunning: Boolean,
+    workingCount: Int
+): List<BunkerServiceItem> {
+    val serviceDefs = listOf(
+        Triple("yt", "YouTube" to "▶", 0xFFEF4444 to listOf("YT", "YouTube")),
+        Triple("tg", "Telegram" to "✈", 0xFF06B6D4 to listOf("TG", "Telegram")),
+        Triple("gpt", "ChatGPT" to "🤖", 0xFF10B981 to listOf("GPT", "ChatGPT", "OpenAI")),
+        Triple("gem", "Gemini" to "✦", 0xFFA855F7 to listOf("GEM", "Gemini"))
+    )
+
+    val remarkHasAnyTag = serviceDefs.any { (_, _, meta) ->
+        val (_, tags) = meta
+        hasServiceToken(currentRemark, tags[0], tags.drop(1))
+    }
+
+    val groupHasAnyTag = serversInGroup.any { server ->
+        val rem = server.profile.remarks
+        serviceDefs.any { (_, _, meta) ->
+            val (_, tags) = meta
+            hasServiceToken(rem, tags[0], tags.drop(1))
+        }
+    }
+
+    val workingServers = serversInGroup.filter { it.testDelayMillis > 0L }
+    val candidateServers = if (workingServers.isNotEmpty()) workingServers else serversInGroup
+
+    return serviceDefs.map { (id, display, meta) ->
+        val (name, icon) = display
+        val (colorHex, tags) = meta
+        val color = Color(colorHex)
+        val mainTag = tags[0]
+        val altTags = tags.drop(1)
+
+        val isAvailable = when {
+            remarkHasAnyTag -> hasServiceToken(currentRemark, mainTag, altTags)
+            groupHasAnyTag -> {
+                candidateServers.any { hasServiceToken(it.profile.remarks, mainTag, altTags) }
+            }
+            else -> isRunning || workingCount > 0
+        }
+
+        BunkerServiceItem(
+            id = id,
+            name = name,
+            icon = icon,
+            color = color,
+            isAvailable = isAvailable
+        )
+    }
+}
+
+@Composable
+private fun ServiceBadge(
+    service: BunkerServiceItem,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = if (service.isAvailable) service.color.copy(alpha = 0.14f) else Color.White.copy(alpha = 0.04f),
+        border = BorderStroke(
+            1.dp,
+            if (service.isAvailable) service.color.copy(alpha = 0.55f) else Color.White.copy(alpha = 0.12f)
+        ),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = service.icon,
+                fontSize = 10.sp,
+                color = if (service.isAvailable) service.color else Color.White.copy(alpha = 0.3f)
+            )
+            Spacer(modifier = Modifier.width(3.dp))
+            Text(
+                text = service.name,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = if (service.isAvailable) FontWeight.Bold else FontWeight.Normal,
+                fontSize = 10.5.sp,
+                color = if (service.isAvailable) service.color else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
+            )
+            if (service.isAvailable) {
+                Spacer(modifier = Modifier.width(2.5.dp))
+                Text(
+                    text = "✓",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = service.color
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun BunkerHeroHeader(
     isRunning: Boolean,
     statusText: String,
     currentServerRemark: String? = null,
+    isTesting: Boolean = false,
+    workingServersCount: Int = 0,
+    totalServersCount: Int = 0,
+    testedServersCount: Int = 0,
+    serversInGroup: List<ServersCache> = emptyList(),
     onToggle: () -> Unit,
     onTestPing: () -> Unit,
     onSortByPing: () -> Unit,
@@ -198,7 +321,7 @@ fun BunkerHeroHeader(
             Spacer(modifier = Modifier.height(2.dp))
 
             // Server node or instructions
-            if (isRunning && !currentServerRemark.isNullOrBlank()) {
+            if (!currentServerRemark.isNullOrBlank()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
@@ -208,7 +331,7 @@ fun BunkerHeroHeader(
                         modifier = Modifier
                             .size(7.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFF10B981)) // glowing green dot
+                            .background(if (isRunning) Color(0xFF10B981) else Color(0xFF06B6D4))
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
@@ -228,6 +351,108 @@ fun BunkerHeroHeader(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
                     textAlign = TextAlign.Center
                 )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Real-time Server Testing & Health Counter
+            if (isTesting) {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFF0F172A).copy(alpha = 0.85f),
+                    border = BorderStroke(1.dp, Color(0xFF06B6D4).copy(alpha = pulseAlpha)),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(7.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF06B6D4))
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "⚡ Проверка серверов: $testedServersCount / $totalServersCount • Онлайн: $workingServersCount",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF38BDF8)
+                        )
+                    }
+                }
+            } else if (testedServersCount > 0) {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (workingServersCount > 0) Color(0xFF064E3B).copy(alpha = 0.45f) else Color(0xFF7F1D1D).copy(alpha = 0.45f),
+                    border = BorderStroke(
+                        1.dp,
+                        if (workingServersCount > 0) Color(0xFF10B981).copy(alpha = 0.55f) else Color(0xFFEF4444).copy(alpha = 0.55f)
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(7.dp)
+                                .clip(CircleShape)
+                                .background(if (workingServersCount > 0) Color(0xFF10B981) else Color(0xFFEF4444))
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        val percent = if (totalServersCount > 0) (workingServersCount * 100 / totalServersCount) else 0
+                        Text(
+                            text = if (workingServersCount > 0) {
+                                "⚡ Рабочих узлов: $workingServersCount из $totalServersCount онлайн ($percent%)"
+                            } else {
+                                "✕ Нет доступных серверов (0 из $totalServersCount)"
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = if (workingServersCount > 0) Color(0xFF34D399) else Color(0xFFF87171)
+                        )
+                    }
+                }
+            } else if (totalServersCount > 0) {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "📡 Серверов в группе: $totalServersCount • Нажмите «Пинг» для проверки",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            // Supported Services Cyber Row
+            val services = remember(currentServerRemark, serversInGroup, isRunning, workingServersCount) {
+                detectBunkerServices(currentServerRemark, serversInGroup, isRunning, workingServersCount)
+            }
+            Spacer(modifier = Modifier.height(7.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                services.forEach { service ->
+                    ServiceBadge(service = service)
+                }
             }
 
             // Realtime Live Traffic & Timer HUD

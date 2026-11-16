@@ -107,6 +107,7 @@ fun SettingsScreen(
     val systemVpnSettingsAvailable by viewModel.systemVpnSettingsAvailable.collectAsStateWithLifecycle()
     var uiSettingsExpanded by rememberSaveable { mutableStateOf(true) }
     var vpnSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var pingSettingsExpanded by rememberSaveable { mutableStateOf(true) }
     var coreSettingsExpanded by rememberSaveable { mutableStateOf(true) }
     var muxSettingsExpanded by rememberSaveable { mutableStateOf(false) }
     var fragmentSettingsExpanded by rememberSaveable { mutableStateOf(false) }
@@ -178,7 +179,7 @@ fun SettingsScreen(
 
     var isBooted by rememberMmkvBool(AppConfig.PREF_IS_BOOTED, false)
     var delayTestUrl by rememberMmkvString(AppConfig.PREF_DELAY_TEST_URL, "")
-    var realPingConcurrency by rememberMmkvString(AppConfig.PREF_REAL_PING_CONCURRENCY, "16")
+    var realPingConcurrency by rememberMmkvString(AppConfig.PREF_REAL_PING_CONCURRENCY, "32")
     var ipApiUrl by rememberMmkvString(AppConfig.PREF_IP_API_URL, "")
 
     val isVpn = mode == VPN
@@ -217,6 +218,15 @@ fun SettingsScreen(
     val observatoryLeastLoadMethodValues = stringArrayResource(R.array.observatory_least_load_method).toList()
     val modeEntries = stringArrayResource(R.array.mode_entries).toList()
     val modeValues = stringArrayResource(R.array.mode_value).toList()
+    val pingConcurrencyEntries = listOf(
+        "16 потоков (Стандарт)",
+        "32 потока (Быстро ⚡ По умолчанию)",
+        "48 потоков (Турбо 🚀)",
+        "64 потока (Максимум 🔥)",
+        "96 потоков (Экстрим 💥)",
+        "128 потоков (Ультра ⚡)"
+    )
+    val pingConcurrencyValues = listOf("16", "32", "48", "64", "96", "128")
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
@@ -397,6 +407,32 @@ fun SettingsScreen(
                     enabled = hevTunEnabled,
                     keyboardNumber = true,
                     onValueChanged = { hevTunRwTimeout = it }
+                )
+            }
+
+            CollapsiblePreferenceGroupHeader(
+                title = stringResource(R.string.title_ping_test_settings),
+                expanded = pingSettingsExpanded,
+                onExpandedChange = { pingSettingsExpanded = it }
+            )
+            if (pingSettingsExpanded) {
+                SettingsListItem(
+                    title = stringResource(R.string.title_ping_concurrency_preset),
+                    entries = pingConcurrencyEntries,
+                    values = pingConcurrencyValues,
+                    selectedValue = realPingConcurrency,
+                    onSelected = { realPingConcurrency = it }
+                )
+                SettingsEditItem(
+                    title = stringResource(R.string.title_ping_concurrency_custom),
+                    value = realPingConcurrency,
+                    keyboardNumber = true,
+                    onValueChanged = { realPingConcurrency = it }
+                )
+                SettingsEditItem(
+                    title = stringResource(R.string.title_pref_delay_test_url),
+                    value = delayTestUrl,
+                    onValueChanged = { delayTestUrl = it }
                 )
             }
 
@@ -651,17 +687,6 @@ fun SettingsScreen(
                         onClick = onSystemVpnSettingsClicked
                     )
                 }
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_delay_test_url),
-                    value = delayTestUrl,
-                    onValueChanged = { delayTestUrl = it }
-                )
-                SettingsEditItem(
-                    title = stringResource(R.string.title_pref_real_ping_concurrency),
-                    value = realPingConcurrency,
-                    keyboardNumber = true,
-                    onValueChanged = { realPingConcurrency = it }
-                )
                 SettingsEditItem(
                     title = stringResource(R.string.title_pref_ip_api_url),
                     value = ipApiUrl,

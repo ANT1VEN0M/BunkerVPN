@@ -252,6 +252,10 @@
     <string name="title_pref_dns_hosts">DNS host mappings (format: domain:address,…)</string>
     <string name="summary_pref_dns_hosts">domain:address,…</string>
 
+    <string name="title_ping_test_settings">Server Testing &amp; Speed</string>
+    <string name="title_ping_concurrency_preset">Ping test threads (speed)</string>
+    <string name="summary_ping_concurrency_preset">Number of parallel threads for testing servers</string>
+    <string name="title_ping_concurrency_custom">Custom thread count (1-128)</string>
     <string name="title_pref_delay_test_url">Real delay test URL</string>
     <string name="summary_pref_delay_test_url" translatable="false">URL</string>
     <string name="title_pref_real_ping_concurrency">Concurrent real-delay tests</string>
