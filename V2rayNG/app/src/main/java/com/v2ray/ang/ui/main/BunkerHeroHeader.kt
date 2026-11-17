@@ -1098,8 +1098,3 @@ fun BunkerHeroHeader(
         BunkerThemeDialog(onDismissRequest = { showThemeDialog = false })
     }
 }
-
-    if (showThemeDialog) {
-        BunkerThemeDialog(onDismissRequest = { showThemeDialog = false })
-    }
-}
