@@ -64,7 +64,7 @@ class WidgetProvider : AppWidgetProvider() {
 
             val selectedGuid = MmkvManager.getSelectServer()
             val currentConfig = MmkvManager.decodeServerConfig(selectedGuid)
-            val serverName = currentConfig?.remarks ?: "Бункер Кота ⚡"
+            val serverName = currentConfig?.remarks?.takeIf { it.isNotBlank() } ?: "Бункер Кота ⚡"
 
             if (isRunning) {
                 val (downBps, upBps) = MmkvManager.decodeTrafficSpeed()
@@ -81,7 +81,8 @@ class WidgetProvider : AppWidgetProvider() {
                 remoteViews.setInt(R.id.layout_widget_card, "setBackgroundResource", R.drawable.bg_cyber_widget_inactive)
                 remoteViews.setTextViewText(R.id.tv_widget_status, "⚪ БУНКЕР ОТКЛЮЧЕН")
                 remoteViews.setTextColor(R.id.tv_widget_status, 0xFF94A3B8.toInt())
-                remoteViews.setTextViewText(R.id.tv_widget_server, serverName.ifBlank { "Нажмите для подключения" })
+                val displayInactiveServer = if (serverName.isNotBlank()) serverName else "Нажмите для подключения"
+                remoteViews.setTextViewText(R.id.tv_widget_server, displayInactiveServer)
                 remoteViews.setTextViewText(R.id.tv_widget_speed, "Узлы готовы к работе")
                 remoteViews.setInt(R.id.layout_switch, "setBackgroundResource", R.drawable.bg_cyber_button_inactive)
                 remoteViews.setInt(R.id.image_switch, "setImageResource", R.drawable.ic_play_24dp)

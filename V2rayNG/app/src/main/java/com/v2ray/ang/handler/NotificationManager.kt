@@ -312,7 +312,7 @@ object NotificationManager {
         val currentDownSpeed = ((proxyDownlink + directDownlink) / sinceLastQueryInSeconds).toLong()
         val currentUpSpeed = ((proxyUplink + directUplink) / sinceLastQueryInSeconds).toLong()
         MmkvManager.encodeTrafficSpeed(currentDownSpeed, currentUpSpeed)
-        com.v2ray.ang.receiver.WidgetProvider.updateAllWidgets(service)
+        getService()?.let { com.v2ray.ang.receiver.WidgetProvider.updateAllWidgets(it) }
 
         val zeroSpeed = proxyTotal + directTotal == 0L
         if (!zeroSpeed || !lastZeroSpeed) {

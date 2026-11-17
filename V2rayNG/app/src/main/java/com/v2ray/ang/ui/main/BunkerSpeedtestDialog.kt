@@ -54,7 +54,7 @@ import java.util.Locale
 fun BunkerSpeedtestDialog(
     show: Boolean,
     onDismiss: () -> Unit,
-    serverName: String,
+    serverName: String? = null,
     proxyPort: Int = 0
 ) {
     if (!show) return
@@ -122,7 +122,7 @@ fun BunkerSpeedtestDialog(
 
                 // Server Subtitle
                 Text(
-                    text = serverName.ifBlank { "Сервер Бункера" },
+                    text = serverName?.takeIf { it.isNotBlank() } ?: "Сервер Бункера",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFF94A3B8),
                     maxLines = 1,

@@ -68,20 +68,21 @@ object BunkerSpeedtestManager {
 
         try {
             val url = URL(SPEED_TEST_URL)
-            urlConnection = if (proxyPort > 0) {
+            val conn = if (proxyPort > 0) {
                 val proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress("127.0.0.1", proxyPort))
                 url.openConnection(proxy) as HttpURLConnection
             } else {
                 url.openConnection() as HttpURLConnection
             }
+            urlConnection = conn
 
-            urlConnection.connectTimeout = 8000
-            urlConnection.readTimeout = 12000
-            urlConnection.setRequestProperty("User-Agent", "BunkerVPN-Speedtest/1.2.3")
-            urlConnection.setRequestProperty("Accept-Encoding", "identity")
-            urlConnection.instanceFollowRedirects = true
+            conn.connectTimeout = 8000
+            conn.readTimeout = 12000
+            conn.setRequestProperty("User-Agent", "BunkerVPN-Speedtest/1.2.3")
+            conn.setRequestProperty("Accept-Encoding", "identity")
+            conn.instanceFollowRedirects = true
 
-            val responseCode = urlConnection.responseCode
+            val responseCode = conn.responseCode
             if (responseCode !in 200..299) {
                 emit(SpeedtestProgress(
                     stage = SpeedtestStage.FAILED,
@@ -91,7 +92,8 @@ object BunkerSpeedtestManager {
                 return@flow
             }
 
-            inputStream = urlConnection.inputStream
+            val stream = conn.inputStream
+            inputStream = stream
             val buffer = ByteArray(32768)
             var totalRead = 0L
             val testStart = System.currentTimeMillis()
@@ -99,7 +101,7 @@ object BunkerSpeedtestManager {
             var lastReadBytes = 0L
 
             while (true) {
-                val read = inputStream.read(buffer)
+                val read = stream.read(buffer)
                 if (read <= 0) break
                 totalRead += read
 
