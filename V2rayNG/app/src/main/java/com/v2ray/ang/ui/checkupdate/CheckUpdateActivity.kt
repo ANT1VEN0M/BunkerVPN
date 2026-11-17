@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.ang.BuildConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.core.CoreNativeManager
+import com.v2ray.ang.handler.InAppUpdateDialog
 import com.v2ray.ang.ui.base.BaseComponentActivity
 import com.v2ray.ang.ui.compose.AppTopBar
 import com.v2ray.ang.ui.compose.NavigationBarsSpacer
@@ -99,33 +100,11 @@ fun CheckUpdateScreen(
 
     if (showUpdateDialog && updateResult != null) {
         val result = updateResult!!
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissUpdateDialog() },
-            title = { Text(stringResource(R.string.update_new_version_found, result.latestVersion ?: "")) },
-            text = {
-                val scrollState = rememberScrollState()
-                Text(
-                    text = result.releaseNotes.orEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(scrollState)
-                        .verticalScrollbar(scrollState)
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.dismissUpdateDialog()
-                    result.downloadUrl?.let { Utils.openUri(context, it) }
-                }) {
-                    Text(stringResource(R.string.update_now))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.dismissUpdateDialog() }) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.surface
+        InAppUpdateDialog(
+            latestVersion = result.latestVersion ?: "",
+            releaseNotes = result.releaseNotes,
+            downloadUrl = result.downloadUrl ?: "",
+            onDismissRequest = { viewModel.dismissUpdateDialog() }
         )
     }
 }

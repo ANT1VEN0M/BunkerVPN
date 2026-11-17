@@ -43,6 +43,7 @@ import com.v2ray.ang.core.LauncherManager
 import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.extension.toast
+import com.v2ray.ang.handler.InAppUpdateDialog
 import com.v2ray.ang.handler.SettingsManager
 import com.v2ray.ang.handler.UpdateCheckerManager
 import com.v2ray.ang.ui.compose.LocalDarkTheme
@@ -77,6 +78,8 @@ fun MainScreen(
     }
     var availableUpdateVersion by remember { mutableStateOf<String?>(null) }
     var updateDownloadUrl by remember { mutableStateOf<String?>(null) }
+    var updateReleaseNotes by remember { mutableStateOf<String?>(null) }
+    var showInAppUpdateDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
@@ -86,6 +89,7 @@ fun MainScreen(
                     withContext(Dispatchers.Main) {
                         availableUpdateVersion = result.latestVersion
                         updateDownloadUrl = result.downloadUrl
+                        updateReleaseNotes = result.releaseNotes
                     }
                 }
             }
@@ -107,12 +111,7 @@ fun MainScreen(
     }
 
     val handleUpdateClick: () -> Unit = {
-        updateDownloadUrl?.let { url ->
-            runCatching {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                context.startActivity(intent)
-            }
-        }
+        showInAppUpdateDialog = true
     }
 
     var showSearch by remember { mutableStateOf(false) }
@@ -209,6 +208,15 @@ fun MainScreen(
     }
     if (shareQRCodeBitmap != null) {
         QRCodeDialog(bitmap = shareQRCodeBitmap, onDismiss = { onAction(MainAction.DismissQRCodeDialog) })
+    }
+
+    if (showInAppUpdateDialog && !availableUpdateVersion.isNullOrBlank() && !updateDownloadUrl.isNullOrBlank()) {
+        InAppUpdateDialog(
+            latestVersion = availableUpdateVersion!!,
+            releaseNotes = updateReleaseNotes,
+            downloadUrl = updateDownloadUrl!!,
+            onDismissRequest = { showInAppUpdateDialog = false }
+        )
     }
 
     ModalNavigationDrawer(
