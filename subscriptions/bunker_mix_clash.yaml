@@ -1,0 +1,2306 @@
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: rule
+log-level: info
+unified-delay: true
+tcp-concurrent: true
+proxies:
+- name: 'BUNKER ⚡ | Швеция 🇸🇪 #001 | YT×TG×GPT×GEM | 60ms'
+  type: vless
+  server: 136.148.215.248
+  port: 25191
+  uuid: 62995b2a-8f82-41f8-ac80-dfdfc1253e76
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: _Cb2FzFDVi9blwCb_5V0NZue6wt-U6GL0N_-OX8NGGA
+    short-id: 55328e423218ee9b
+  servername: a8687er.se2.h1clayd.click
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /astral-edge-h1
+    headers:
+      Host: 136.148.215.248
+  http-opts:
+    path:
+    - /astral-edge-h1
+    headers:
+      Host:
+      - 136.148.215.248
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #002 | YT×TG×GPT×GEM | 68ms'
+  type: vless
+  server: 85.14.243.91
+  port: 8443
+  uuid: e75ad2eb-6c1f-45ce-8023-f5f10875df66
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: dPnrpjfG_vzjH20n0W7qNbWB5-dMxNSjeo2BpIsrXAE
+    short-id: bca958b54462eba5
+  servername: edge-7577e858223c.eu-cdn539.com
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: workspace6c036b2914c6
+- name: 'BUNKER ⚡ | Бельгия 🇧🇪 #003 | YT×TG×GPT×GEM | 76ms'
+  type: vless
+  server: 31.77.237.165
+  port: 443
+  uuid: e40b2b8e-492b-4982-aaaf-59e76c52a7fe
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: dh8czg12AdXJyLQSzSNI7fNWnFCbbDnkOsRx02_eUmk
+    short-id: 536c2528b834d390
+  servername: passport.yandex.ru
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Польша 🇵🇱 #004 | YT×TG×GPT×GEM | 84ms'
+  type: vless
+  server: 31.76.125.19
+  port: 8443
+  uuid: e40b2b8e-492b-4982-aaaf-59e76c52a7fe
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: -WS9_PoYmJybZfepl6md_S2kbIWphQMMXap5MySgu3c
+    short-id: ae040cf4656c2be9
+  servername: passport.yandex.ru
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Эстония 🇪🇪 #005 | YT×TG×GPT×GEM | 86ms'
+  type: vless
+  server: 185.155.55.12
+  port: 8443
+  uuid: 5c09e56b-f97f-4360-8f01-eb4d39202095
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE
+    short-id: 661766b2bcef440a
+  servername: ee-nf.reddotcorp.org
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Финляндия 🇫🇮 #006 | YT×TG×GPT×GEM | 99ms'
+  type: vless
+  server: 196.196.204.162
+  port: 443
+  uuid: 40ec5509-5da9-44b8-bb25-e6091ac9c6db
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: eYbvMPFfKx6p-MHADvbHFh9mwW7Da0i2pSTlJFY56iE
+    short-id: 7d423daf022cf4a1
+  servername: 8e526cg.fi12.h1clayd.click
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: 5e50d99a1ea8
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #007 | YT×TG×GPT×GEM | 100ms'
+  type: vless
+  server: ns.uu.1omg1.click
+  port: 443
+  uuid: 02ac275e-7604-4f62-b8cf-5045a8227ec9
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc
+    short-id: ''
+  servername: id.vk.com
+  client-fingerprint: safari
+  grpc-opts:
+    grpc-service-name: vless-grpc-reality
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #008 | YT×TG×GPT×GEM | 100ms'
+  type: vless
+  server: 81.163.22.118
+  port: 443
+  uuid: ab698db1-25d1-4e70-838c-5a79c9cf6c12
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: r3YuHAE5GxO2URYSEJGfOmS8gB2alPns-dKg1vFp1So
+    short-id: a179
+  servername: get.videostreamer.ru
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #009 | YT×TG×GPT×GEM | 101ms'
+  type: vless
+  server: 193.233.246.203
+  port: 443
+  uuid: f3a227cb-8a8b-4ccb-b613-9143c4a1346c
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: _JbW9ikiVfyugqgzc8nSqBLapmM2XyW7FSm0XEdi7HY
+    short-id: ff71e23db9448b9d
+  servername: ru-gr2.fluxnode777.ru
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #010 | YT×TG×GPT×GEM | 106ms'
+  type: vless
+  server: 191.217.217.82
+  port: 443
+  uuid: 372931d3-91c5-4564-b79c-041302de9a17
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 9UG9zvrDpiPgY_J0dvB-n10ygEw3FzJ2qT8PFtITUBE
+    short-id: e06e30590f288e0f
+  servername: nl6.soshelper.space
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Австрия 🇦🇹 #011 | YT×TG×GPT×GEM | 108ms'
+  type: vless
+  server: 50.7.115.243
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: Mwczt2QjgQo3q8N10PVx8bWNubwiNhgka5GvxUy-GHQ
+    short-id: 139a95f1
+  servername: scree.rowanmere.top
+  client-fingerprint: safari
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Северная Корея 🇰🇵 #012 | YT×TG×GPT×GEM | 116ms'
+  type: vless
+  server: 80.47.10.106
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: a7c92e4b10d6f835
+  servername: pl8.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #013 | YT×TG×GPT×GEM | 119ms'
+  type: vless
+  server: 154.86.119.227
+  port: 61374
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: be.golangwikito.cfd
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - be.golangwikito.cfd
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #014 | YT×TG×GPT×GEM | 135ms'
+  type: vless
+  server: 154.86.119.227
+  port: 61374
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: be.golangwikito.cfd
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - be.golangwikito.cfd
+- name: 'BUNKER ⚡ | Литва 🇱🇹 #015 | YT×TG×GPT×GEM | 137ms'
+  type: vless
+  server: 84.32.248.124
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: a7d309e4c16b825f
+  servername: net-io-api.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #016 | YT×TG×GPT×GEM | 148ms'
+  type: vless
+  server: 154.86.119.227
+  port: 443
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 6sEquzhND4g7HGZptDdnO-B0UjAKib9Pcjkd2_IoC2s
+    short-id: 5f0e533560ec8582
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #017 | YT×TG×GPT×GEM | 153ms'
+  type: vless
+  server: 2.27.40.46
+  port: 443
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: ZqVz1kWNxh_5zQ5PPkoPHoaXQOvppM0ZyIo8uKp2dCg
+    short-id: a3565610aa574a6e
+  servername: nl-s-2-b1.pythonmakemigreat.wiki
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Израиль 🇮🇱 #018 | YT×TG×GPT×GEM | 154ms'
+  type: vless
+  server: 45.150.108.180
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: Jw--SSPecJpt9-lke7H9Bdr8F73xxtvC_5ZrxiWRog0
+    short-id: dc1bf50b0e0a
+  servername: il1.gofizzin.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #019 | YT×TG×GPT×GEM | 155ms'
+  type: vless
+  server: 46.8.21.88
+  port: 12443
+  uuid: df198807-16c0-4ad9-b6e5-db6e97f42b03
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: kDEc42JBZxig3BrLD3V1ofs3oJZk15-ANWN-rM0JW10
+    short-id: f28145401b4f633a
+  servername: ligastavok.ru
+  client-fingerprint: chrome
+  xhttp-opts:
+    path: /
+    headers:
+      Host: 46.8.21.88
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - 46.8.21.88
+- name: 'BUNKER ⚡ | США 🇺🇸 #020 | YT×TG×GPT×GEM | 168ms'
+  type: vless
+  server: 50.117.3.35
+  port: 443
+  uuid: e40b2b8e-492b-4982-aaaf-59e76c52a7fe
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: nkvbLzqp1MazY6gb2AbpLoH06jvIQYJdDa9ntjOVqEY
+    short-id: 85c9c30cdaf5249b
+  servername: f8a562b6570c.j.cloudfront.hls.ttvnw.net
+  client-fingerprint: edge
+  grpc-opts:
+    grpc-service-name: simplegrpc
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #021 | YT×TG×GPT×GEM | 181ms'
+  type: vless
+  server: 154.86.119.227
+  port: 61374
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: be.golangwikito.cfd
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - be.golangwikito.cfd
+- name: 'BUNKER ⚡ | США 🇺🇸 #022 | YT×TG×GPT×GEM | 183ms'
+  type: vless
+  server: 3.144.167.194
+  port: 443
+  uuid: 8086176e-450a-4afa-97b0-3728ba37739f
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: pImGK1ICM3v2O8cbr3nuyrw1b9IHGzS25CSF-KbkW2w
+    short-id: 73044417e9
+  servername: corporate.amazon.com
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Финляндия 🇫🇮 #023 | YT×TG×GPT×GEM | 196ms'
+  type: vless
+  server: 196.196.204.162
+  port: 443
+  uuid: 40ec5509-5da9-44b8-bb25-e6091ac9c6db
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: -mgSf2ljCCMUR7eC6te0-Nx84SRdoEMluCC2anPbmw8
+    short-id: adb0e7cc1b0f66d4
+  servername: 485d74x.fi12.h1clayd.click
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /14a1d164b7df
+    headers:
+      Host: 196.196.204.162
+  http-opts:
+    path:
+    - /14a1d164b7df
+    headers:
+      Host:
+      - 196.196.204.162
+- name: 'BUNKER ⚡ | Литва 🇱🇹 #024 | YT×TG×GPT×GEM | 197ms'
+  type: vless
+  server: 84.32.248.124
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: a7d309e4c16b825f
+  servername: net-io-api.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #025 | YT×TG×GPT×GEM | 200ms'
+  type: vless
+  server: 82.148.244.55
+  port: 8443
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: assets.study.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: 82.148.244.55
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - 82.148.244.55
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #026 | YT×TG×GPT×GEM | 202ms'
+  type: vless
+  server: 153.56.230.77
+  port: 25155
+  uuid: 62995b2a-8f82-41f8-ac80-dfdfc1253e76
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: I4mzdgz1mvaVDtkDD9AzK1ZJkEaQu_GYEbGIfm_a5UM
+    short-id: 0ebb438948cdf356
+  servername: 48688cr.us12.h1clayd.click
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /astral-edge-h1
+    headers:
+      Host: 153.56.230.77
+  http-opts:
+    path:
+    - /astral-edge-h1
+    headers:
+      Host:
+      - 153.56.230.77
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #027 | YT×TG×GPT×GEM | 202ms'
+  type: vless
+  server: 154.86.119.227
+  port: 61374
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: be.golangwikito.cfd
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - be.golangwikito.cfd
+- name: 'BUNKER ⚡ | Турция 🇹🇷 #028 | YT×TG×GPT×GEM | 207ms'
+  type: vless
+  server: 45.141.148.46
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 868419504747f6de
+  servername: tr1b.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | США 🇺🇸 #029 | YT×TG×GPT×GEM | 241ms'
+  type: vless
+  server: 84.32.54.237
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 868419504747f6de
+  servername: rly-gw-cfg.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #030 | YT×TG×GPT×GEM | 243ms'
+  type: vless
+  server: 154.86.119.227
+  port: 61374
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: be.golangwikito.cfd
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - be.golangwikito.cfd
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #031 | YT×TG×GPT×GEM | 251ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21018
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #032 | YT×TG×GPT×GEM | 255ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21018
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #033 | YT×TG×GPT×GEM | 260ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21019
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | США 🇺🇸 #034 | YT×TG×GPT×GEM | 270ms'
+  type: vless
+  server: 152.232.62.82
+  port: 443
+  uuid: 239b816e-2095-46fb-a33b-1f565b6ed3ac
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: r5WB5FnSCt4eeBC1FJMfkWHbzsMuabo0Rc6wuAhlZUs
+    short-id: a8
+  servername: api.videobereg.cc
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #035 | YT×TG×GPT×GEM | 271ms'
+  type: vless
+  server: 67.159.52.80
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: ZW0yTM5nfPIQ68ihbjYoIGxvypA6fAU8xjDk2PMVwwY
+    short-id: e7cea6ccd340d2d7
+  servername: tarn.glenmarsh.top
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #036 | YT×TG×GPT×GEM | 284ms'
+  type: vless
+  server: 50.7.21.92
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: xU_Pw9119W3uGKLCBU4lTBCwcazzsAsuoUVxLWSJ-BE
+    short-id: 807fa7754d
+  servername: gorse.heathcombe.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #037 | YT×TG×GPT×GEM | 331ms'
+  type: vless
+  server: 50.7.21.92
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: xU_Pw9119W3uGKLCBU4lTBCwcazzsAsuoUVxLWSJ-BE
+    short-id: 807fa7754d
+  servername: gorse.heathcombe.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #038 | YT×TG×GPT×GEM | 338ms'
+  type: vless
+  server: 50.7.21.22
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: QHLG_9UrJNKH86yMVDRbnQgbtgfPc-iJEyKo6p3Fo1k
+    short-id: bd3d2095
+  servername: ling.heathcombe.top
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Турция 🇹🇷 #039 | YT×TG×GPT×GEM | 346ms'
+  type: vless
+  server: 45.141.148.46
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 868419504747f6de
+  servername: tr1b.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #040 | YT×TG×GPT×GEM | 352ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21018
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #041 | YT×TG×GPT×GEM | 352ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21019
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #042 | YT×TG×GPT×GEM | 364ms'
+  type: vless
+  server: 37.9.4.62
+  port: 443
+  uuid: 88e79aa6-f431-4453-8dcc-652a0c747198
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: vP4XeQ-z8LYtkSz1SCAxRMAEPreaHspoXm2nt0okQVw
+    short-id: c7674e
+  servername: 360.yandex.ru
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #043 | YT×TG×GPT×GEM | 396ms'
+  type: vmess
+  server: dog-us.kunlun01dns.com
+  port: 21009
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | США 🇺🇸 #044 | YT×TG×GPT×GEM | 399ms'
+  type: vmess
+  server: dog-us.kunlun01dns.com
+  port: 21009
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Швеция 🇸🇪 #045 | YT×TG×GPT×GEM | 422ms'
+  type: vless
+  server: 185.134.201.254
+  port: 443
+  uuid: 88e79aa6-f431-4453-8dcc-652a0c747198
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: U5oHsZbfXVvUqPS2G5lrM3lrEtDVvdxlSloHkO6cf0Y
+    short-id: 30ed95
+  servername: tidalcore.dev
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #046 | YT×TG×GPT×GEM | 514ms'
+  type: vless
+  server: 50.7.21.22
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: QHLG_9UrJNKH86yMVDRbnQgbtgfPc-iJEyKo6p3Fo1k
+    short-id: bd3d2095
+  servername: ling.heathcombe.top
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #047 | YT×TG×GPT×GEM | 578ms'
+  type: vless
+  server: 92.255.58.59
+  port: 443
+  uuid: a30903dc-1bf0-0001-8b1b-603a3a56211c
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 344f83372596eea2
+  servername: api-gw-cfg.galioncc.com
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #048 | YT×TG×GPT×GEM | 678ms'
+  type: vless
+  server: 37.9.4.62
+  port: 443
+  uuid: 88e79aa6-f431-4453-8dcc-652a0c747198
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: vP4XeQ-z8LYtkSz1SCAxRMAEPreaHspoXm2nt0okQVw
+    short-id: c7674e
+  servername: 360.yandex.ru
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Тайвань 🇹🇼 #049 | YT×TG×GPT×GEM | 754ms'
+  type: vless
+  server: 114.37.105.51
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 3OEqq4MiCKoUP5yKBOmZsjuwg4i8A1fb8WrEDOFQek8
+    short-id: 2c14765d0b
+  servername: tw1.gofizzin.com
+  client-fingerprint: edge
+- name: 'BUNKER ⚡ | Тайвань 🇹🇼 #050 | YT×TG×GPT×GEM | 914ms'
+  type: vless
+  server: 114.37.105.51
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 3OEqq4MiCKoUP5yKBOmZsjuwg4i8A1fb8WrEDOFQek8
+    short-id: 2c14765d0b
+  servername: tw1.gofizzin.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #051 | YT×TG×GPT×GEM | 981ms'
+  type: vless
+  server: 195.110.15.19
+  port: 43000
+  uuid: a75b8ca1-3bbe-43fc-87f6-e153bf192f83
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: KeFxVlEEuDN8alZBsrXiX9yrcY2-H7lcdzXWjtrIWy0
+    short-id: a9c3bda4
+  servername: 195.110.15.19
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Северная Корея 🇰🇵 #052 | YT×TG×GPT×GEM | 1032ms'
+  type: vless
+  server: 92.255.58.59
+  port: 443
+  uuid: a30903dc-1bf0-0001-8b1b-603a3a56211c
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 344f83372596eea2
+  servername: api-gw-cfg.galioncc.com
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #053 | YT×TG×GPT×GEM | 1151ms'
+  type: vless
+  server: 92.255.58.59
+  port: 443
+  uuid: a30903dc-1bf0-0001-8b1b-603a3a56211c
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 344f83372596eea2
+  servername: api-gw-cfg.galioncc.com
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #054 | YT×TG×GPT×GEM | 1567ms'
+  type: vless
+  server: 178.18.158.17
+  port: 43000
+  uuid: 0809eed6-5204-49b8-8312-b82a10024022
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: U_dxFnbfesmgSwL-SlpvGYFbpY5vlJ1kb52knlCXkkI
+    short-id: 8cfe1563
+  servername: 178.18.158.17
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #055 | YT×TG×GPT×GEM | 2481ms'
+  type: vless
+  server: 154.86.119.227
+  port: 61374
+  uuid: f8d52ece-fad4-478d-875d-df6eed3befa7
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: QrNs0ew7snHqLfpVXS9RAhlRzgAzzGZK9fXmDcx9xHI
+    short-id: ''
+  servername: be.golangwikito.cfd
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: be.golangwikito.cfd
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - be.golangwikito.cfd
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #056 | YT×TG×GPT×GEM | 3494ms'
+  type: vless
+  server: 50.7.89.67
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: afJl8rD_HbWjSxuktnRgL5m1yLGHr4Zgw0oLGCARbQ8
+    short-id: 93420fadc22c9df7
+  servername: grove.oakhollow.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #057 | YT×TG×GPT | 56ms'
+  type: vless
+  server: 48.103.120.4
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 868419504747f6de
+  servername: net-svc-io.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #058 | YT×TG×GPT | 58ms'
+  type: vless
+  server: 37.49.225.92
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: 868419504747f6de
+  servername: ns-gw-mgr.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #059 | YT×TG×GPT | 65ms'
+  type: ss
+  server: 135.220.178.46
+  port: 46303
+  cipher: chacha20-ietf-poly1305
+  password: zZMNTGpPl38ASlbI1EKOBJ
+  udp: true
+- name: 'BUNKER ⚡ | Эстония 🇪🇪 #060 | YT×TG×GPT | 66ms'
+  type: vless
+  server: 185.155.55.12
+  port: 8443
+  uuid: 5c09e56b-f97f-4360-8f01-eb4d39202095
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE
+    short-id: 661766b2bcef440a
+  servername: ee-nf.reddotcorp.org
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Иран 🇮🇷 #061 | YT×TG×GPT | 68ms'
+  type: vless
+  server: ee.puflino.com
+  port: 8443
+  uuid: 5c09e56b-f97f-4360-8f01-eb4d39202095
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE
+    short-id: 661766b2bcef440a
+  servername: ee-nf.reddotcorp.org
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Австрия 🇦🇹 #062 | YT×TG×GPT | 84ms'
+  type: vless
+  server: 50.7.115.243
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: Mwczt2QjgQo3q8N10PVx8bWNubwiNhgka5GvxUy-GHQ
+    short-id: 139a95f1
+  servername: scree.rowanmere.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #063 | YT×TG×GPT | 94ms'
+  type: vless
+  server: 88.216.211.36
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: c4e7a1902b8d6f35
+  servername: de8.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #064 | YT×TG×GPT | 95ms'
+  type: vless
+  server: 94.183.179.212
+  port: 443
+  uuid: 372931d3-91c5-4564-b79c-041302de9a17
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 9UG9zvrDpiPgY_J0dvB-n10ygEw3FzJ2qT8PFtITUBE
+    short-id: e06e30590f288e0f
+  servername: gb1.soshelper.space
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Иран 🇮🇷 #065 | YT×TG×GEM | 99ms'
+  type: vless
+  server: 5.253.86.3
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 51ZCyVOxvcD_smARtd9mV-3Rh_WurOzMGRFxk9u2Kgo
+    short-id: fa1754221e4c5f9e
+  servername: nl3.gofizz.in
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Эстония 🇪🇪 #066 | YT×TG×GPT | 100ms'
+  type: vless
+  server: ee.puflino.com
+  port: 8443
+  uuid: 5c09e56b-f97f-4360-8f01-eb4d39202095
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: ApMfbcEyBOve6DxXoBNVu3bCCzQ7XCEYB4ummsDtTBE
+    short-id: 661766b2bcef440a
+  servername: ee-nf.reddotcorp.org
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #067 | YT×TG×GPT | 101ms'
+  type: vless
+  server: 94.183.179.64
+  port: 443
+  uuid: 372931d3-91c5-4564-b79c-041302de9a17
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 9UG9zvrDpiPgY_J0dvB-n10ygEw3FzJ2qT8PFtITUBE
+    short-id: e06e30590f288e0f
+  servername: gb2.soshelper.space
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #068 | YT×TG×GPT | 103ms'
+  type: vless
+  server: 31.77.28.173
+  port: 443
+  uuid: 372931d3-91c5-4564-b79c-041302de9a17
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 9UG9zvrDpiPgY_J0dvB-n10ygEw3FzJ2qT8PFtITUBE
+    short-id: e06e30590f288e0f
+  servername: nl4.soshelper.space
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #069 | YT×TG×GPT | 116ms'
+  type: vless
+  server: 45.157.235.218
+  port: 443
+  uuid: 4618cebd-e1e9-45c3-be98-d9d6e3ee8bef
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: C_DlyXDDS4fWcAlxb-6O7LBKtq28fg2slCrH5tPaTQ4
+    short-id: 16cea10606a4e401
+  servername: a566d1g.de18.h1clayd.click
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: 98b9c56e8ebb
+- name: 'BUNKER ⚡ | Израиль 🇮🇱 #070 | YT×TG×GPT | 135ms'
+  type: vless
+  server: 45.150.108.180
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: Jw--SSPecJpt9-lke7H9Bdr8F73xxtvC_5ZrxiWRog0
+    short-id: dc1bf50b0e0a
+  servername: il1.gofizzin.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Израиль 🇮🇱 #071 | YT×TG×GPT | 139ms'
+  type: vless
+  server: 45.150.108.180
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: Jw--SSPecJpt9-lke7H9Bdr8F73xxtvC_5ZrxiWRog0
+    short-id: dc1bf50b0e0a
+  servername: il1.gofizzin.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Словения 🇸🇮 #072 | TG×GPT×GEM | 145ms'
+  type: vless
+  server: 194.55.239.195
+  port: 443
+  uuid: 75a8cc15-fa52-4067-949f-42a89859b54f
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: oJpmeGMTN9jhcq4ORR_gtU5_8WyfMsCCWE3Wq3x9JQ4
+    short-id: 9cb9497322
+  servername: stats.24catvpn.ru
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Израиль 🇮🇱 #073 | YT×TG×GPT | 149ms'
+  type: vless
+  server: 45.150.108.180
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: Jw--SSPecJpt9-lke7H9Bdr8F73xxtvC_5ZrxiWRog0
+    short-id: dc1bf50b0e0a
+  servername: il1.gofizzin.com
+  client-fingerprint: chrome
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #074 | YT×TG×GPT | 159ms'
+  type: vless
+  server: 88.216.211.36
+  port: 443
+  uuid: a30903dc-1bf0-4be5-8b1b-603a3a56211c
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: drl7nndYdfzZY1aQ0eUAWmNV0nsHig2uDnu9siy9biQ
+    short-id: c4e7a1902b8d6f35
+  servername: de8.galioncc.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #075 | YT×TG×GPT | 176ms'
+  type: vless
+  server: 91.99.18.148
+  port: 8080
+  uuid: 7e8c5916-2070-4013-864d-be767d4e2fd7
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: WmXizpmTbo93c-OF9igidRjiO8MZcVl10wyAEB-k9wE
+    short-id: 74ada7413ab3047a
+  servername: tgju.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #076 | YT×TG×GPT | 287ms'
+  type: vless
+  server: 50.7.21.44
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: ZW0yTM5nfPIQ68ihbjYoIGxvypA6fAU8xjDk2PMVwwY
+    short-id: e7cea6ccd340d2d7
+  servername: holt.glenmarsh.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #077 | YT×TG×GPT | 292ms'
+  type: vless
+  server: 31.77.28.68
+  port: 443
+  uuid: 372931d3-91c5-4564-b79c-041302de9a17
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: mEo4kHPpRns7efJfVW1G-gDEsPag0jELFQK-HIwrvjY
+    short-id: 6562cf617728186e
+  servername: nl2.soshelper.space
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Сингапур 🇸🇬 #078 | YT×TG×GPT | 311ms'
+  type: vless
+  server: 50.7.21.252
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 9z2gIqli8mHcRY5WFxUrlHcU-5Td_x0teoCDIAq1fSs
+    short-id: 95c8616d6286
+  servername: moss.heathcombe.top
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Андорра 🇦🇩 #079 | YT×TG×GEM | 313ms'
+  type: vless
+  server: ad6ea328-ace0-45e1-8b69-e698536fa709.67dc6e59-0fd8-4ca5-ba29-26a8817e203b.byteprivatelink.com
+  port: 443
+  uuid: 7f6ee01e-c243-4c84-9cf2-7d8ecc0da202
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: POkinloWKlvN-mG2Xgh4vBOFI9X4DGnBce9QDtIft0w
+    short-id: 493bac61
+  servername: tw.archive.ubuntu.com
+  client-fingerprint: ios
+- name: 'BUNKER ⚡ | Иран 🇮🇷 #080 | TG×GPT×GEM | 382ms'
+  type: vless
+  server: main.jarbook.net
+  port: 443
+  uuid: 2232d904-8e6a-4202-8240-6efd8aec02e9
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: gJoMHh97teLxW92Z_3DI8qdSulqBlb9sW6mthYPEEBk
+    short-id: d889ac17
+  servername: main.jarbook.net
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | США 🇺🇸 #081 | TG×GPT×GEM | 415ms'
+  type: vmess
+  server: dog-us.kunlun01dns.com
+  port: 21010
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #082 | YT×TG×GPT | 542ms'
+  type: vless
+  server: 185.206.92.107
+  port: 3134
+  uuid: 49fe1f7b-e6f6-43dc-a67d-caade85128ba
+  udp: true
+  network: tcp
+  tls: true
+  reality-opts:
+    public-key: BECatGFyR4lUoLv4-w-qOzPPDkAQt_P8yGB4cP3nE0k
+    short-id: e9b64ca7d55f2672
+  servername: aparat.com
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #083 | YT×TG×GPT | 650ms'
+  type: vless
+  server: 50.7.90.26
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: afJl8rD_HbWjSxuktnRgL5m1yLGHr4Zgw0oLGCARbQ8
+    short-id: 9e5860a711d95972
+  servername: creek.oakhollow.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | США 🇺🇸 #084 | YT×GPT×GEM | 773ms'
+  type: vless
+  server: 192.129.221.38
+  port: 59158
+  uuid: 715a2b0f-b2b8-41f2-93c7-b152338718d1
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 2QZvuJ0cpnAK483GMUnOKQCMxZKc2lR5aMhB_jYdIUE
+    short-id: db4fff91103c
+  servername: www.sony.co.in
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #085 | YT×TG×GEM | 1045ms'
+  type: vless
+  server: free-de1.endurancepro.space
+  port: 443
+  uuid: 33b25ed8-2088-40a5-ba4f-cf04b6d3fc06
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: vJgQ5ZSblvzGdJ1s693hIEIUGTgMJaci4_2UGR7BFVA
+    short-id: 789df6fbcf3518ea
+  servername: free-de1.endurancepro.space
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | США 🇺🇸 #086 | YT×TG×GPT | 1063ms'
+  type: vmess
+  server: 188.114.97.6
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Венгрия 🇭🇺 #087 | YT×TG×GPT | 2564ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Украина 🇺🇦 #088 | YT×TG×GPT | 3252ms'
+  type: vmess
+  server: 172.67.187.145
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Канада 🇨🇦 #089 | YT×TG×GPT | 3396ms'
+  type: vmess
+  server: 104.17.147.222
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Иран 🇮🇷 #090 | YT×TG | 62ms'
+  type: vless
+  server: 50.7.95.230
+  port: 443
+  uuid: 2232d904-8e6a-4202-8240-6efd8aec02e9
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: gJoMHh97teLxW92Z_3DI8qdSulqBlb9sW6mthYPEEBk
+    short-id: d889ac17
+  servername: main.jarbook.net
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #091 | YT×TG | 67ms'
+  type: vless
+  server: 5.253.86.3
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 51ZCyVOxvcD_smARtd9mV-3Rh_WurOzMGRFxk9u2Kgo
+    short-id: fa1754221e4c5f9e
+  servername: nl3.gofizz.in
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #092 | YT×TG | 67ms'
+  type: vless
+  server: 5.253.86.3
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 51ZCyVOxvcD_smARtd9mV-3Rh_WurOzMGRFxk9u2Kgo
+    short-id: fa1754221e4c5f9e
+  servername: nl3.gofizz.in
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #093 | YT×TG | 73ms'
+  type: vless
+  server: 5.253.86.3
+  port: 443
+  uuid: 8197b9b9-8945-460f-99c9-325ef8a8a7c3
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: 51ZCyVOxvcD_smARtd9mV-3Rh_WurOzMGRFxk9u2Kgo
+    short-id: fa1754221e4c5f9e
+  servername: nl3.gofizz.in
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | Австрия 🇦🇹 #094 | YT×TG | 90ms'
+  type: vless
+  server: 50.7.115.244
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: Mwczt2QjgQo3q8N10PVx8bWNubwiNhgka5GvxUy-GHQ
+    short-id: 00defa20
+  servername: gill.tarnfell.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #095 | YT×GEM | 217ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21018
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | ЦАР 🇨🇫 #096 | TG×GPT | 364ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #097 | YT×GPT | 385ms'
+  type: vmess
+  server: zfd-hkv2.kunlun01dns.com
+  port: 16112
+  uuid: 0802ac03-7973-39ef-a019-ba02de6c01e1
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | США 🇺🇸 #098 | TG×GPT | 443ms'
+  type: vmess
+  server: 188.114.97.6
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #099 | YT×TG | 802ms'
+  type: vless
+  server: 23.237.59.227
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: gY8Ar_jONItcoTqUPez1k5RjK77PgtS8cYwgM_Qs_wY
+    short-id: eee81998bc378318
+  servername: brook.quietgrove.forum
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | США 🇺🇸 #100 | YT×GPT | 839ms'
+  type: vmess
+  server: 172.67.187.145
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Германия 🇩🇪 #101 | YT×GEM | 1340ms'
+  type: vless
+  server: 50.7.90.26
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: afJl8rD_HbWjSxuktnRgL5m1yLGHr4Zgw0oLGCARbQ8
+    short-id: 9e5860a711d95972
+  servername: creek.oakhollow.top
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | США 🇺🇸 #102 | TG×GPT | 2245ms'
+  type: vmess
+  server: 172.67.187.145
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #103 | YT×TG | 3146ms'
+  type: vless
+  server: 23.237.59.226
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: 7ubUnSDMuzBIFRNuKxOy5VDgJQ5q3FYZcrnLBMrLYEw
+    short-id: 8d8489aa57d310bb
+  servername: ridge.quietgrove.forum
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | США 🇺🇸 #104 | YT×GPT | 3212ms'
+  type: vmess
+  server: 172.67.187.145
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #105 | YT×GPT | 3265ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #106 | YT×TG | 4438ms'
+  type: vmess
+  server: 172.67.187.145
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Япония 🇯🇵 #107 | YT×GEM | 5504ms'
+  type: vmess
+  server: 141.11.139.102
+  port: 32515
+  uuid: 081dbf5a-d8b6-40c8-96f8-3c4ca9f50442
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Финляндия 🇫🇮 #108 | TG | 110ms'
+  type: vless
+  server: 83.171.241.238
+  port: 443
+  uuid: 537d8ade-134d-4ec2-905c-0187e7e1e22e
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: _oCg5rCW6XTxriBPzbd_AX0os6QhenVYO9cbrsDSyRY
+    short-id: cf2a731a5f2dc451
+  servername: f0f0bet.fi2.h1clayd.click
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Финляндия 🇫🇮 #109 | TG | 113ms'
+  type: vless
+  server: 83.171.241.238
+  port: 443
+  uuid: 537d8ade-134d-4ec2-905c-0187e7e1e22e
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: WCuIW5EhUUfvOtDeVO-M7NjwXaE20zinTv3rpQ9erxs
+    short-id: 6f2d8ece33a96159
+  servername: 78ec29x.fi2.h1clayd.click
+  client-fingerprint: firefox
+  xhttp-opts:
+    path: /
+    headers:
+      Host: 83.171.241.238
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - 83.171.241.238
+- name: 'BUNKER ⚡ | Великобритания 🇬🇧 #110 | TUNNEL | 183ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21018
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #111 | GEM | 228ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21020
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Нидерланды 🇳🇱 #112 | TUNNEL | 265ms'
+  type: vless
+  server: 50.7.95.230
+  port: 443
+  uuid: 2232d904-8e6a-4202-8240-6efd8aec02e9
+  udp: true
+  network: tcp
+  flow: xtls-rprx-vision
+  tls: true
+  reality-opts:
+    public-key: gJoMHh97teLxW92Z_3DI8qdSulqBlb9sW6mthYPEEBk
+    short-id: d889ac17
+  servername: main.jarbook.net
+  client-fingerprint: firefox
+- name: 'BUNKER ⚡ | США 🇺🇸 #113 | TG | 371ms'
+  type: vless
+  server: 23.237.59.228
+  port: 443
+  uuid: 49db4ce7-ad48-41a3-9b6f-4c6dabd94504
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: XI4UUmMnY3R3Wintseg5Kl354f8DBT38p_klhZq1dnk
+    short-id: acb03e8bef86cd48
+  servername: glen.quietgrove.forum
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: grpc
+- name: 'BUNKER ⚡ | Гонконг 🇭🇰 #114 | GEM | 658ms'
+  type: vmess
+  server: dog-hk.kunlun01dns.com
+  port: 21022
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | ЦАР 🇨🇫 #115 | GPT | 692ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | Россия 🇷🇺 #116 | YT | 755ms'
+  type: vless
+  server: b3cd32g.es9.h1clayd.click
+  port: 443
+  uuid: 4201786b-d99b-4147-a5f0-20d47acddb81
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: 7efBhLzPwoTtEC1GlukCdiTllobUfa2_XuAKNSLJx30
+    short-id: e7cffac9f8cfb434
+  servername: b3cd32g.es9.h1clayd.click
+  client-fingerprint: firefox
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | Финляндия 🇫🇮 #117 | TG | 995ms'
+  type: vless
+  server: 78ec29x.fi2.h1clayd.click
+  port: 443
+  uuid: 537d8ade-134d-4ec2-905c-0187e7e1e22e
+  udp: true
+  network: xhttp
+  tls: true
+  reality-opts:
+    public-key: WCuIW5EhUUfvOtDeVO-M7NjwXaE20zinTv3rpQ9erxs
+    short-id: 6f2d8ece33a96159
+  servername: 78ec29x.fi2.h1clayd.click
+  client-fingerprint: chrome
+  xhttp-opts:
+    path: /
+    headers:
+      Host: 78ec29x.fi2.h1clayd.click
+  http-opts:
+    path:
+    - /
+    headers:
+      Host:
+      - 78ec29x.fi2.h1clayd.click
+- name: 'BUNKER ⚡ | США 🇺🇸 #118 | GEM | 1095ms'
+  type: vmess
+  server: dog-us.kunlun01dns.com
+  port: 21009
+  uuid: 9464ca40-dd75-3742-a628-d931a9f413b2
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: tcp
+- name: 'BUNKER ⚡ | Финляндия 🇫🇮 #119 | TG | 1209ms'
+  type: vless
+  server: f0f0bet.fi2.h1clayd.click
+  port: 443
+  uuid: 537d8ade-134d-4ec2-905c-0187e7e1e22e
+  udp: true
+  network: grpc
+  tls: true
+  reality-opts:
+    public-key: _oCg5rCW6XTxriBPzbd_AX0os6QhenVYO9cbrsDSyRY
+    short-id: cf2a731a5f2dc451
+  servername: f0f0bet.fi2.h1clayd.click
+  client-fingerprint: chrome
+  grpc-opts:
+    grpc-service-name: ''
+- name: 'BUNKER ⚡ | США 🇺🇸 #120 | GPT | 1621ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #121 | TG | 2891ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #122 | YT | 2990ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #123 | GPT | 3536ms'
+  type: vmess
+  server: 188.114.97.6
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed
+    headers:
+      Host: vmess.lbw666.dpdns.org
+- name: 'BUNKER ⚡ | США 🇺🇸 #124 | TG | 3978ms'
+  type: vmess
+  server: cf.0sm.com
+  port: 80
+  uuid: 0cf6d970-3f1d-4aae-a989-92a8f76ae3db
+  alterId: 0
+  cipher: auto
+  udp: true
+  network: ws
+  ws-opts:
+    path: /ws?ed=2048
+    headers:
+      Host: vmess.lbw666.dpdns.org
+proxy-groups:
+- name: ⚡ БУНКЕР МИКС
+  type: select
+  proxies:
+  - 🚀 Автовыбор (Быстрый пинг)
+  - ♻️ Отказоустойчивый (Fallback)
+  - 🇦🇹 Австрия
+  - 🇨🇫 ЦАР
+  - 🇩🇪 Германия
+  - 🇪🇪 Эстония
+  - 🇫🇮 Финляндия
+  - 🇬🇧 Великобритания
+  - 🇭🇰 Гонконг
+  - 🇮🇱 Израиль
+  - 🇮🇷 Иран
+  - 🇰🇵 Северная Корея
+  - 🇱🇹 Литва
+  - 🇳🇱 Нидерланды
+  - 🇷🇺 Россия
+  - 🇸🇪 Швеция
+  - 🇸🇬 Сингапур
+  - 🇹🇷 Турция
+  - 🇹🇼 Тайвань
+  - 🇺🇸 США
+  - DIRECT
+  - 'BUNKER ⚡ | Швеция 🇸🇪 #001 | YT×TG×GPT×GEM | 60ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #002 | YT×TG×GPT×GEM | 68ms'
+  - 'BUNKER ⚡ | Бельгия 🇧🇪 #003 | YT×TG×GPT×GEM | 76ms'
+  - 'BUNKER ⚡ | Польша 🇵🇱 #004 | YT×TG×GPT×GEM | 84ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #005 | YT×TG×GPT×GEM | 86ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #006 | YT×TG×GPT×GEM | 99ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #007 | YT×TG×GPT×GEM | 100ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #008 | YT×TG×GPT×GEM | 100ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #009 | YT×TG×GPT×GEM | 101ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #010 | YT×TG×GPT×GEM | 106ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #011 | YT×TG×GPT×GEM | 108ms'
+  - 'BUNKER ⚡ | Северная Корея 🇰🇵 #012 | YT×TG×GPT×GEM | 116ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #013 | YT×TG×GPT×GEM | 119ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #014 | YT×TG×GPT×GEM | 135ms'
+  - 'BUNKER ⚡ | Литва 🇱🇹 #015 | YT×TG×GPT×GEM | 137ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #016 | YT×TG×GPT×GEM | 148ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #017 | YT×TG×GPT×GEM | 153ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #018 | YT×TG×GPT×GEM | 154ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #019 | YT×TG×GPT×GEM | 155ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #020 | YT×TG×GPT×GEM | 168ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #021 | YT×TG×GPT×GEM | 181ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #022 | YT×TG×GPT×GEM | 183ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #023 | YT×TG×GPT×GEM | 196ms'
+  - 'BUNKER ⚡ | Литва 🇱🇹 #024 | YT×TG×GPT×GEM | 197ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #025 | YT×TG×GPT×GEM | 200ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #026 | YT×TG×GPT×GEM | 202ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #027 | YT×TG×GPT×GEM | 202ms'
+  - 'BUNKER ⚡ | Турция 🇹🇷 #028 | YT×TG×GPT×GEM | 207ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #029 | YT×TG×GPT×GEM | 241ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #030 | YT×TG×GPT×GEM | 243ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #031 | YT×TG×GPT×GEM | 251ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #032 | YT×TG×GPT×GEM | 255ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #033 | YT×TG×GPT×GEM | 260ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #034 | YT×TG×GPT×GEM | 270ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #035 | YT×TG×GPT×GEM | 271ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #036 | YT×TG×GPT×GEM | 284ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #037 | YT×TG×GPT×GEM | 331ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #038 | YT×TG×GPT×GEM | 338ms'
+  - 'BUNKER ⚡ | Турция 🇹🇷 #039 | YT×TG×GPT×GEM | 346ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #040 | YT×TG×GPT×GEM | 352ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #041 | YT×TG×GPT×GEM | 352ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #042 | YT×TG×GPT×GEM | 364ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #043 | YT×TG×GPT×GEM | 396ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #044 | YT×TG×GPT×GEM | 399ms'
+  - 'BUNKER ⚡ | Швеция 🇸🇪 #045 | YT×TG×GPT×GEM | 422ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #046 | YT×TG×GPT×GEM | 514ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #047 | YT×TG×GPT×GEM | 578ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #048 | YT×TG×GPT×GEM | 678ms'
+  - 'BUNKER ⚡ | Тайвань 🇹🇼 #049 | YT×TG×GPT×GEM | 754ms'
+  - 'BUNKER ⚡ | Тайвань 🇹🇼 #050 | YT×TG×GPT×GEM | 914ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #051 | YT×TG×GPT×GEM | 981ms'
+  - 'BUNKER ⚡ | Северная Корея 🇰🇵 #052 | YT×TG×GPT×GEM | 1032ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #053 | YT×TG×GPT×GEM | 1151ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #054 | YT×TG×GPT×GEM | 1567ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #055 | YT×TG×GPT×GEM | 2481ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #056 | YT×TG×GPT×GEM | 3494ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #057 | YT×TG×GPT | 56ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #058 | YT×TG×GPT | 58ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #059 | YT×TG×GPT | 65ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #060 | YT×TG×GPT | 66ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #061 | YT×TG×GPT | 68ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #062 | YT×TG×GPT | 84ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #063 | YT×TG×GPT | 94ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #064 | YT×TG×GPT | 95ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #065 | YT×TG×GEM | 99ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #066 | YT×TG×GPT | 100ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #067 | YT×TG×GPT | 101ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #068 | YT×TG×GPT | 103ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #069 | YT×TG×GPT | 116ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #070 | YT×TG×GPT | 135ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #071 | YT×TG×GPT | 139ms'
+  - 'BUNKER ⚡ | Словения 🇸🇮 #072 | TG×GPT×GEM | 145ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #073 | YT×TG×GPT | 149ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #074 | YT×TG×GPT | 159ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #075 | YT×TG×GPT | 176ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #076 | YT×TG×GPT | 287ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #077 | YT×TG×GPT | 292ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #078 | YT×TG×GPT | 311ms'
+  - 'BUNKER ⚡ | Андорра 🇦🇩 #079 | YT×TG×GEM | 313ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #080 | TG×GPT×GEM | 382ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #081 | TG×GPT×GEM | 415ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #082 | YT×TG×GPT | 542ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #083 | YT×TG×GPT | 650ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #084 | YT×GPT×GEM | 773ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #085 | YT×TG×GEM | 1045ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #086 | YT×TG×GPT | 1063ms'
+  - 'BUNKER ⚡ | Венгрия 🇭🇺 #087 | YT×TG×GPT | 2564ms'
+  - 'BUNKER ⚡ | Украина 🇺🇦 #088 | YT×TG×GPT | 3252ms'
+  - 'BUNKER ⚡ | Канада 🇨🇦 #089 | YT×TG×GPT | 3396ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #090 | YT×TG | 62ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #091 | YT×TG | 67ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #092 | YT×TG | 67ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #093 | YT×TG | 73ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #094 | YT×TG | 90ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #095 | YT×GEM | 217ms'
+  - 'BUNKER ⚡ | ЦАР 🇨🇫 #096 | TG×GPT | 364ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #097 | YT×GPT | 385ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #098 | TG×GPT | 443ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #099 | YT×TG | 802ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #100 | YT×GPT | 839ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #101 | YT×GEM | 1340ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #102 | TG×GPT | 2245ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #103 | YT×TG | 3146ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #104 | YT×GPT | 3212ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #105 | YT×GPT | 3265ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #106 | YT×TG | 4438ms'
+  - 'BUNKER ⚡ | Япония 🇯🇵 #107 | YT×GEM | 5504ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #108 | TG | 110ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #109 | TG | 113ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #110 | TUNNEL | 183ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #111 | GEM | 228ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #112 | TUNNEL | 265ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #113 | TG | 371ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #114 | GEM | 658ms'
+  - 'BUNKER ⚡ | ЦАР 🇨🇫 #115 | GPT | 692ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #116 | YT | 755ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #117 | TG | 995ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #118 | GEM | 1095ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #119 | TG | 1209ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #120 | GPT | 1621ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #121 | TG | 2891ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #122 | YT | 2990ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #123 | GPT | 3536ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #124 | TG | 3978ms'
+- name: 🚀 Автовыбор (Быстрый пинг)
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies: &id001
+  - 'BUNKER ⚡ | Швеция 🇸🇪 #001 | YT×TG×GPT×GEM | 60ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #002 | YT×TG×GPT×GEM | 68ms'
+  - 'BUNKER ⚡ | Бельгия 🇧🇪 #003 | YT×TG×GPT×GEM | 76ms'
+  - 'BUNKER ⚡ | Польша 🇵🇱 #004 | YT×TG×GPT×GEM | 84ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #005 | YT×TG×GPT×GEM | 86ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #006 | YT×TG×GPT×GEM | 99ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #007 | YT×TG×GPT×GEM | 100ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #008 | YT×TG×GPT×GEM | 100ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #009 | YT×TG×GPT×GEM | 101ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #010 | YT×TG×GPT×GEM | 106ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #011 | YT×TG×GPT×GEM | 108ms'
+  - 'BUNKER ⚡ | Северная Корея 🇰🇵 #012 | YT×TG×GPT×GEM | 116ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #013 | YT×TG×GPT×GEM | 119ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #014 | YT×TG×GPT×GEM | 135ms'
+  - 'BUNKER ⚡ | Литва 🇱🇹 #015 | YT×TG×GPT×GEM | 137ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #016 | YT×TG×GPT×GEM | 148ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #017 | YT×TG×GPT×GEM | 153ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #018 | YT×TG×GPT×GEM | 154ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #019 | YT×TG×GPT×GEM | 155ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #020 | YT×TG×GPT×GEM | 168ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #021 | YT×TG×GPT×GEM | 181ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #022 | YT×TG×GPT×GEM | 183ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #023 | YT×TG×GPT×GEM | 196ms'
+  - 'BUNKER ⚡ | Литва 🇱🇹 #024 | YT×TG×GPT×GEM | 197ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #025 | YT×TG×GPT×GEM | 200ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #026 | YT×TG×GPT×GEM | 202ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #027 | YT×TG×GPT×GEM | 202ms'
+  - 'BUNKER ⚡ | Турция 🇹🇷 #028 | YT×TG×GPT×GEM | 207ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #029 | YT×TG×GPT×GEM | 241ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #030 | YT×TG×GPT×GEM | 243ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #031 | YT×TG×GPT×GEM | 251ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #032 | YT×TG×GPT×GEM | 255ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #033 | YT×TG×GPT×GEM | 260ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #034 | YT×TG×GPT×GEM | 270ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #035 | YT×TG×GPT×GEM | 271ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #036 | YT×TG×GPT×GEM | 284ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #037 | YT×TG×GPT×GEM | 331ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #038 | YT×TG×GPT×GEM | 338ms'
+  - 'BUNKER ⚡ | Турция 🇹🇷 #039 | YT×TG×GPT×GEM | 346ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #040 | YT×TG×GPT×GEM | 352ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #041 | YT×TG×GPT×GEM | 352ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #042 | YT×TG×GPT×GEM | 364ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #043 | YT×TG×GPT×GEM | 396ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #044 | YT×TG×GPT×GEM | 399ms'
+  - 'BUNKER ⚡ | Швеция 🇸🇪 #045 | YT×TG×GPT×GEM | 422ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #046 | YT×TG×GPT×GEM | 514ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #047 | YT×TG×GPT×GEM | 578ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #048 | YT×TG×GPT×GEM | 678ms'
+  - 'BUNKER ⚡ | Тайвань 🇹🇼 #049 | YT×TG×GPT×GEM | 754ms'
+  - 'BUNKER ⚡ | Тайвань 🇹🇼 #050 | YT×TG×GPT×GEM | 914ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #051 | YT×TG×GPT×GEM | 981ms'
+  - 'BUNKER ⚡ | Северная Корея 🇰🇵 #052 | YT×TG×GPT×GEM | 1032ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #053 | YT×TG×GPT×GEM | 1151ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #054 | YT×TG×GPT×GEM | 1567ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #055 | YT×TG×GPT×GEM | 2481ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #056 | YT×TG×GPT×GEM | 3494ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #057 | YT×TG×GPT | 56ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #058 | YT×TG×GPT | 58ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #059 | YT×TG×GPT | 65ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #060 | YT×TG×GPT | 66ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #061 | YT×TG×GPT | 68ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #062 | YT×TG×GPT | 84ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #063 | YT×TG×GPT | 94ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #064 | YT×TG×GPT | 95ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #065 | YT×TG×GEM | 99ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #066 | YT×TG×GPT | 100ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #067 | YT×TG×GPT | 101ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #068 | YT×TG×GPT | 103ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #069 | YT×TG×GPT | 116ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #070 | YT×TG×GPT | 135ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #071 | YT×TG×GPT | 139ms'
+  - 'BUNKER ⚡ | Словения 🇸🇮 #072 | TG×GPT×GEM | 145ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #073 | YT×TG×GPT | 149ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #074 | YT×TG×GPT | 159ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #075 | YT×TG×GPT | 176ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #076 | YT×TG×GPT | 287ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #077 | YT×TG×GPT | 292ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #078 | YT×TG×GPT | 311ms'
+  - 'BUNKER ⚡ | Андорра 🇦🇩 #079 | YT×TG×GEM | 313ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #080 | TG×GPT×GEM | 382ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #081 | TG×GPT×GEM | 415ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #082 | YT×TG×GPT | 542ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #083 | YT×TG×GPT | 650ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #084 | YT×GPT×GEM | 773ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #085 | YT×TG×GEM | 1045ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #086 | YT×TG×GPT | 1063ms'
+  - 'BUNKER ⚡ | Венгрия 🇭🇺 #087 | YT×TG×GPT | 2564ms'
+  - 'BUNKER ⚡ | Украина 🇺🇦 #088 | YT×TG×GPT | 3252ms'
+  - 'BUNKER ⚡ | Канада 🇨🇦 #089 | YT×TG×GPT | 3396ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #090 | YT×TG | 62ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #091 | YT×TG | 67ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #092 | YT×TG | 67ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #093 | YT×TG | 73ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #094 | YT×TG | 90ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #095 | YT×GEM | 217ms'
+  - 'BUNKER ⚡ | ЦАР 🇨🇫 #096 | TG×GPT | 364ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #097 | YT×GPT | 385ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #098 | TG×GPT | 443ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #099 | YT×TG | 802ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #100 | YT×GPT | 839ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #101 | YT×GEM | 1340ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #102 | TG×GPT | 2245ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #103 | YT×TG | 3146ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #104 | YT×GPT | 3212ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #105 | YT×GPT | 3265ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #106 | YT×TG | 4438ms'
+  - 'BUNKER ⚡ | Япония 🇯🇵 #107 | YT×GEM | 5504ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #108 | TG | 110ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #109 | TG | 113ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #110 | TUNNEL | 183ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #111 | GEM | 228ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #112 | TUNNEL | 265ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #113 | TG | 371ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #114 | GEM | 658ms'
+  - 'BUNKER ⚡ | ЦАР 🇨🇫 #115 | GPT | 692ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #116 | YT | 755ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #117 | TG | 995ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #118 | GEM | 1095ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #119 | TG | 1209ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #120 | GPT | 1621ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #121 | TG | 2891ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #122 | YT | 2990ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #123 | GPT | 3536ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #124 | TG | 3978ms'
+- name: ♻️ Отказоустойчивый (Fallback)
+  type: fallback
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  proxies: *id001
+- name: 🇦🇹 Австрия
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #011 | YT×TG×GPT×GEM | 108ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #062 | YT×TG×GPT | 84ms'
+  - 'BUNKER ⚡ | Австрия 🇦🇹 #094 | YT×TG | 90ms'
+- name: 🇨🇫 ЦАР
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | ЦАР 🇨🇫 #096 | TG×GPT | 364ms'
+  - 'BUNKER ⚡ | ЦАР 🇨🇫 #115 | GPT | 692ms'
+- name: 🇩🇪 Германия
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Германия 🇩🇪 #002 | YT×TG×GPT×GEM | 68ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #009 | YT×TG×GPT×GEM | 101ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #026 | YT×TG×GPT×GEM | 202ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #051 | YT×TG×GPT×GEM | 981ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #054 | YT×TG×GPT×GEM | 1567ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #056 | YT×TG×GPT×GEM | 3494ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #057 | YT×TG×GPT | 56ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #059 | YT×TG×GPT | 65ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #063 | YT×TG×GPT | 94ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #069 | YT×TG×GPT | 116ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #074 | YT×TG×GPT | 159ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #075 | YT×TG×GPT | 176ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #083 | YT×TG×GPT | 650ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #085 | YT×TG×GEM | 1045ms'
+  - 'BUNKER ⚡ | Германия 🇩🇪 #101 | YT×GEM | 1340ms'
+- name: 🇪🇪 Эстония
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #005 | YT×TG×GPT×GEM | 86ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #060 | YT×TG×GPT | 66ms'
+  - 'BUNKER ⚡ | Эстония 🇪🇪 #066 | YT×TG×GPT | 100ms'
+- name: 🇫🇮 Финляндия
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #006 | YT×TG×GPT×GEM | 99ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #023 | YT×TG×GPT×GEM | 196ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #108 | TG | 110ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #109 | TG | 113ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #117 | TG | 995ms'
+  - 'BUNKER ⚡ | Финляндия 🇫🇮 #119 | TG | 1209ms'
+- name: 🇬🇧 Великобритания
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #025 | YT×TG×GPT×GEM | 200ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #031 | YT×TG×GPT×GEM | 251ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #040 | YT×TG×GPT×GEM | 352ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #064 | YT×TG×GPT | 95ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #067 | YT×TG×GPT | 101ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #095 | YT×GEM | 217ms'
+  - 'BUNKER ⚡ | Великобритания 🇬🇧 #110 | TUNNEL | 183ms'
+- name: 🇭🇰 Гонконг
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #032 | YT×TG×GPT×GEM | 255ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #033 | YT×TG×GPT×GEM | 260ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #041 | YT×TG×GPT×GEM | 352ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #043 | YT×TG×GPT×GEM | 396ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #097 | YT×GPT | 385ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #111 | GEM | 228ms'
+  - 'BUNKER ⚡ | Гонконг 🇭🇰 #114 | GEM | 658ms'
+- name: 🇮🇱 Израиль
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #018 | YT×TG×GPT×GEM | 154ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #070 | YT×TG×GPT | 135ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #071 | YT×TG×GPT | 139ms'
+  - 'BUNKER ⚡ | Израиль 🇮🇱 #073 | YT×TG×GPT | 149ms'
+- name: 🇮🇷 Иран
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Иран 🇮🇷 #061 | YT×TG×GPT | 68ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #065 | YT×TG×GEM | 99ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #080 | TG×GPT×GEM | 382ms'
+  - 'BUNKER ⚡ | Иран 🇮🇷 #090 | YT×TG | 62ms'
+- name: 🇰🇵 Северная Корея
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Северная Корея 🇰🇵 #012 | YT×TG×GPT×GEM | 116ms'
+  - 'BUNKER ⚡ | Северная Корея 🇰🇵 #052 | YT×TG×GPT×GEM | 1032ms'
+- name: 🇱🇹 Литва
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Литва 🇱🇹 #015 | YT×TG×GPT×GEM | 137ms'
+  - 'BUNKER ⚡ | Литва 🇱🇹 #024 | YT×TG×GPT×GEM | 197ms'
+- name: 🇳🇱 Нидерланды
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #010 | YT×TG×GPT×GEM | 106ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #013 | YT×TG×GPT×GEM | 119ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #014 | YT×TG×GPT×GEM | 135ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #016 | YT×TG×GPT×GEM | 148ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #017 | YT×TG×GPT×GEM | 153ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #021 | YT×TG×GPT×GEM | 181ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #027 | YT×TG×GPT×GEM | 202ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #030 | YT×TG×GPT×GEM | 243ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #047 | YT×TG×GPT×GEM | 578ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #055 | YT×TG×GPT×GEM | 2481ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #058 | YT×TG×GPT | 58ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #068 | YT×TG×GPT | 103ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #077 | YT×TG×GPT | 292ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #082 | YT×TG×GPT | 542ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #091 | YT×TG | 67ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #092 | YT×TG | 67ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #093 | YT×TG | 73ms'
+  - 'BUNKER ⚡ | Нидерланды 🇳🇱 #112 | TUNNEL | 265ms'
+- name: 🇷🇺 Россия
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Россия 🇷🇺 #007 | YT×TG×GPT×GEM | 100ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #008 | YT×TG×GPT×GEM | 100ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #019 | YT×TG×GPT×GEM | 155ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #042 | YT×TG×GPT×GEM | 364ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #048 | YT×TG×GPT×GEM | 678ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #053 | YT×TG×GPT×GEM | 1151ms'
+  - 'BUNKER ⚡ | Россия 🇷🇺 #116 | YT | 755ms'
+- name: 🇸🇪 Швеция
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Швеция 🇸🇪 #001 | YT×TG×GPT×GEM | 60ms'
+  - 'BUNKER ⚡ | Швеция 🇸🇪 #045 | YT×TG×GPT×GEM | 422ms'
+- name: 🇸🇬 Сингапур
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #035 | YT×TG×GPT×GEM | 271ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #036 | YT×TG×GPT×GEM | 284ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #037 | YT×TG×GPT×GEM | 331ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #038 | YT×TG×GPT×GEM | 338ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #046 | YT×TG×GPT×GEM | 514ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #076 | YT×TG×GPT | 287ms'
+  - 'BUNKER ⚡ | Сингапур 🇸🇬 #078 | YT×TG×GPT | 311ms'
+- name: 🇹🇷 Турция
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Турция 🇹🇷 #028 | YT×TG×GPT×GEM | 207ms'
+  - 'BUNKER ⚡ | Турция 🇹🇷 #039 | YT×TG×GPT×GEM | 346ms'
+- name: 🇹🇼 Тайвань
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | Тайвань 🇹🇼 #049 | YT×TG×GPT×GEM | 754ms'
+  - 'BUNKER ⚡ | Тайвань 🇹🇼 #050 | YT×TG×GPT×GEM | 914ms'
+- name: 🇺🇸 США
+  type: url-test
+  url: http://cp.cloudflare.com/generate_204
+  interval: 300
+  tolerance: 50
+  proxies:
+  - 'BUNKER ⚡ | США 🇺🇸 #020 | YT×TG×GPT×GEM | 168ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #022 | YT×TG×GPT×GEM | 183ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #029 | YT×TG×GPT×GEM | 241ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #034 | YT×TG×GPT×GEM | 270ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #044 | YT×TG×GPT×GEM | 399ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #081 | TG×GPT×GEM | 415ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #084 | YT×GPT×GEM | 773ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #086 | YT×TG×GPT | 1063ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #098 | TG×GPT | 443ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #099 | YT×TG | 802ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #100 | YT×GPT | 839ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #102 | TG×GPT | 2245ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #103 | YT×TG | 3146ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #104 | YT×GPT | 3212ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #105 | YT×GPT | 3265ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #106 | YT×TG | 4438ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #113 | TG | 371ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #118 | GEM | 1095ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #120 | GPT | 1621ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #121 | TG | 2891ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #122 | YT | 2990ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #123 | GPT | 3536ms'
+  - 'BUNKER ⚡ | США 🇺🇸 #124 | TG | 3978ms'
+rules:
+- DOMAIN-SUFFIX,ru,DIRECT
+- DOMAIN-SUFFIX,su,DIRECT
+- DOMAIN-SUFFIX,xn--p1ai,DIRECT
+- DOMAIN-KEYWORD,sber,DIRECT
+- DOMAIN-KEYWORD,tinkoff,DIRECT
+- DOMAIN-KEYWORD,tbank,DIRECT
+- DOMAIN-KEYWORD,alfa,DIRECT
+- DOMAIN-KEYWORD,vtb,DIRECT
+- DOMAIN-KEYWORD,raiffeisen,DIRECT
+- DOMAIN-KEYWORD,gosuslugi,DIRECT
+- DOMAIN-KEYWORD,nalog,DIRECT
+- DOMAIN-KEYWORD,mos.ru,DIRECT
+- DOMAIN-KEYWORD,yandex,DIRECT
+- DOMAIN-KEYWORD,vk.com,DIRECT
+- DOMAIN-KEYWORD,mail.ru,DIRECT
+- DOMAIN-KEYWORD,kinopoisk,DIRECT
+- DOMAIN-KEYWORD,ozon,DIRECT
+- DOMAIN-KEYWORD,wildberries,DIRECT
+- GEOIP,RU,DIRECT,no-resolve
+- MATCH,⚡ БУНКЕР МИКС

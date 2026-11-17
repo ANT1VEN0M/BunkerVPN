@@ -1,11 +1,14 @@
-name: Sync Karing Subscription
+name: Sync Bunker Subscriptions (Mos Hub & Karing)
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
-  workflow_dispatch:
+    - cron: '*/30 * * * *' # Every 30 minutes
+  workflow_dispatch:       # Manual trigger from GitHub UI
+  repository_dispatch:     # Webhook trigger from GitLab / external events
+    types: [mos_hub_update, sub_update]
   push:
     paths:
+      - 'scripts/sync_mos_bunker.py'
       - 'scripts/sync_karing_subscription.py'
 
 jobs:
@@ -26,7 +29,10 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
-      - name: Sync and convert subscription
+      - name: Sync Mos Hub subscriptions (BLWL_MIX & WHITE_LIST to Clash Meta)
+        run: python3 scripts/sync_mos_bunker.py
+
+      - name: Sync Karing subscription (alexander-official.ru)
         run: python3 scripts/sync_karing_subscription.py
 
       - name: Commit and push if changed
@@ -35,8 +41,8 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add subscriptions/
           if git diff --staged --quiet; then
-            echo "No subscription changes found."
+            echo "No subscription updates found. Everything is up to date."
           else
-            git commit -m "Auto-sync Karing subscription nodes"
+            git commit -m "Auto-sync Bunker subscriptions from Mos Hub & web [Clash YAML]"
             git push origin main
           fi
