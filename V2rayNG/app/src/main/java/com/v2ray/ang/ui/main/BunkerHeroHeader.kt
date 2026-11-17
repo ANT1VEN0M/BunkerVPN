@@ -90,8 +90,7 @@ private fun detectBunkerServices(
     val serviceDefs = listOf(
         Triple("yt", "YouTube" to "▶", 0xFFEF4444 to listOf("YT", "YouTube")),
         Triple("tg", "Telegram" to "✈", 0xFF06B6D4 to listOf("TG", "Telegram")),
-        Triple("gpt", "ChatGPT" to "🤖", 0xFF10B981 to listOf("GPT", "ChatGPT", "OpenAI")),
-        Triple("gem", "Gemini" to "✦", 0xFFA855F7 to listOf("GEM", "Gemini"))
+        Triple("ai", "AI (GPT•Gemini)" to "🤖", 0xFF10B981 to listOf("GPT", "ChatGPT", "OpenAI", "GEM", "Gemini", "AI"))
     )
 
     val remarkHasAnyTag = serviceDefs.any { (_, _, meta) ->

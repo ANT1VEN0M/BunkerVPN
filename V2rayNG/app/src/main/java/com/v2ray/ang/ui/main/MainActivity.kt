@@ -272,12 +272,27 @@ class MainActivity : HelperBaseComponentActivity() {
     private fun handleAutoSelectBestServer() {
         val prevGuid = mainViewModel.uiState.value.selectedGuid
         if (mainViewModel.autoSelectBestServer()) {
-            if (mainViewModel.uiState.value.isRunning && prevGuid != mainViewModel.uiState.value.selectedGuid) {
-                LauncherManager.restartService(this)
+            if (mainViewModel.uiState.value.isRunning) {
+                if (prevGuid != mainViewModel.uiState.value.selectedGuid) {
+                    LauncherManager.restartService(this)
+                }
+            } else {
+                toastSuccess("🎯 Подключение к лучшему серверу...")
+                requestServiceStart()
             }
         } else {
+            val groupId = mainViewModel.uiState.value.selectedGroupId
+            val groupState = mainViewModel.serverGroupState(groupId).value
+            val policyGroup = groupState.servers.find { it.profile.configType == EConfigType.POLICYGROUP }
+            val candidate = policyGroup ?: groupState.servers.firstOrNull()
+            if (candidate != null) {
+                mainViewModel.updateSelectedGuid(candidate.guid)
+            }
+            if (!mainViewModel.uiState.value.isRunning) {
+                toastSuccess("🎯 1-Click подключение: запуск туннеля...")
+                requestServiceStart()
+            }
             mainViewModel.isAutoSelectPending = true
-            toastInfo("⚡ Замер пинга... Подбираем лучший сервер")
             mainViewModel.testAllRealPing()
         }
     }

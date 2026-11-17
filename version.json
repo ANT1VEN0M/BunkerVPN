@@ -1,7 +1,7 @@
 {
-  "version": "1.2.6",
-  "versionCode": 1018,
-  "tagName": "v1.2.6",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.6/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.2.6: Режим «🎯 Авто» (автоподбор лучшего сервера с мин. пингом), адаптивный и сворачиваемый интерфейс для всех экранов (Realme и др.), повышенная контрастность светлой темы, авто-фоллбэк при нерабочих узлах."
+  "version": "1.2.7",
+  "versionCode": 1019,
+  "tagName": "v1.2.7",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.7/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.2.7: Мгновенное 1-Click Авто-подключение (жмешь «Авто» — и сразу в сети на лучшем узле), объединенный бейдж «🤖 AI», умная балансировка и поддержка."
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
+import com.v2ray.ang.core.LauncherManager
 import com.v2ray.ang.dto.ConnectionTestResult
 import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.dto.GroupMapItem
@@ -966,11 +967,15 @@ class MainViewModel(
                 }
                 if (working.isNotEmpty()) {
                     val best = working.minByOrNull { it.testDelayMillis }!!
+                    val prevGuid = _uiState.value.selectedGuid
                     updateSelectedGuid(best.guid)
                     sortByTestResultsInternal()
                     cacheMutex.withLock { groupDataCache.clear() }
                     setupGroupTab(forceRefresh = true)
                     toastSuccess("🎯 Автовыбор: ${best.profile.remarks} (${best.testDelayMillis} мс)")
+                    if (_uiState.value.isRunning && prevGuid != best.guid) {
+                        LauncherManager.restartService(getApplication())
+                    }
                 } else {
                     toastError(R.string.connection_test_fail)
                 }
