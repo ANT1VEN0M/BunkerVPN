@@ -94,6 +94,7 @@ object AppConfig {
     const val PREF_AUTO_TEST_AFTER_UPDATE_SUBSCRIPTION = "pref_auto_test_after_update_subscription"
     const val PREF_AUTO_REMOVE_INVALID_AFTER_TEST = "pref_auto_remove_invalid_after_test"
     const val PREF_AUTO_SORT_AFTER_TEST = "pref_auto_sort_after_test"
+    const val PREF_HIDE_OFFLINE_SERVERS = "pref_hide_offline_servers"
     const val PREF_REAL_PING_CONCURRENCY = "pref_real_ping_concurrency"
 
     /** Cache keys. */

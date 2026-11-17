@@ -26,6 +26,7 @@ data class MainUiState(
     val locateTarget: LocateTarget? = null,
     val confirmRemove: Boolean = false,
     val doubleColumnDisplay: Boolean = false,
+    val hideOfflineServers: Boolean = false,
     val shareQRCodeBitmap: android.graphics.Bitmap? = null
 )
 
@@ -36,6 +37,8 @@ sealed interface MainAction {
     data object Initialize : MainAction
     data object RefreshGroups : MainAction
     data object ToggleService : MainAction
+    data object ToggleHideOfflineServers : MainAction
+    data object ToggleDoubleColumn : MainAction
     data object TestCurrentServer : MainAction
     data object TestAllServers : MainAction
     data object TestRealAllServers : MainAction

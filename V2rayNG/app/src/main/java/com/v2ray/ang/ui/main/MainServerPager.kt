@@ -82,6 +82,7 @@ fun GroupPagerPage(
     selectedGuid: String?,
     locateTarget: LocateTarget?,
     doubleColumnDisplay: Boolean,
+    hideOfflineServers: Boolean = false,
     searchQuery: String,
     lazyListStates: MutableMap<String, LazyListState>,
     lazyGridStates: MutableMap<String, LazyGridState>,
@@ -102,7 +103,13 @@ fun GroupPagerPage(
 
     var selectedCountryKey by rememberSaveable(groupId) { mutableStateOf<String?>(null) }
 
-    val countryFilters = remember(groupState.rows) {
+    val onlineCount = remember(groupState.rows) {
+        groupState.rows.count {
+            it.profile.configType == EConfigType.POLICYGROUP || it.testDelayMillis > 0L
+        }
+    }
+
+    val countryFilters = remember(groupState.rows, onlineCount) {
         if (groupState.rows.isEmpty()) emptyList()
         else {
             val counts = mutableMapOf<String, Int>()
@@ -119,21 +126,29 @@ fun GroupPagerPage(
                     }
                 }.thenByDescending { it.value }
             )
-            listOf("🌐 Все" to groupState.rows.size) + sortedEntries.map { it.key to it.value }
+            val baseList = mutableListOf<Pair<String, Int>>()
+            baseList.add("🌐 Все" to groupState.rows.size)
+            if (onlineCount > 0 && onlineCount < groupState.rows.size) {
+                baseList.add("⚡ Онлайн" to onlineCount)
+            }
+            baseList + sortedEntries.map { it.key to it.value }
         }
     }
 
-    val displayedRows = remember(groupState.rows, selectedCountryKey) {
-        if (selectedCountryKey == null || selectedCountryKey == "🌐 Все") {
-            groupState.rows
-        } else {
-            groupState.rows.filter { row ->
+    val displayedRows = remember(groupState.rows, selectedCountryKey, hideOfflineServers) {
+        var list = groupState.rows
+        if (hideOfflineServers || selectedCountryKey == "⚡ Онлайн") {
+            list = list.filter { it.profile.configType == EConfigType.POLICYGROUP || it.testDelayMillis > 0L }
+        }
+        if (selectedCountryKey != null && selectedCountryKey != "🌐 Все" && selectedCountryKey != "⚡ Онлайн") {
+            list = list.filter { row ->
                 CountryFilterHelper.extractFilterKey(row.remarks) == selectedCountryKey
             }
         }
+        list
     }
 
-    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty() && (selectedCountryKey == null || selectedCountryKey == "🌐 Все")
+    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty() && !hideOfflineServers && (selectedCountryKey == null || selectedCountryKey == "🌐 Все")
     val actions = remember(
         onSelectServer,
         onEditServer,

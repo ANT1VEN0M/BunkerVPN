@@ -81,7 +81,7 @@ private fun hasServiceToken(remark: String?, token: String, altKeywords: List<St
     return false
 }
 
-private fun detectBunkerServices(
+internal fun detectBunkerServices(
     currentRemark: String?,
     serversInGroup: List<ServersCache>,
     isRunning: Boolean,
@@ -135,7 +135,7 @@ private fun detectBunkerServices(
 }
 
 @Composable
-private fun ServiceBadge(
+internal fun ServiceBadge(
     service: BunkerServiceItem,
     modifier: Modifier = Modifier
 ) {
@@ -265,10 +265,16 @@ fun BunkerHeroHeader(
     onSortByPing: () -> Unit = {},
     onSpeedtestClick: () -> Unit = {},
     onUpdateSub: () -> Unit,
+    hideOfflineServers: Boolean = false,
+    onToggleHideOffline: () -> Unit = {},
+    doubleColumnDisplay: Boolean = false,
+    onToggleDoubleColumn: () -> Unit = {},
+    onRemoveInvalid: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
     var isCollapsed by rememberSaveable { mutableStateOf(false) }
+    var showFilterDialog by remember { mutableStateOf(false) }
     val isDarkTheme = MaterialTheme.colorScheme.surface.luminance() < 0.5f
 
     val infiniteTransition = rememberInfiniteTransition(label = "bunker_pulse")
@@ -287,7 +293,6 @@ fun BunkerHeroHeader(
     var upSpeedText by remember { mutableStateOf("0 B/s") }
     var elapsedSeconds by remember { mutableLongStateOf(0L) }
     var trafficIntensity by remember { mutableFloatStateOf(0f) }
-    var showThemeDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRunning) {
         if (!isRunning) {
@@ -346,7 +351,7 @@ fun BunkerHeroHeader(
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp),
+                .padding(horizontal = 12.dp, vertical = 3.dp),
             shape = RoundedCornerShape(14.dp),
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
@@ -361,7 +366,7 @@ fun BunkerHeroHeader(
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .size(38.dp)
+                        .size(36.dp)
                         .clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onToggle()
@@ -370,7 +375,7 @@ fun BunkerHeroHeader(
                     if (isRunning) {
                         Box(
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(36.dp)
                                 .clip(CircleShape)
                                 .border(1.5.dp, colorFabActive.copy(alpha = pulseAlpha), CircleShape)
                         )
@@ -379,14 +384,14 @@ fun BunkerHeroHeader(
                         painter = painterResource(R.drawable.bunker_logo),
                         contentDescription = "Bunker Cat Button",
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
                     )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // Middle Info
+                // Middle Info - Safe single-line texts to prevent character wrapping
                 Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
@@ -396,22 +401,21 @@ fun BunkerHeroHeader(
                                 .background(if (isRunning) Color(0xFF10B981) else Color(0xFF94A3B8))
                         )
                         Spacer(modifier = Modifier.width(4.dp))
+                        val statusTitle = if (isRunning) {
+                            if (downSpeedText != "0 B/s") "⚡ АКТИВЕН • $downSpeedText" else "⚡ БУНКЕР АКТИВЕН"
+                        } else {
+                            "🛡 ЗАЩИТА ВЫКЛ"
+                        }
                         Text(
-                            text = if (isRunning) "⚡ БУНКЕР АКТИВЕН" else "🛡 ЗАЩИТА ВЫКЛ",
+                            text = statusTitle,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             fontSize = 11.sp,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis,
                             color = if (isRunning) colorFabActive else MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        if (isRunning && downSpeedText != "0 B/s") {
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "↓$downSpeedText",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF10B981)
-                            )
-                        }
                     }
                     Text(
                         text = currentServerRemark ?: "Нажмите на кота для подключения",
@@ -424,7 +428,7 @@ fun BunkerHeroHeader(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(6.dp))
+                Spacer(modifier = Modifier.width(4.dp))
 
                 // Quick Auto Button in collapsed mode
                 Surface(
@@ -445,7 +449,36 @@ fun BunkerHeroHeader(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+
+                // Filter button in collapsed mode
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = if (hideOfflineServers || isAntiRknEnabled) BorderStroke(1.dp, Color(0xFF10B981)) else null,
+                    modifier = Modifier.clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        showFilterDialog = true
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "🎛️", fontSize = 11.sp)
+                        if (hideOfflineServers || isAntiRknEnabled) {
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(5.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFF10B981))
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
 
                 // Expand toggle button
                 Surface(
@@ -457,44 +490,65 @@ fun BunkerHeroHeader(
                     }
                 ) {
                     Text(
-                        text = "▼ Развернуть",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
+                        text = "▼",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 5.dp)
+                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
                     )
                 }
             }
         }
     } else {
-        // Expanded View
+        // Expanded View - Compact, Clean & Fast
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp),
+                .padding(horizontal = 12.dp, vertical = 3.dp),
             shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp, horizontal = 12.dp),
+                    .padding(vertical = 8.dp, horizontal = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Top Mini Header with Collapse Action
+                // Top Mini Header with active indicators and Collapse action
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "BUNKER CYBER SHIELD",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.8.sp,
-                        fontSize = 9.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "BUNKER CYBER SHIELD",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.8.sp,
+                            fontSize = 9.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                        if (hideOfflineServers) {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "• Онлайн",
+                                fontSize = 8.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF10B981)
+                            )
+                        }
+                        if (isAntiRknEnabled) {
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "• Анти-РКН 🇷🇺",
+                                fontSize = 8.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF38BDF8)
+                            )
+                        }
+                    }
+
                     Surface(
                         shape = RoundedCornerShape(6.dp),
                         color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f),
@@ -503,319 +557,197 @@ fun BunkerHeroHeader(
                             isCollapsed = true
                         }
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "▲ Свернуть",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontSize = 9.5.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                        Text(
+                            text = "▲ Свернуть",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontSize = 9.5.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Interactive Cat Button with Cyber Glow
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(66.dp)
-                        .clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onToggle()
-                        }
+                // Main Identity Row: Cat + Status + Current Server
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Outer glow pulse
-                    if (isRunning) {
-                        Box(
-                            modifier = Modifier
-                                .size(66.dp)
-                                .clip(CircleShape)
-                                .background(colorFabActive.copy(alpha = pulseAlpha * 0.25f))
-                                .border(
-                                    width = 2.dp,
-                                    color = colorFabActive.copy(alpha = pulseAlpha),
-                                    shape = CircleShape
-                                )
-                        )
-                    }
-
-                    // Inner Cat Emblem
-                    Image(
-                        painter = painterResource(R.drawable.bunker_logo),
-                        contentDescription = "Bunker Cat Button",
+                    // Cat Button
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .shadow(elevation = if (isRunning) 6.dp else 2.dp, shape = CircleShape)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Main Status Banner
-                Text(
-                    text = if (isRunning) "⚡ БУНКЕР АКТИВЕН" else "🛡 ЗАЩИТА ОТКЛЮЧЕНА",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.5.sp,
-                    color = if (isRunning) colorFabActive else MaterialTheme.colorScheme.onSurfaceVariant,
-                    letterSpacing = 0.5.sp
-                )
-
-                Spacer(modifier = Modifier.height(2.dp))
-
-                // Server node or instructions
-                if (!currentServerRemark.isNullOrBlank()) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(horizontal = 6.dp)
+                            .size(50.dp)
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onToggle()
+                            }
                     ) {
-                        Box(
+                        if (isRunning) {
+                            Box(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .clip(CircleShape)
+                                    .background(colorFabActive.copy(alpha = pulseAlpha * 0.2f))
+                                    .border(1.5.dp, colorFabActive.copy(alpha = pulseAlpha), CircleShape)
+                            )
+                        }
+                        Image(
+                            painter = painterResource(R.drawable.bunker_logo),
+                            contentDescription = "Bunker Cat Button",
                             modifier = Modifier
-                                .size(6.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
-                                .background(if (isRunning) Color(0xFF10B981) else Color(0xFF06B6D4))
-                        )
-                        Spacer(modifier = Modifier.width(5.dp))
-                        Text(
-                            text = currentServerRemark,
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 1,
-                            softWrap = false,
-                            overflow = TextOverflow.Ellipsis
+                                .shadow(elevation = if (isRunning) 4.dp else 1.dp, shape = CircleShape)
                         )
                     }
-                } else {
-                    Text(
-                        text = if (isRunning) "Туннель зашифрован • Нажмите на кота для отключения"
-                        else "Нажмите на кота для мгновенного подключения",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontSize = 10.5.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
-                        textAlign = TextAlign.Center
-                    )
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    // Status and Server Info
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = if (isRunning) "⚡ БУНКЕР АКТИВЕН" else "🛡 ЗАЩИТА ОТКЛЮЧЕНА",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            color = if (isRunning) colorFabActive else MaterialTheme.colorScheme.onSurfaceVariant,
+                            letterSpacing = 0.3.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(1.dp))
+
+                        if (!currentServerRemark.isNullOrBlank()) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(6.dp)
+                                        .clip(CircleShape)
+                                        .background(if (isRunning) Color(0xFF10B981) else Color(0xFF06B6D4))
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = currentServerRemark,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 10.5.sp,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = "Нажмите на кота для подключения",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
+                // If running: Single-line clean Live HUD
+                if (isRunning) {
+                    Spacer(modifier = Modifier.height(5.dp))
+                    val hours = elapsedSeconds / 3600
+                    val minutes = (elapsedSeconds % 3600) / 60
+                    val seconds = elapsedSeconds % 60
+                    val durationStr = if (hours > 0) {
+                        String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                    } else {
+                        String.format("%02d:%02d", minutes, seconds)
+                    }
 
-                // Real-time Server Testing & Health Counter
-                if (isTesting) {
-                    val testingBg = if (isDarkTheme) Color(0xFF0F172A).copy(alpha = 0.85f) else Color(0xFFE0F2FE)
-                    val testingText = if (isDarkTheme) Color(0xFF38BDF8) else Color(0xFF0284C7)
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = testingBg,
-                        border = BorderStroke(1.dp, Color(0xFF06B6D4).copy(alpha = pulseAlpha)),
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp)
+                        color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.55f),
+                        border = BorderStroke(1.dp, colorFabActive.copy(alpha = 0.2f)),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 3.dp),
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "↓ $downSpeedText",
+                                fontSize = 10.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF10B981)
+                            )
+                            Text(
+                                text = "⏱ $durationStr",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF06B6D4)
+                            )
+                            Text(
+                                text = "↑ $upSpeedText",
+                                fontSize = 10.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                } else if (isTesting) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (isDarkTheme) Color(0xFF0F172A).copy(alpha = 0.85f) else Color(0xFFE0F2FE),
+                        border = BorderStroke(1.dp, Color(0xFF06B6D4).copy(alpha = pulseAlpha)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0xFF06B6D4))
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
                             Text(
                                 text = "⚡ Проверка серверов: $testedServersCount / $totalServersCount • Онлайн: $workingServersCount",
-                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 10.5.sp,
-                                color = testingText
+                                color = if (isDarkTheme) Color(0xFF38BDF8) else Color(0xFF0284C7)
                             )
                         }
                     }
                 } else if (testedServersCount > 0) {
-                    val healthBg = when {
-                        workingServersCount > 0 && isDarkTheme -> Color(0xFF064E3B).copy(alpha = 0.5f)
-                        workingServersCount > 0 && !isDarkTheme -> Color(0xFFDCFCE7)
-                        isDarkTheme -> Color(0xFF7F1D1D).copy(alpha = 0.5f)
-                        else -> Color(0xFFFEE2E2)
-                    }
-                    val healthBorder = when {
-                        workingServersCount > 0 && isDarkTheme -> Color(0xFF10B981).copy(alpha = 0.6f)
-                        workingServersCount > 0 && !isDarkTheme -> Color(0xFF16A34A).copy(alpha = 0.7f)
-                        isDarkTheme -> Color(0xFFEF4444).copy(alpha = 0.6f)
-                        else -> Color(0xFFDC2626).copy(alpha = 0.7f)
-                    }
-                    val healthText = when {
-                        workingServersCount > 0 && isDarkTheme -> Color(0xFF34D399)
-                        workingServersCount > 0 && !isDarkTheme -> Color(0xFF14532D)
-                        isDarkTheme -> Color(0xFFF87171)
-                        else -> Color(0xFF991B1B)
-                    }
-
+                    Spacer(modifier = Modifier.height(4.dp))
+                    val percent = if (totalServersCount > 0) (workingServersCount * 100 / totalServersCount) else 0
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = healthBg,
-                        border = BorderStroke(1.dp, healthBorder),
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp)
+                        color = if (workingServersCount > 0 && isDarkTheme) Color(0xFF064E3B).copy(alpha = 0.45f)
+                        else if (workingServersCount > 0) Color(0xFFDCFCE7)
+                        else if (isDarkTheme) Color(0xFF7F1D1D).copy(alpha = 0.45f)
+                        else Color(0xFFFEE2E2),
+                        border = BorderStroke(
+                            1.dp,
+                            if (workingServersCount > 0) Color(0xFF10B981).copy(alpha = 0.5f) else Color(0xFFEF4444).copy(alpha = 0.5f)
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(if (workingServersCount > 0) Color(0xFF10B981) else Color(0xFFEF4444))
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            val percent = if (totalServersCount > 0) (workingServersCount * 100 / totalServersCount) else 0
                             Text(
                                 text = if (workingServersCount > 0) {
                                     "⚡ Рабочих узлов: $workingServersCount из $totalServersCount онлайн ($percent%)"
                                 } else {
                                     "✕ Нет доступных серверов (0 из $totalServersCount)"
                                 },
-                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 10.5.sp,
-                                color = healthText
-                            )
-                        }
-                    }
-                } else if (totalServersCount > 0) {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)),
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "📡 Серверов в группе: $totalServersCount • Нажмите «Пинг» для замера",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 10.5.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-
-                // Supported Services Cyber Row
-                val services = remember(currentServerRemark, serversInGroup, isRunning, workingServersCount) {
-                    detectBunkerServices(currentServerRemark, serversInGroup, isRunning, workingServersCount)
-                }
-                Spacer(modifier = Modifier.height(5.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    services.forEach { service ->
-                        ServiceBadge(
-                            service = service,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-
-                // Anti-RKN Mode Toggle & Theme Palette Quick Row
-                Spacer(modifier = Modifier.height(5.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val rknBg = when {
-                        isAntiRknEnabled && isDarkTheme -> Color(0xFF064E3B).copy(alpha = 0.5f)
-                        isAntiRknEnabled && !isDarkTheme -> Color(0xFFDCFCE7)
-                        isDarkTheme -> Color(0xFF1E1B4B).copy(alpha = 0.5f)
-                        else -> MaterialTheme.colorScheme.surfaceContainerHigh
-                    }
-                    val rknBorder = when {
-                        isAntiRknEnabled && isDarkTheme -> Color(0xFF10B981).copy(alpha = 0.7f)
-                        isAntiRknEnabled && !isDarkTheme -> Color(0xFF16A34A).copy(alpha = 0.7f)
-                        else -> MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
-                    }
-                    val rknText = when {
-                        isAntiRknEnabled && isDarkTheme -> Color(0xFF34D399)
-                        isAntiRknEnabled && !isDarkTheme -> Color(0xFF14532D)
-                        else -> MaterialTheme.colorScheme.primary
-                    }
-
-                    // Anti-RKN Mode Toggle Pill
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = rknBg,
-                        border = BorderStroke(1.dp, rknBorder),
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onToggleAntiRkn()
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 5.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = if (isAntiRknEnabled) "⚡" else "🌐",
-                                fontSize = 11.sp
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = if (isAntiRknEnabled) "Анти-РКН 🇷🇺 (РФ прямо)" else "Полный туннель",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = rknText,
-                                fontSize = 10.5.sp,
-                                maxLines = 1,
-                                softWrap = false,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-
-                    // Theme Quick Pill
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)),
-                        modifier = Modifier.clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            showThemeDialog = true
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = "🎨", fontSize = 11.sp)
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "Тема",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.5.sp,
-                                color = MaterialTheme.colorScheme.primary
+                                color = if (workingServersCount > 0 && isDarkTheme) Color(0xFF34D399)
+                                else if (workingServersCount > 0) Color(0xFF14532D)
+                                else if (isDarkTheme) Color(0xFFF87171)
+                                else Color(0xFF991B1B)
                             )
                         }
                     }
@@ -823,37 +755,34 @@ fun BunkerHeroHeader(
 
                 // In-App Update Banner
                 if (!availableUpdateVersion.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(5.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                         border = BorderStroke(1.dp, Color(0xFF06B6D4)),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 2.dp)
                             .clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 onUpdateClick()
                             }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "🚀", fontSize = 10.5.sp)
+                            Text(text = "🚀", fontSize = 10.sp)
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = "Обновление $availableUpdateVersion!",
-                                style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 10.sp,
                                 color = Color(0xFF38BDF8)
                             )
-                            Spacer(modifier = Modifier.width(5.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Обновить ➔",
-                                style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 10.sp,
                                 color = Color(0xFF10B981)
@@ -862,140 +791,17 @@ fun BunkerHeroHeader(
                     }
                 }
 
-                // Realtime Live Traffic & Timer HUD with Cyber Wave
-                if (isRunning) {
-                    Spacer(modifier = Modifier.height(6.dp))
-                    CyberTrafficWave(
-                        isRunning = isRunning,
-                        intensity = trafficIntensity
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.65f),
-                        border = BorderStroke(1.dp, colorFabActive.copy(alpha = 0.25f)),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp, vertical = 5.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // Down speed
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = "↓",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF10B981),
-                                    fontSize = 12.sp
-                                )
-                                Spacer(modifier = Modifier.width(3.dp))
-                                Text(
-                                    text = downSpeedText,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 10.5.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
+                Spacer(modifier = Modifier.height(6.dp))
 
-                            // Session Duration
-                            val hours = elapsedSeconds / 3600
-                            val minutes = (elapsedSeconds % 3600) / 60
-                            val seconds = elapsedSeconds % 60
-                            val durationStr = if (hours > 0) {
-                                String.format("%02d:%02d:%02d", hours, minutes, seconds)
-                            } else {
-                                String.format("%02d:%02d", minutes, seconds)
-                            }
-
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = "⏱",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontSize = 10.sp
-                                )
-                                Spacer(modifier = Modifier.width(3.dp))
-                                Text(
-                                    text = durationStr,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 10.5.sp,
-                                    color = Color(0xFF06B6D4)
-                                )
-                            }
-
-                            // Up speed
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = "↑",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontSize = 12.sp
-                                )
-                                Spacer(modifier = Modifier.width(3.dp))
-                                Text(
-                                    text = upSpeedText,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 10.5.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(7.dp))
-
-                // Quick Control Pills: Пинг | Авто | Тест | Обновить
+                // Essential Clean Action Row: Авто | Пинг | Фильтры | Тест
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // 1. Ping Button
+                    // 1. Quick Auto 1-Click
                     Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                onTestPing()
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 3.dp, vertical = 7.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_flash_on_24dp),
-                                contentDescription = null,
-                                tint = colorFabActive,
-                                modifier = Modifier.size(13.dp)
-                            )
-                            Spacer(modifier = Modifier.width(2.5.dp))
-                            Text(
-                                text = "Пинг",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 11.sp,
-                                maxLines = 1,
-                                softWrap = false,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
-
-                    // 2. Auto Select Lowest Ping Button
-                    Surface(
-                        shape = RoundedCornerShape(10.dp),
+                        shape = RoundedCornerShape(9.dp),
                         color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
                         border = BorderStroke(1.dp, colorFabActive.copy(alpha = 0.5f)),
                         modifier = Modifier
@@ -1006,12 +812,12 @@ fun BunkerHeroHeader(
                             }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 3.dp, vertical = 7.dp),
+                            modifier = Modifier.padding(vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(text = "🎯", fontSize = 11.sp)
-                            Spacer(modifier = Modifier.width(2.5.dp))
+                            Spacer(modifier = Modifier.width(3.dp))
                             Text(
                                 text = "Авто",
                                 style = MaterialTheme.typography.labelMedium,
@@ -1024,9 +830,84 @@ fun BunkerHeroHeader(
                         }
                     }
 
-                    // 3. Speedtest Button
+                    // 2. Ping Test
                     Surface(
-                        shape = RoundedCornerShape(10.dp),
+                        shape = RoundedCornerShape(9.dp),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onTestPing()
+                            }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_flash_on_24dp),
+                                contentDescription = null,
+                                tint = colorFabActive,
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Spacer(modifier = Modifier.width(3.dp))
+                            Text(
+                                text = "Пинг",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 11.sp,
+                                maxLines = 1,
+                                softWrap = false,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+
+                    // 3. Filters & Settings Sheet Button (Alexander's filter button!)
+                    Surface(
+                        shape = RoundedCornerShape(9.dp),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
+                        border = if (hideOfflineServers || isAntiRknEnabled) BorderStroke(1.dp, Color(0xFF10B981)) else null,
+                        modifier = Modifier
+                            .weight(1.1f)
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                showFilterDialog = true
+                            }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "🎛️", fontSize = 11.sp)
+                            Spacer(modifier = Modifier.width(3.dp))
+                            Text(
+                                text = "Фильтры",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                maxLines = 1,
+                                softWrap = false,
+                                color = if (hideOfflineServers || isAntiRknEnabled) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurface
+                            )
+                            if (hideOfflineServers || isAntiRknEnabled) {
+                                Spacer(modifier = Modifier.width(3.dp))
+                                Box(
+                                    modifier = Modifier
+                                        .size(5.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFF10B981))
+                                )
+                            }
+                        }
+                    }
+
+                    // 4. Speedtest
+                    Surface(
+                        shape = RoundedCornerShape(9.dp),
                         color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
                         modifier = Modifier
                             .weight(1f)
@@ -1036,12 +917,12 @@ fun BunkerHeroHeader(
                             }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 3.dp, vertical = 7.dp),
+                            modifier = Modifier.padding(vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(text = "🚀", fontSize = 11.sp)
-                            Spacer(modifier = Modifier.width(2.5.dp))
+                            Spacer(modifier = Modifier.width(3.dp))
                             Text(
                                 text = "Тест",
                                 style = MaterialTheme.typography.labelMedium,
@@ -1053,47 +934,28 @@ fun BunkerHeroHeader(
                             )
                         }
                     }
-
-                    // 4. Update Subscriptions Button
-                    Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                onUpdateSub()
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 3.dp, vertical = 7.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_refresh_24dp),
-                                contentDescription = null,
-                                tint = colorFabActive,
-                                modifier = Modifier.size(13.dp)
-                            )
-                            Spacer(modifier = Modifier.width(2.5.dp))
-                            Text(
-                                text = "Обновить",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 10.5.sp,
-                                maxLines = 1,
-                                softWrap = false,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
                 }
             }
         }
     }
 
-    if (showThemeDialog) {
-        BunkerThemeDialog(onDismissRequest = { showThemeDialog = false })
+    if (showFilterDialog) {
+        BunkerFilterDialog(
+            hideOfflineServers = hideOfflineServers,
+            onToggleHideOffline = onToggleHideOffline,
+            doubleColumnDisplay = doubleColumnDisplay,
+            onToggleDoubleColumn = onToggleDoubleColumn,
+            isAntiRknEnabled = isAntiRknEnabled,
+            onToggleAntiRkn = onToggleAntiRkn,
+            onSortByPing = onSortByPing,
+            onRemoveInvalid = onRemoveInvalid,
+            onSpeedtestClick = onSpeedtestClick,
+            onUpdateSub = onUpdateSub,
+            currentServerRemark = currentServerRemark,
+            serversInGroup = serversInGroup,
+            isRunning = isRunning,
+            workingServersCount = workingServersCount,
+            onDismissRequest = { showFilterDialog = false }
+        )
     }
 }

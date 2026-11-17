@@ -85,7 +85,8 @@ class MainViewModel(
             selectedGroupId = dataSource.getSelectedSubscriptionId(),
             selectedGuid = dataSource.getSelectServer(),
             confirmRemove = dataSource.getConfirmRemove(),
-            doubleColumnDisplay = dataSource.getDoubleColumnDisplay()
+            doubleColumnDisplay = dataSource.getDoubleColumnDisplay(),
+            hideOfflineServers = MmkvManager.decodeSettingsBool(AppConfig.PREF_HIDE_OFFLINE_SERVERS, false)
         )
     )
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -288,6 +289,16 @@ class MainViewModel(
             MainAction.RemoveAllServers -> removeAllServerAsync()
             MainAction.RemoveDuplicateServers -> removeDuplicateServerAsync()
             MainAction.RemoveInvalidServers -> removeInvalidServerAsync()
+            MainAction.ToggleDoubleColumn -> {
+                val current = _uiState.value.doubleColumnDisplay
+                MmkvManager.encodeSettings(AppConfig.PREF_DOUBLE_COLUMN_DISPLAY, !current)
+                _uiState.update { it.copy(doubleColumnDisplay = !current) }
+            }
+            MainAction.ToggleHideOfflineServers -> {
+                val current = _uiState.value.hideOfflineServers
+                MmkvManager.encodeSettings(AppConfig.PREF_HIDE_OFFLINE_SERVERS, !current)
+                _uiState.update { it.copy(hideOfflineServers = !current) }
+            }
             MainAction.SortByTestResults -> sortByTestResultsAsync()
             MainAction.UpdateSubscriptions -> importConfigViaSub(uiState.value.selectedGroupId)
             is MainAction.UpdateGroupSubscription -> importConfigViaSub(action.groupId)
@@ -955,8 +966,11 @@ class MainViewModel(
         if (testRequests.completeBulk(requestId) == null) return
         resetTestStatus()
         viewModelScope.launch(ioDispatcher) {
+            // Automatically sort available servers by ping (fastest first, offline to bottom)
+            sortByTestResultsInternal()
             cacheMutex.withLock { groupDataCache.clear() }
             reloadAllGroups(_uiState.value.groups.map { it.id })
+            setupGroupTab(forceRefresh = true)
             if (isAutoSelectPending) {
                 isAutoSelectPending = false
                 delay(350)
@@ -969,9 +983,6 @@ class MainViewModel(
                     val best = working.minByOrNull { it.testDelayMillis }!!
                     val prevGuid = _uiState.value.selectedGuid
                     updateSelectedGuid(best.guid)
-                    sortByTestResultsInternal()
-                    cacheMutex.withLock { groupDataCache.clear() }
-                    setupGroupTab(forceRefresh = true)
                     toastSuccess("🎯 Автовыбор: ${best.profile.remarks} (${best.testDelayMillis} мс)")
                     if (_uiState.value.isRunning && prevGuid != best.guid) {
                         LauncherManager.restartService(getApplication())

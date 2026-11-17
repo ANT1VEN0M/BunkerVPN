@@ -66,6 +66,7 @@ fun MainScreen(
     val displayText = mainViewModel.formatStatus(uiState.status)
     val selectedGuid = uiState.selectedGuid
     val doubleColumnDisplay = uiState.doubleColumnDisplay
+    val hideOfflineServers = uiState.hideOfflineServers
     val confirmRemove = uiState.confirmRemove
     val shareQRCodeBitmap = uiState.shareQRCodeBitmap
 
@@ -331,7 +332,12 @@ fun MainScreen(
                         onAutoSelect = { onAction(MainAction.AutoSelectBestServer) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },
                         onSpeedtestClick = { showSpeedtestDialog = true },
-                        onUpdateSub = { onAction(MainAction.UpdateSubscriptions) }
+                        onUpdateSub = { onAction(MainAction.UpdateSubscriptions) },
+                        hideOfflineServers = hideOfflineServers,
+                        onToggleHideOffline = { onAction(MainAction.ToggleHideOfflineServers) },
+                        doubleColumnDisplay = doubleColumnDisplay,
+                        onToggleDoubleColumn = { onAction(MainAction.ToggleDoubleColumn) },
+                        onRemoveInvalid = { onAction(MainAction.RemoveInvalidServers) }
                     )
 
                     HorizontalPager(
@@ -349,6 +355,7 @@ fun MainScreen(
                             selectedGuid = selectedGuid,
                             locateTarget = uiState.locateTarget,
                             doubleColumnDisplay = doubleColumnDisplay,
+                            hideOfflineServers = hideOfflineServers,
                             searchQuery = searchQuery,
                             lazyListStates = lazyListStates,
                             lazyGridStates = lazyGridStates,
@@ -368,7 +375,7 @@ fun MainScreen(
                                 start = 0.dp,
                                 top = 0.dp,
                                 end = 0.dp,
-                                bottom = bottomBarHeight + 8.dp
+                                bottom = bottomBarHeight + 36.dp
                             )
                         )
                     }

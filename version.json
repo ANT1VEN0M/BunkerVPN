@@ -1,7 +1,7 @@
 {
-  "version": "1.2.8",
-  "versionCode": 1020,
-  "tagName": "v1.2.8",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.8/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.2.8: Встроенный In-App установщик обновлений прямо в приложении! Скачивание APK с индикатором прогресса и прямой запуск установки без перехода в браузер."
+  "version": "1.2.9",
+  "versionCode": 1021,
+  "tagName": "v1.2.9",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.9/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.2.9: Разгружен главный экран (новая Cyber-панель «🎛️ Фильтры»), авто-сортировка по пингу после теста, мгновенный фильтр «⚡ Только онлайн», устранение бага верстки на Samsung A-11 и полная поддержка авто-планшетов Teyes CC3 2K."
 }
