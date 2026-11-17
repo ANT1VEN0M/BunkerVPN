@@ -158,6 +158,7 @@ fun MainScreen(
     val latestGroups by rememberUpdatedState(groups)
     // Height of the floating connection bar, so the server lists can scroll clear of it.
     var bottomBarHeightPx by remember { mutableIntStateOf(0) }
+    var showSpeedtestDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.settledPage }
@@ -184,6 +185,15 @@ fun MainScreen(
         onDismissRemove = { showRemoveConfirm = null },
         onConfirmRemove = { guid -> showRemoveConfirm = null; onAction(MainAction.RemoveServer(guid)) }
     )
+
+    if (showSpeedtestDialog) {
+        BunkerSpeedtestDialog(
+            show = showSpeedtestDialog,
+            onDismiss = { showSpeedtestDialog = false },
+            serverName = mainViewModel.getSelectedServerRemarks(),
+            proxyPort = SettingsManager.getHttpPort()
+        )
+    }
 
     if (shareTarget != null) {
         val (guid, profile, more) = shareTarget!!
@@ -310,6 +320,7 @@ fun MainScreen(
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },
+                        onSpeedtestClick = { showSpeedtestDialog = true },
                         onUpdateSub = { onAction(MainAction.UpdateSubscriptions) }
                     )
 

@@ -7,9 +7,32 @@
     ]
   },
   {
-    "remarks": "Block udp443",
+    "remarks": "Block udp443 (Anti-QUIC throttling)",
     "outboundTag": "block",
     "port": "443",
+    "network": "udp"
+  },
+  {
+    "remarks": "Bunker YouTube & Discord Boost",
+    "outboundTag": "proxy",
+    "domain": [
+      "geosite:youtube",
+      "geosite:discord",
+      "domain:googlevideo.com",
+      "domain:youtube.com",
+      "domain:ytimg.com",
+      "domain:youtu.be",
+      "domain:discord.com",
+      "domain:discord.gg",
+      "domain:discordapp.com",
+      "domain:discord.media",
+      "domain:discordapp.net"
+    ]
+  },
+  {
+    "remarks": "Discord Voice UDP",
+    "outboundTag": "proxy",
+    "port": "50000-65535",
     "network": "udp"
   },
   {

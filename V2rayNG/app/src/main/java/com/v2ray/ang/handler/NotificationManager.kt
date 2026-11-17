@@ -165,6 +165,7 @@ object NotificationManager {
         service.stopForeground(Service.STOP_FOREGROUND_REMOVE)
 
         MmkvManager.encodeTrafficSpeed(0L, 0L)
+        com.v2ray.ang.receiver.WidgetProvider.updateAllWidgets(service)
         mBuilder = null
         speedNotificationJob?.cancel()
         speedNotificationJob = null
@@ -311,6 +312,7 @@ object NotificationManager {
         val currentDownSpeed = ((proxyDownlink + directDownlink) / sinceLastQueryInSeconds).toLong()
         val currentUpSpeed = ((proxyUplink + directUplink) / sinceLastQueryInSeconds).toLong()
         MmkvManager.encodeTrafficSpeed(currentDownSpeed, currentUpSpeed)
+        com.v2ray.ang.receiver.WidgetProvider.updateAllWidgets(service)
 
         val zeroSpeed = proxyTotal + directTotal == 0L
         if (!zeroSpeed || !lastZeroSpeed) {

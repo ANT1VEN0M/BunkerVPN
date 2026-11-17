@@ -1,7 +1,7 @@
 {
-  "version": "1.2.2",
-  "versionCode": 1014,
-  "tagName": "v1.2.2-cyber",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.2-cyber/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 Починен автоапдейтер и добавлено скрытие VPN от банков в режиме Анти-РКН!"
+  "version": "1.2.3",
+  "versionCode": 1015,
+  "tagName": "v1.2.3-cyber",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.3-cyber/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.2.3: Cyber-виджет на рабочий стол, реальный In-App Спидтест и ускорение YouTube 4K / Discord Voice!"
 }

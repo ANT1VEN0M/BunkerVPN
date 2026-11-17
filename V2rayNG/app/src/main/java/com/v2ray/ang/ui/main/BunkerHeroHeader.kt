@@ -257,6 +257,7 @@ fun BunkerHeroHeader(
     onToggle: () -> Unit,
     onTestPing: () -> Unit,
     onSortByPing: () -> Unit,
+    onSpeedtestClick: () -> Unit = {},
     onUpdateSub: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -701,7 +702,7 @@ fun BunkerHeroHeader(
             // Quick Control Pills
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally)
             ) {
                 // Ping Button
                 Surface(
@@ -714,7 +715,7 @@ fun BunkerHeroHeader(
                         }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 11.dp, vertical = 7.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -723,7 +724,7 @@ fun BunkerHeroHeader(
                             tint = colorFabActive,
                             modifier = Modifier.size(15.dp)
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Пинг",
                             style = MaterialTheme.typography.labelMedium,
@@ -744,7 +745,7 @@ fun BunkerHeroHeader(
                         }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 11.dp, vertical = 7.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -753,9 +754,37 @@ fun BunkerHeroHeader(
                             tint = colorFabActive,
                             modifier = Modifier.size(15.dp)
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Топ пинг",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // Speedtest Button
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
+                    modifier = Modifier
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            onSpeedtestClick()
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 7.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "⚡",
+                            fontSize = 12.sp
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Спидтест",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -774,7 +803,7 @@ fun BunkerHeroHeader(
                         }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 11.dp, vertical = 7.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -783,7 +812,7 @@ fun BunkerHeroHeader(
                             tint = colorFabActive,
                             modifier = Modifier.size(15.dp)
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Обновить",
                             style = MaterialTheme.typography.labelMedium,
