@@ -91,7 +91,7 @@ fun MainScreen(
         }
     }
 
-    val handleToggleAntiRkn = {
+    val handleToggleAntiRkn: () -> Unit = {
         val nextState = !isAntiRknEnabled
         SettingsManager.toggleAntiRknRouting(context, nextState)
         isAntiRknEnabled = nextState
@@ -105,7 +105,7 @@ fun MainScreen(
         }
     }
 
-    val handleUpdateClick = {
+    val handleUpdateClick: () -> Unit = {
         updateDownloadUrl?.let { url ->
             runCatching {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -304,9 +304,9 @@ fun MainScreen(
                         testedServersCount = testedServersCount,
                         serversInGroup = realServers,
                         isAntiRknEnabled = isAntiRknEnabled,
-                        onToggleAntiRkn = handleToggleAntiRkn,
+                        onToggleAntiRkn = { handleToggleAntiRkn() },
                         availableUpdateVersion = availableUpdateVersion,
-                        onUpdateClick = handleUpdateClick,
+                        onUpdateClick = { handleUpdateClick() },
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },
