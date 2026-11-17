@@ -233,10 +233,13 @@ def fetch_and_convert():
     out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "subscriptions")
     os.makedirs(out_dir, exist_ok=True)
 
+    # bunker_karing.txt is Base64 encoded for universal compatibility with all V2Ray/Karing/v2rayN/v2rayNG/Happ/Shadowrocket clients
     with open(os.path.join(out_dir, "bunker_karing.txt"), "w", encoding="utf-8") as f:
-        f.write(txt_content)
+        f.write(b64_content)
     with open(os.path.join(out_dir, "bunker_karing_b64.txt"), "w", encoding="utf-8") as f:
         f.write(b64_content)
+    with open(os.path.join(out_dir, "bunker_karing_raw.txt"), "w", encoding="utf-8") as f:
+        f.write(txt_content)
     with open(os.path.join(out_dir, "bunker_karing_clash.yaml"), "w", encoding="utf-8") as f:
         f.write(yaml_content)
 
