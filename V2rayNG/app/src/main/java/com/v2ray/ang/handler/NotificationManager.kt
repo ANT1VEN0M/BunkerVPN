@@ -167,7 +167,7 @@ object NotificationManager {
         service.stopForeground(Service.STOP_FOREGROUND_REMOVE)
 
         MmkvManager.encodeTrafficSpeed(0L, 0L)
-        com.v2ray.ang.receiver.WidgetProvider.updateAllWidgets(service)
+        com.v2ray.ang.receiver.WidgetProvider.stopLiveTicker(service)
         mBuilder = null
         speedNotificationJob?.cancel()
         speedNotificationJob = null

@@ -181,6 +181,7 @@ object CoreServiceManager {
             MessageHelper.sendMsg2UI(service, AppConfig.MSG_STATE_START_SUCCESS, "")
         }
         NotificationManager.startSpeedNotification()
+        com.v2ray.ang.receiver.WidgetProvider.startLiveTicker(service)
         LogUtil.i(AppConfig.TAG, "StartCore-Manager: Core started successfully")
     }
 
@@ -193,6 +194,7 @@ object CoreServiceManager {
         connectionTestScope.coroutineContext.cancelChildren()
         val service = getService() ?: return false
 
+        com.v2ray.ang.receiver.WidgetProvider.stopLiveTicker(service)
         networkMonitor?.unregister()
         networkMonitor = null
         currentVpnInterface = null
