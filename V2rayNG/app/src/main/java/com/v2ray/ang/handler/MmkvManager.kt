@@ -999,6 +999,30 @@ object MmkvManager {
 
     //endregion
 
+    //region Bunker Traffic Speed Sharing
+
+    private const val KEY_TRAFFIC_DOWN_BPS = "bunker_traffic_down_bps"
+    private const val KEY_TRAFFIC_UP_BPS = "bunker_traffic_up_bps"
+    private const val KEY_TRAFFIC_TIMESTAMP = "bunker_traffic_timestamp"
+
+    fun encodeTrafficSpeed(downBps: Long, upBps: Long) {
+        mainStorage.encode(KEY_TRAFFIC_DOWN_BPS, downBps)
+        mainStorage.encode(KEY_TRAFFIC_UP_BPS, upBps)
+        mainStorage.encode(KEY_TRAFFIC_TIMESTAMP, System.currentTimeMillis())
+    }
+
+    fun decodeTrafficSpeed(): Pair<Long, Long> {
+        val timestamp = mainStorage.decodeLong(KEY_TRAFFIC_TIMESTAMP, 0L)
+        if (System.currentTimeMillis() - timestamp > 4000L) {
+            return Pair(0L, 0L)
+        }
+        val down = mainStorage.decodeLong(KEY_TRAFFIC_DOWN_BPS, 0L)
+        val up = mainStorage.decodeLong(KEY_TRAFFIC_UP_BPS, 0L)
+        return Pair(down, up)
+    }
+
+    //endregion
+
     //region Compose helpers for Settings
 
     /**

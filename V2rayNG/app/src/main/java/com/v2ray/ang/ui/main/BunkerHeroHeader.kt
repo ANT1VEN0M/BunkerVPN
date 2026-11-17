@@ -1,5 +1,7 @@
 package com.v2ray.ang.ui.main
 
+import android.net.TrafficStats
+import android.os.Process
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -53,6 +55,7 @@ import com.v2ray.ang.R
 import com.v2ray.ang.core.CoreServiceManager
 import com.v2ray.ang.dto.entities.ServersCache
 import com.v2ray.ang.extension.toSpeedString
+import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.ui.compose.colorFabActive
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -185,27 +188,28 @@ private fun CyberTrafficWave(
         initialValue = 0f,
         targetValue = 6.28318f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = if (intensity > 0.2f) 850 else 1800, easing = LinearEasing),
+            animation = tween(durationMillis = if (intensity > 0.35f) 700 else 1350, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "wave_phase"
     )
 
     val barCount = 14
-    val baseColor = colorFabActive
-    val highColor = Color(0xFF06B6D4)
+    val cyanColor = Color(0xFF06B6D4)
+    val purpleColor = Color(0xFFA855F7)
+    val emeraldColor = Color(0xFF10B981)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(24.dp)
+            .height(26.dp)
             .padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(4.5.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in 0 until barCount) {
             val distFromCenter = kotlin.math.abs(i - (barCount - 1) / 2.0f) / ((barCount - 1) / 2.0f)
-            val centerWeight = 1f - 0.4f * distFromCenter
+            val centerWeight = 1f - 0.35f * distFromCenter
 
             val sineVal = kotlin.math.sin(wavePhase + i * 0.45f).toFloat()
             val normalizedSine = (sineVal + 1f) / 2f
@@ -213,17 +217,21 @@ private fun CyberTrafficWave(
             val targetHeightDp = if (!isRunning) {
                 3.dp
             } else {
-                val idleH = 4f + normalizedSine * 3f
-                val activeH = 6f + normalizedSine * 18f * (0.3f + 0.7f * intensity)
-                (idleH + (activeH - idleH) * (if (intensity > 0.05f) 1f else 0f) * centerWeight).dp
+                val minH = 6f + normalizedSine * 6f
+                val maxH = 9f + normalizedSine * 17f
+                (minH + (maxH - minH) * intensity * centerWeight).dp
             }
 
-            val barAlpha = if (!isRunning) 0.2f else (0.45f + 0.55f * normalizedSine)
-            val barColor = if (intensity > 0.2f && (i % 2 == 0)) highColor else baseColor
+            val barAlpha = if (!isRunning) 0.25f else (0.55f + 0.45f * normalizedSine)
+            val barColor = when {
+                i % 3 == 0 -> cyanColor
+                i % 3 == 1 -> purpleColor
+                else -> emeraldColor
+            }
 
             Box(
                 modifier = Modifier
-                    .width(3.5.dp)
+                    .width(4.dp)
                     .height(targetHeightDp)
                     .clip(RoundedCornerShape(2.dp))
                     .background(barColor.copy(alpha = barAlpha))
@@ -280,49 +288,47 @@ fun BunkerHeroHeader(
             return@LaunchedEffect
         }
         var lastTime = System.currentTimeMillis()
-        var lastDown = 0L
-        var lastUp = 0L
-
-        runCatching {
-            CoreServiceManager.queryAllOutboundTrafficStats().forEach { stat ->
-                if (stat.tag != AppConfig.TAG_BLOCKED) {
-                    when (stat.direction) {
-                        AppConfig.UPLINK -> lastUp += stat.value
-                        AppConfig.DOWNLINK -> lastDown += stat.value
-                    }
-                }
-            }
-        }
+        val uid = Process.myUid()
+        var lastRx = TrafficStats.getUidRxBytes(uid).takeIf { it >= 0 } ?: TrafficStats.getTotalRxBytes()
+        var lastTx = TrafficStats.getUidTxBytes(uid).takeIf { it >= 0 } ?: TrafficStats.getTotalTxBytes()
 
         while (isActive && isRunning) {
             delay(1000L)
             elapsedSeconds += 1L
             val now = System.currentTimeMillis()
             val dt = (now - lastTime).coerceAtLeast(100L) / 1000.0
-            var curDown = 0L
-            var curUp = 0L
-
-            runCatching {
-                CoreServiceManager.queryAllOutboundTrafficStats().forEach { stat ->
-                    if (stat.tag != AppConfig.TAG_BLOCKED) {
-                        when (stat.direction) {
-                            AppConfig.UPLINK -> curUp += stat.value
-                            AppConfig.DOWNLINK -> curDown += stat.value
-                        }
-                    }
-                }
-            }
-
-            val dDown = (curDown - lastDown).coerceAtLeast(0L)
-            val dUp = (curUp - lastUp).coerceAtLeast(0L)
-            lastDown = curDown
-            lastUp = curUp
             lastTime = now
 
-            downSpeedText = (dDown / dt).toLong().toSpeedString()
-            upSpeedText = (dUp / dt).toLong().toSpeedString()
-            val totalBytes = dDown + dUp
-            trafficIntensity = (totalBytes / (dt * 1024.0 * 1024.0 * 2.5)).toFloat().coerceIn(0f, 1f)
+            val curRx = TrafficStats.getUidRxBytes(uid).takeIf { it >= 0 } ?: TrafficStats.getTotalRxBytes()
+            val curTx = TrafficStats.getUidTxBytes(uid).takeIf { it >= 0 } ?: TrafficStats.getTotalTxBytes()
+
+            var speedDown = 0L
+            var speedUp = 0L
+
+            if (curRx >= 0 && lastRx >= 0 && curRx >= lastRx) {
+                speedDown = ((curRx - lastRx) / dt).toLong().coerceAtLeast(0L)
+            }
+            if (curTx >= 0 && lastTx >= 0 && curTx >= lastTx) {
+                speedUp = ((curTx - lastTx) / dt).toLong().coerceAtLeast(0L)
+            }
+
+            // Cross-check with core stats shared through MMKV by daemon
+            val (coreDown, coreUp) = MmkvManager.decodeTrafficSpeed()
+            val finalDown = maxOf(speedDown, coreDown)
+            val finalUp = maxOf(speedUp, coreUp)
+
+            lastRx = curRx
+            lastTx = curTx
+
+            downSpeedText = finalDown.toSpeedString()
+            upSpeedText = finalUp.toSpeedString()
+
+            val totalSpeed = finalDown + finalUp
+            trafficIntensity = if (totalSpeed <= 0L) {
+                0.2f
+            } else {
+                (0.25f + (totalSpeed / (1024.0 * 1024.0 * 2.0)).toFloat() * 0.75f).coerceIn(0.2f, 1f)
+            }
         }
     }
 

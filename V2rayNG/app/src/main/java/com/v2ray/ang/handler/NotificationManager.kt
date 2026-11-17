@@ -67,7 +67,7 @@ object NotificationManager {
      * @param currentConfig The current profile configuration.
      */
     fun startSpeedNotification() {
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SPEED_ENABLED) != true) return
+        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SPEED_ENABLED, true) != true) return
         if (speedNotificationJob != null || CoreServiceManager.isRunning() == false) return
 
         var lastZeroSpeed = false
@@ -164,6 +164,7 @@ object NotificationManager {
         val service = getService() ?: return
         service.stopForeground(Service.STOP_FOREGROUND_REMOVE)
 
+        MmkvManager.encodeTrafficSpeed(0L, 0L)
         mBuilder = null
         speedNotificationJob?.cancel()
         speedNotificationJob = null
@@ -307,6 +308,10 @@ object NotificationManager {
 
         val proxyTotal = proxyUplink + proxyDownlink
         val directTotal = directUplink + directDownlink
+        val currentDownSpeed = ((proxyDownlink + directDownlink) / sinceLastQueryInSeconds).toLong()
+        val currentUpSpeed = ((proxyUplink + directUplink) / sinceLastQueryInSeconds).toLong()
+        MmkvManager.encodeTrafficSpeed(currentDownSpeed, currentUpSpeed)
+
         val zeroSpeed = proxyTotal + directTotal == 0L
         if (!zeroSpeed || !lastZeroSpeed) {
             val pUp = (proxyUplink / sinceLastQueryInSeconds).toLong().toSpeedString()
