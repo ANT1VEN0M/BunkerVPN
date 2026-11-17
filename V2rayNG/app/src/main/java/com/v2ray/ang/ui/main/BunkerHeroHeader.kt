@@ -196,7 +196,7 @@ private fun CyberTrafficWave(
 
     val barCount = 14
     val cyanColor = Color(0xFF06B6D4)
-    val purpleColor = Color(0xFFA855F7)
+    val purpleColor = MaterialTheme.colorScheme.primary
     val emeraldColor = Color(0xFF10B981)
 
     Row(
@@ -279,6 +279,7 @@ fun BunkerHeroHeader(
     var upSpeedText by remember { mutableStateOf("0 B/s") }
     var elapsedSeconds by remember { mutableLongStateOf(0L) }
     var trafficIntensity by remember { mutableFloatStateOf(0f) }
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(isRunning) {
         if (!isRunning) {
@@ -530,46 +531,89 @@ fun BunkerHeroHeader(
                 }
             }
 
-            // Anti-RKN Mode Toggle Pill
+            // Anti-RKN Mode Toggle & Theme Palette Quick Row
             Spacer(modifier = Modifier.height(7.dp))
-            Surface(
-                shape = RoundedCornerShape(10.dp),
-                color = if (isAntiRknEnabled) Color(0xFF064E3B).copy(alpha = 0.5f) else Color(0xFF1E1B4B).copy(alpha = 0.5f),
-                border = BorderStroke(
-                    1.dp,
-                    if (isAntiRknEnabled) Color(0xFF10B981).copy(alpha = 0.7f) else Color(0xFF818CF8).copy(alpha = 0.6f)
-                ),
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 4.dp)
-                    .clickable {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onToggleAntiRkn()
-                    }
+                    .padding(horizontal = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                // Anti-RKN Mode Toggle Pill
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (isAntiRknEnabled) Color(0xFF064E3B).copy(alpha = 0.5f) else Color(0xFF1E1B4B).copy(alpha = 0.5f),
+                    border = BorderStroke(
+                        1.dp,
+                        if (isAntiRknEnabled) Color(0xFF10B981).copy(alpha = 0.7f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onToggleAntiRkn()
+                        }
                 ) {
-                    Text(
-                        text = if (isAntiRknEnabled) "⚡" else "🌐",
-                        fontSize = 11.sp
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = if (isAntiRknEnabled) "Режим: Анти-РКН 🇷🇺 (Банки и РФ напрямую)" else "Режим: Полный туннель (Весь трафик)",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isAntiRknEnabled) Color(0xFF34D399) else Color(0xFFA5B4FC)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(if (isAntiRknEnabled) Color(0xFF10B981) else Color(0xFF818CF8))
-                    )
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = if (isAntiRknEnabled) "⚡" else "🌐",
+                            fontSize = 11.sp
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text(
+                            text = if (isAntiRknEnabled) "Анти-РКН 🇷🇺 (РФ прямо)" else "Полный туннель",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isAntiRknEnabled) Color(0xFF34D399) else MaterialTheme.colorScheme.primary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(6.dp)
+                                .clip(CircleShape)
+                                .background(if (isAntiRknEnabled) Color(0xFF10B981) else MaterialTheme.colorScheme.primary)
+                        )
+                    }
+                }
+
+                // Theme Quick Pill
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.85f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)),
+                    modifier = Modifier.clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        showThemeDialog = true
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "🎨", fontSize = 11.sp)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(7.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primary)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Тема",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
 
@@ -578,7 +622,7 @@ fun BunkerHeroHeader(
                 Spacer(modifier = Modifier.height(6.dp))
                 Surface(
                     shape = RoundedCornerShape(10.dp),
-                    color = Color(0xFF7C3AED).copy(alpha = 0.25f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
                     border = BorderStroke(1.dp, Color(0xFF06B6D4)),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -682,7 +726,7 @@ fun BunkerHeroHeader(
                                 text = "↑",
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFA855F7), // Neon Purple
+                                color = MaterialTheme.colorScheme.primary, // Neon Theme Accent
                                 fontSize = 13.sp
                             )
                             Spacer(modifier = Modifier.width(4.dp))
@@ -823,5 +867,9 @@ fun BunkerHeroHeader(
                 }
             }
         }
+    }
+
+    if (showThemeDialog) {
+        BunkerThemeDialog(onDismissRequest = { showThemeDialog = false })
     }
 }

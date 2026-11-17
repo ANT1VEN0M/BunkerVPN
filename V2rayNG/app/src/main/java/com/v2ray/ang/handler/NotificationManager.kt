@@ -24,6 +24,7 @@ import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.extension.delay
 import com.v2ray.ang.extension.toSpeedString
 import com.v2ray.ang.helper.NotificationHelper
+import com.v2ray.ang.ui.compose.BunkerThemePalette
 import com.v2ray.ang.ui.main.MainActivity
 import com.v2ray.ang.util.LogUtil
 import kotlinx.coroutines.CoroutineScope
@@ -115,10 +116,11 @@ object NotificationManager {
             }
 
         val catBitmap = getCircularCatBitmap(service)
+        val palette = BunkerThemePalette.fromId(MmkvManager.decodeSettingsString(AppConfig.PREF_THEME_PALETTE, AppConfig.DEFAULT_THEME_PALETTE))
 
         mBuilder = NotificationCompat.Builder(service, channelId)
             .setSmallIcon(R.drawable.ic_stat_name)
-            .setColor(0xFF7C3AED.toInt()) // Cyber Purple
+            .setColor(palette.notifColorInt)
             .apply {
                 if (catBitmap != null) {
                     setLargeIcon(catBitmap)
@@ -229,7 +231,8 @@ object NotificationManager {
         if (service != null) {
             getCircularCatBitmap(service)?.let { builder.setLargeIcon(it) }
         }
-        builder.setColor(0xFF7C3AED.toInt())
+        val palette = BunkerThemePalette.fromId(MmkvManager.decodeSettingsString(AppConfig.PREF_THEME_PALETTE, AppConfig.DEFAULT_THEME_PALETTE))
+        builder.setColor(palette.notifColorInt)
         if (!bigText.isNullOrEmpty()) {
             builder.setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
         }

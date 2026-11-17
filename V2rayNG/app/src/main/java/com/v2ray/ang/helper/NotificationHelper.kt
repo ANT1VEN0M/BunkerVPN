@@ -9,9 +9,12 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
+import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.enums.NotificationChannelType
 import com.v2ray.ang.handler.AppLocaleManager
+import com.v2ray.ang.handler.MmkvManager
+import com.v2ray.ang.ui.compose.BunkerThemePalette
 
 /**
  * Unified notification helper for different notification channels.
@@ -184,9 +187,13 @@ object NotificationHelper {
             BitmapFactory.decodeResource(context.resources, R.drawable.bunker_logo)
         }.getOrNull()
 
+        val palette = BunkerThemePalette.fromId(
+            MmkvManager.decodeSettingsString(AppConfig.PREF_THEME_PALETTE, AppConfig.DEFAULT_THEME_PALETTE)
+        )
+
         return NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_stat_name)
-            .setColor(0xFF7C3AED.toInt())
+            .setColor(palette.notifColorInt)
             .apply {
                 if (catBitmap != null) {
                     setLargeIcon(catBitmap)

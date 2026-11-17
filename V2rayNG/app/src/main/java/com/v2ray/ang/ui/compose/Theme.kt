@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -34,85 +35,192 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 
-private val LightColor = lightColorScheme(
-    primary = Color(0xFF000000), // Black
-    onPrimary = Color(0xFFFFFFFF), // White
-    primaryContainer = Color(0xFFE0E0E0), // Light Gray
-    onPrimaryContainer = Color(0xFF000000), // Black
-    secondary = Color(0xFFf97910), // Orange
-    onSecondary = Color(0xFFFFFFFF), // White
-    secondaryContainer = Color(0xFFFFE8D6), // Pale Orange
-    onSecondaryContainer = Color(0xFF2B1700), // Dark Brown
-    tertiary = Color(0xFF009966), // Green
-    onTertiary = Color(0xFFFFFFFF), // White
-    tertiaryContainer = Color(0xFFA0F2D0), // Light Green
-    onTertiaryContainer = Color(0xFF00201A), // Dark Teal
-    error = Color(0xFFBA1A1A), // Red
-    errorContainer = Color(0xFFFFDAD6), // Light Red
-    onError = Color(0xFFFFFFFF), // White
-    onErrorContainer = Color(0xFF410002), // Dark Red
-    background = Color(0xFFFFFFFF), // White
-    onBackground = Color(0xFF1C1B1F), // Near Black
-    surface = Color(0xFFFFFFFF), // White
-    onSurface = Color(0xFF1C1B1F), // Near Black
-    surfaceVariant = Color(0xFFE7E0EC), // Light Purple Gray
-    onSurfaceVariant = Color(0xFF49454F), // Dark Gray
-    outline = Color(0xFF79747E), // Medium Gray
-    outlineVariant = Color(0xFFCAC4D0), // Light Gray
-    inverseSurface = Color(0xFF313033), // Dark Gray
-    inverseOnSurface = Color(0xFFF4EFF4), // Very Light Gray
-    inversePrimary = Color(0xFFC0C0C0), // Silver Gray
-    scrim = Color(0xFF000000), // Black
-    surfaceTint = Color(0xFF000000), // Black
-    surfaceContainerLowest = Color(0xFFFFFFFF), // White
-    surfaceContainerLow = Color(0xFFF7F7F7), // Very Light Gray
-    surfaceContainer = Color(0xFFF1F1F1), // Light Gray
-    surfaceContainerHigh = Color(0xFFEBEBEB), // Light Gray
-    surfaceContainerHighest = Color(0xFFE5E5E5), // Light Gray
-)
+/**
+ * Bunker VPN Cyber Theme Palettes
+ */
+enum class BunkerThemePalette(
+    val id: String,
+    val title: String,
+    val primaryColor: Color,
+    val secondaryColor: Color,
+    val tertiaryColor: Color,
+    val backgroundColor: Color,
+    val surfaceColor: Color,
+    val cardColor: Color,
+    val accentActiveColor: Color
+) {
+    CYBER_VIOLET(
+        id = "cyber_violet",
+        title = "🔮 Кибер Фиолетовый",
+        primaryColor = Color(0xFFA855F7),
+        secondaryColor = Color(0xFFC084FC),
+        tertiaryColor = Color(0xFF818CF8),
+        backgroundColor = Color(0xFF0B0912),
+        surfaceColor = Color(0xFF120F1D),
+        cardColor = Color(0xFF201B30),
+        accentActiveColor = Color(0xFFA855F7)
+    ),
+    EMERALD_MATRIX(
+        id = "emerald_matrix",
+        title = "⚡ Изумрудная Матрица",
+        primaryColor = Color(0xFF10B981),
+        secondaryColor = Color(0xFF34D399),
+        tertiaryColor = Color(0xFF6EE7B7),
+        backgroundColor = Color(0xFF041009),
+        surfaceColor = Color(0xFF081C10),
+        cardColor = Color(0xFF0E2E1B),
+        accentActiveColor = Color(0xFF10B981)
+    ),
+    ARCTIC_CYAN(
+        id = "arctic_cyan",
+        title = "❄️ Арктический Циан",
+        primaryColor = Color(0xFF06B6D4),
+        secondaryColor = Color(0xFF38BDF8),
+        tertiaryColor = Color(0xFF7DD3FC),
+        backgroundColor = Color(0xFF050E17),
+        surfaceColor = Color(0xFF0A1826),
+        cardColor = Color(0xFF10273D),
+        accentActiveColor = Color(0xFF06B6D4)
+    ),
+    CYBER_AMBER(
+        id = "cyber_amber",
+        title = "🌇 Янтарный Неон",
+        primaryColor = Color(0xFFF59E0B),
+        secondaryColor = Color(0xFFFBBF24),
+        tertiaryColor = Color(0xFFFCD34D),
+        backgroundColor = Color(0xFF100C04),
+        surfaceColor = Color(0xFF1B1408),
+        cardColor = Color(0xFF2B200D),
+        accentActiveColor = Color(0xFFF59E0B)
+    ),
+    CRIMSON_RED(
+        id = "crimson_red",
+        title = "🩸 Кровавый Рубин",
+        primaryColor = Color(0xFFEF4444),
+        secondaryColor = Color(0xFFF87171),
+        tertiaryColor = Color(0xFFFCA5A5),
+        backgroundColor = Color(0xFF120606),
+        surfaceColor = Color(0xFF1C0A0A),
+        cardColor = Color(0xFF2E1212),
+        accentActiveColor = Color(0xFFEF4444)
+    ),
+    STEALTH_MONO(
+        id = "stealth_mono",
+        title = "🖤 Черный Титан",
+        primaryColor = Color(0xFF94A3B8),
+        secondaryColor = Color(0xFFCBD5E1),
+        tertiaryColor = Color(0xFFE2E8F0),
+        backgroundColor = Color(0xFF000000),
+        surfaceColor = Color(0xFF0C0E12),
+        cardColor = Color(0xFF161A22),
+        accentActiveColor = Color(0xFFCBD5E1)
+    );
 
-private val DarkColor = darkColorScheme(
-    primary = Color(0xFFA855F7), // Neon Cyber Purple
-    onPrimary = Color(0xFF0B0912), // Deep Dark AMOLED
-    primaryContainer = Color(0xFF3B185F), // Deep Purple Container
-    onPrimaryContainer = Color(0xFFF3E8FF), // Soft Purple White
-    secondary = Color(0xFFC084FC), // Bright Neon Violet
-    onSecondary = Color(0xFF2E1065), // Deep Violet
-    secondaryContainer = Color(0xFF28183E), // Dark Purple Card
-    onSecondaryContainer = Color(0xFFF3E8FF), // Light Purple Text
-    tertiary = Color(0xFF818CF8), // Electric Indigo
-    onTertiary = Color(0xFF1E1B4B), // Dark Indigo
-    tertiaryContainer = Color(0xFF312E81), // Deep Indigo Container
-    onTertiaryContainer = Color(0xFFE0E7FF), // Soft Blue
-    error = Color(0xFFFFB4AB), // Light Red
-    errorContainer = Color(0xFF93000A), // Dark Red
-    onError = Color(0xFF690005), // Deep Red
-    onErrorContainer = Color(0xFFFFDAD6), // Light Red
-    background = Color(0xFF0B0912), // True AMOLED Black with Purple Haze
-    onBackground = Color(0xFFF1EEF7), // Off-white
-    surface = Color(0xFF120F1D), // Dark Purple Slate Surface
-    onSurface = Color(0xFFF1EEF7), // Off-white
-    surfaceVariant = Color(0xFF201B30), // Elevated Card Surface
-    onSurfaceVariant = Color(0xFFD6CEE5), // Muted Purple-Gray
-    outline = Color(0xFF6B5C82), // Purple Outline
-    outlineVariant = Color(0xFF332B45), // Dark Purple Outline
-    inverseSurface = Color(0xFFF1EEF7),
-    inverseOnSurface = Color(0xFF0B0912),
-    inversePrimary = Color(0xFF7C3AED),
-    scrim = Color(0xFF000000),
-    surfaceTint = Color(0xFFA855F7), // Neon Purple Tint
-    surfaceContainerLowest = Color(0xFF08060E),
-    surfaceContainerLow = Color(0xFF100D1A),
-    surfaceContainer = Color(0xFF161224),
-    surfaceContainerHigh = Color(0xFF1E1930),
-    surfaceContainerHighest = Color(0xFF27213E),
-)
+    val notifColorInt: Int
+        get() = when (this) {
+            CYBER_VIOLET -> 0xFF7C3AED.toInt()
+            EMERALD_MATRIX -> 0xFF10B981.toInt()
+            ARCTIC_CYAN -> 0xFF06B6D4.toInt()
+            CYBER_AMBER -> 0xFFF59E0B.toInt()
+            CRIMSON_RED -> 0xFFEF4444.toInt()
+            STEALTH_MONO -> 0xFF94A3B8.toInt()
+        }
+
+    companion object {
+        fun fromId(id: String?): BunkerThemePalette {
+            return entries.find { it.id.equals(id, ignoreCase = true) } ?: CYBER_VIOLET
+        }
+    }
+}
+
+val LocalThemePalette = compositionLocalOf { BunkerThemePalette.CYBER_VIOLET }
+
+fun buildDarkColorScheme(palette: BunkerThemePalette): ColorScheme {
+    return darkColorScheme(
+        primary = palette.primaryColor,
+        onPrimary = palette.backgroundColor,
+        primaryContainer = palette.cardColor,
+        onPrimaryContainer = Color.White,
+        secondary = palette.secondaryColor,
+        onSecondary = palette.backgroundColor,
+        secondaryContainer = palette.surfaceColor,
+        onSecondaryContainer = Color.White,
+        tertiary = palette.tertiaryColor,
+        onTertiary = palette.backgroundColor,
+        tertiaryContainer = palette.cardColor,
+        onTertiaryContainer = Color.White,
+        error = Color(0xFFFFB4AB),
+        errorContainer = Color(0xFF93000A),
+        onError = Color(0xFF690005),
+        onErrorContainer = Color(0xFFFFDAD6),
+        background = palette.backgroundColor,
+        onBackground = Color(0xFFF1EEF7),
+        surface = palette.surfaceColor,
+        onSurface = Color(0xFFF1EEF7),
+        surfaceVariant = palette.cardColor,
+        onSurfaceVariant = Color(0xFFD6CEE5),
+        outline = palette.primaryColor.copy(alpha = 0.45f),
+        outlineVariant = palette.primaryColor.copy(alpha = 0.2f),
+        inverseSurface = Color(0xFFF1EEF7),
+        inverseOnSurface = palette.backgroundColor,
+        inversePrimary = palette.secondaryColor,
+        scrim = Color(0xFF000000),
+        surfaceTint = palette.primaryColor,
+        surfaceContainerLowest = palette.backgroundColor,
+        surfaceContainerLow = palette.surfaceColor,
+        surfaceContainer = palette.surfaceColor,
+        surfaceContainerHigh = palette.cardColor,
+        surfaceContainerHighest = palette.cardColor,
+    )
+}
+
+fun buildLightColorScheme(palette: BunkerThemePalette): ColorScheme {
+    return lightColorScheme(
+        primary = palette.primaryColor,
+        onPrimary = Color.White,
+        primaryContainer = palette.primaryColor.copy(alpha = 0.15f),
+        onPrimaryContainer = Color.Black,
+        secondary = palette.secondaryColor,
+        onSecondary = Color.White,
+        secondaryContainer = palette.secondaryColor.copy(alpha = 0.15f),
+        onSecondaryContainer = Color.Black,
+        tertiary = palette.tertiaryColor,
+        onTertiary = Color.White,
+        tertiaryContainer = palette.tertiaryColor.copy(alpha = 0.15f),
+        onTertiaryContainer = Color.Black,
+        error = Color(0xFFBA1A1A),
+        errorContainer = Color(0xFFFFDAD6),
+        onError = Color.White,
+        onErrorContainer = Color(0xFF410002),
+        background = Color(0xFFF8FAFC),
+        onBackground = Color(0xFF1E293B),
+        surface = Color.White,
+        onSurface = Color(0xFF1E293B),
+        surfaceVariant = Color(0xFFF1F5F9),
+        onSurfaceVariant = Color(0xFF475569),
+        outline = palette.primaryColor.copy(alpha = 0.35f),
+        outlineVariant = Color(0xFFCBD5E1),
+        inverseSurface = Color(0xFF1E293B),
+        inverseOnSurface = Color.White,
+        inversePrimary = palette.primaryColor,
+        scrim = Color.Black,
+        surfaceTint = palette.primaryColor,
+        surfaceContainerLowest = Color.White,
+        surfaceContainerLow = Color(0xFFF8FAFC),
+        surfaceContainer = Color(0xFFF1F5F9),
+        surfaceContainerHigh = Color(0xFFE2E8F0),
+        surfaceContainerHighest = Color(0xFFCBD5E1),
+    )
+}
 
 // Semantic Colors
 val colorPing = Color(0xFF009966) // Green
 val colorPingRed = Color(0xFFFF0099) // Pink Red
 val colorConfigType = Color(0xFFf97910) // Orange
-val colorFabActive = Color(0xFFf97910) // Orange
+val colorFabActive: Color
+    @Composable
+    get() = LocalThemePalette.current.accentActiveColor
+
 val colorFabInactiveLight = Color(0xFF9C9C9C) // Gray
 val colorFabInactiveDark = Color(0xFF646464) // Dark Gray
 val dividerColorLight = Color(0xFFE0E0E0) // Light Gray
@@ -134,9 +242,16 @@ object ThemeManager {
     val themeMode: StateFlow<String> = _themeMode.asStateFlow()
 
     private val _dynamicColorEnabled = MutableStateFlow(
-        MmkvManager.decodeSettingsBool(AppConfig.PREF_DYNAMIC_COLOR, true)
+        MmkvManager.decodeSettingsBool(AppConfig.PREF_DYNAMIC_COLOR, false)
     )
     val dynamicColorEnabled: StateFlow<Boolean> = _dynamicColorEnabled.asStateFlow()
+
+    private val _themePalette = MutableStateFlow(
+        BunkerThemePalette.fromId(
+            MmkvManager.decodeSettingsString(AppConfig.PREF_THEME_PALETTE, AppConfig.DEFAULT_THEME_PALETTE)
+        )
+    )
+    val themePalette: StateFlow<BunkerThemePalette> = _themePalette.asStateFlow()
 
     private val _customWallpaper = MutableStateFlow(
         MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
@@ -153,6 +268,15 @@ object ThemeManager {
         _dynamicColorEnabled.value = enabled
     }
 
+    fun setThemePalette(palette: BunkerThemePalette) {
+        MmkvManager.encodeSettings(AppConfig.PREF_THEME_PALETTE, palette.id)
+        // Explicit user choice disables dynamic wallpaper override
+        if (_dynamicColorEnabled.value) {
+            setDynamicColorEnabled(false)
+        }
+        _themePalette.value = palette
+    }
+
     fun setCustomWallpaper(path: String?) {
         MmkvManager.encodeSettings(AppConfig.PREF_CUSTOM_WALLPAPER, path ?: "")
         _customWallpaper.value = path?.takeIf { it.isNotBlank() }
@@ -162,7 +286,11 @@ object ThemeManager {
         _themeMode.value =
             MmkvManager.decodeSettingsString(AppConfig.PREF_UI_MODE_NIGHT, "0") ?: "0"
         _dynamicColorEnabled.value =
-            MmkvManager.decodeSettingsBool(AppConfig.PREF_DYNAMIC_COLOR, true)
+            MmkvManager.decodeSettingsBool(AppConfig.PREF_DYNAMIC_COLOR, false)
+        _themePalette.value =
+            BunkerThemePalette.fromId(
+                MmkvManager.decodeSettingsString(AppConfig.PREF_THEME_PALETTE, AppConfig.DEFAULT_THEME_PALETTE)
+            )
         _customWallpaper.value =
             MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
     }
@@ -214,6 +342,7 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val dynamicColor by ThemeManager.dynamicColorEnabled.collectAsState()
+    val currentPalette by ThemeManager.themePalette.collectAsState()
     val wallpaperPath by ThemeManager.customWallpaper.collectAsState()
     val hasWallpaper = !wallpaperPath.isNullOrBlank()
 
@@ -222,17 +351,16 @@ fun AppTheme(
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
-        darkTheme -> DarkColor
-        else -> LightColor
+        darkTheme -> buildDarkColorScheme(currentPalette)
+        else -> buildLightColorScheme(currentPalette)
     }
 
     val colorScheme = if (hasWallpaper) {
         baseColorScheme.copy(
             background = Color.Transparent,
-            surface = if (darkTheme) Color(0xCC120F1D) else Color(0xCCFFFFFF),
-            surfaceVariant = if (darkTheme) Color(0xD9201B30) else Color(0xD9E7E0EC),
-            surfaceContainer = if (darkTheme) Color(0xCC161224) else Color(0xCCF1F1F1)
+            surface = if (darkTheme) currentPalette.surfaceColor.copy(alpha = 0.8f) else Color(0xCCFFFFFF),
+            surfaceVariant = if (darkTheme) currentPalette.cardColor.copy(alpha = 0.85f) else Color(0xD9E7E0EC),
+            surfaceContainer = if (darkTheme) currentPalette.surfaceColor.copy(alpha = 0.8f) else Color(0xCCF1F1F1)
         )
     } else {
         baseColorScheme
@@ -254,6 +382,7 @@ fun AppTheme(
 
     CompositionLocalProvider(
         LocalDarkTheme provides darkTheme,
+        LocalThemePalette provides currentPalette,
         LocalAppSnackbar provides snackbarController
     ) {
         MaterialTheme(

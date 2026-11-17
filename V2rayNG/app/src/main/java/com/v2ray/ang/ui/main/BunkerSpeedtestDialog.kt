@@ -87,8 +87,8 @@ fun BunkerSpeedtestDialog(
     }) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = Color(0xFF140D24),
-            border = androidx.compose.foundation.BorderStroke(1.5.dp, Color(0xFF7C3AED).copy(alpha = 0.6f)),
+            color = MaterialTheme.colorScheme.surface,
+            border = androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)),
             modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
         ) {
             Column(
@@ -234,7 +234,7 @@ fun BunkerSpeedtestDialog(
                     } else {
                         Button(
                             onClick = { startTest() },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C3AED)),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Text("Повторить", color = Color.White, fontWeight = FontWeight.Bold)

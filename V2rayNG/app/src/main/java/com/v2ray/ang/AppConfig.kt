@@ -62,6 +62,8 @@ object AppConfig {
     const val PREF_APP_LOCALE_MIGRATED = "pref_app_locale_migrated"
     const val PREF_UI_MODE_NIGHT = "pref_ui_mode_night"
     const val PREF_DYNAMIC_COLOR = "pref_dynamic_color"
+    const val PREF_THEME_PALETTE = "pref_theme_palette"
+    const val DEFAULT_THEME_PALETTE = "cyber_violet"
     const val PREF_CUSTOM_WALLPAPER = "pref_custom_wallpaper"
     const val PREF_IPV6_ENABLED = "pref_ipv6_enabled"
     const val PREF_PREFER_IPV6 = "pref_prefer_ipv6"
