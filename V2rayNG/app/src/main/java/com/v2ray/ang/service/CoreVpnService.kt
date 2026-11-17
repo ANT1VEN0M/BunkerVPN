@@ -266,24 +266,43 @@ class CoreVpnService : VpnService(), ServiceControl {
     private fun configurePerAppProxy(builder: Builder) {
         val selfPackageName = BuildConfig.APPLICATION_ID
 
-        // If per-app proxy is not enabled, disallow the VPN service's own package and return
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_PER_APP_PROXY) == false) {
+        // Always disallow self
+        try {
             builder.addDisallowedApplication(selfPackageName)
+        } catch (_: Exception) {}
+
+        // Anti-RKN mode: exclude all installed Russian banking and government apps from the VPN interface
+        // at the OS kernel level, so they do NOT see TRANSPORT_VPN and do NOT show "VPN is enabled" warning!
+        if (SettingsManager.isAntiRknRoutingEnabled()) {
+            val pm = packageManager
+            AppConfig.RUSSIAN_BANKING_APPS.forEach { pkg ->
+                try {
+                    pm.getPackageInfo(pkg, 0)
+                    builder.addDisallowedApplication(pkg)
+                    LogUtil.i(AppConfig.TAG, "Anti-RKN: Excluded banking app from VPN interface: $pkg")
+                } catch (_: PackageManager.NameNotFoundException) {
+                    // Not installed on device, skip safely
+                } catch (e: Exception) {
+                    LogUtil.w(AppConfig.TAG, "Anti-RKN: Failed to exclude $pkg", e)
+                }
+            }
+        }
+
+        // If per-app proxy is not enabled, return
+        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_PER_APP_PROXY) == false) {
             return
         }
 
-        // If no apps are selected, disallow the VPN service's own package and return
+        // If no apps are selected, return
         val apps = MmkvManager.decodeSettingsStringSet(AppConfig.PREF_PER_APP_PROXY_SET)
         if (apps.isNullOrEmpty()) {
-            builder.addDisallowedApplication(selfPackageName)
             return
         }
 
         val bypassApps = MmkvManager.decodeSettingsBool(AppConfig.PREF_BYPASS_APPS)
-        // Handle the VPN service's own package according to the mode
-        if (bypassApps) apps.add(selfPackageName) else apps.remove(selfPackageName)
 
         apps.forEach {
+            if (it == selfPackageName) return@forEach
             try {
                 if (bypassApps) {
                     // In bypass mode, disallow the selected apps

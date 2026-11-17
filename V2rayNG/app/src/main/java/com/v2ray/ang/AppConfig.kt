@@ -140,6 +140,41 @@ object AppConfig {
     const val TG_CHANNEL_URL = "https://t.me/BUNKER_KOTA"
     const val TG_CHAT_URL = "https://t.me/BUNKER_K0TA"
     const val TG_K0TLUX_URL = "https://t.me/k0tlux"
+    const val VERSION_INFO_URL = "$GITHUB_RAW_URL/ANT1VEN0M/BunkerVPN/main/version.json"
+
+    val RUSSIAN_BANKING_APPS = listOf(
+        "ru.sberbankmobile",           // СберБанк
+        "ru.sberbank_sbbol",           // СберБизнес
+        "ru.sberbank.sberinvestor",    // СберИнвестор
+        "com.idamob.tinkoff.android",   // Т-Банк (Тинькофф)
+        "ru.tcsbank.invest",           // Т-Инвестиции
+        "ru.alfabank.mobile.android",  // Альфа-Банк
+        "com.bpc.ucube.alfa",          // Альфа-Мобайл
+        "ru.vtb24.mobilebanking.android", // ВТБ
+        "ru.vtb.invest",               // ВТБ Мои Инвестиции
+        "ru.gosuslugi.esia",           // Госуслуги
+        "ru.gosuslugi.pos",            // Госуслуги Решаем вместе
+        "ru.gosuslugi.auto",           // Госуслуги Авто
+        "ru.mos.app",                  // Госуслуги Москвы
+        "ru.ozon.fintech",             // Ozon Банк
+        "com.yandex.bank",             // Яндекс Банк
+        "ru.gazprombank.android.mobilebank.app", // Газпромбанк
+        "ru.raiffeisennews",           // Райффайзенбанк
+        "ru.sovcomcard.halva.v1",      // Совкомбанк (Халва)
+        "ru.mts.money",                // МТС Банк
+        "ru.psbank.mobile.android",    // ПСБ
+        "ru.openbank.mb.o2",           // Банк Открытие
+        "ru.rshb.dbo",                 // Россельхозбанк
+        "com.bpc.rshb.mobile",         // РСХБ
+        "ru.rosbank.android",          // Росбанк
+        "ru.rosbank.invest",           // Росбанк Инвестиции
+        "ru.letobank.Prometheus",      // Почта Банк
+        "ru.bankuralsib.mb.android",   // Уралсиб
+        "ru.akbars.mobile",            // Ак Барс
+        "ru.nspk.mirpay",              // Mir Pay
+        "ru.nspk.sbp",                 // СБПэй
+        "ru.wildberries.bank"          // WB Банк
+    )
     const val DELAY_TEST_URL = "https://www.gstatic.com/generate_204"
     const val DELAY_TEST_URL2 = "https://www.google.com/generate_204"
     const val OBSERVATORY_LEAST_PING_INTERVAL = "3m"

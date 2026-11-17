@@ -13,41 +13,88 @@ import com.v2ray.ang.util.LogUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+data class BunkerVersionPayload(
+    val version: String = "",
+    val versionCode: Int = 0,
+    val tagName: String = "",
+    val downloadUrl: String = "",
+    val releaseNotes: String = ""
+)
+
 object UpdateCheckerManager {
     suspend fun checkForUpdate(includePreRelease: Boolean = false): CheckUpdateResult = withContext(Dispatchers.IO) {
+        val proxyUsername = SettingsManager.getSocksUsername()
+        val proxyPassword = SettingsManager.getSocksPassword()
+        val httpPort = SettingsManager.getHttpPort()
+
+        // 1. Fast direct check via raw version.json (no GitHub API rate limits)
+        runCatching {
+            var rawJson = HttpUtil.getUrlContent(
+                UrlContentRequest(
+                    url = AppConfig.VERSION_INFO_URL,
+                    timeout = 4000,
+                    userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME}"
+                )
+            )
+            if (rawJson.isNullOrBlank() && httpPort != 0) {
+                rawJson = HttpUtil.getUrlContent(
+                    UrlContentRequest(
+                        url = AppConfig.VERSION_INFO_URL,
+                        timeout = 4000,
+                        httpPort = httpPort,
+                        proxyUsername = proxyUsername,
+                        proxyPassword = proxyPassword,
+                        userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME}"
+                    )
+                )
+            }
+            if (!rawJson.isNullOrBlank()) {
+                val info = JsonUtil.fromJsonSafe(rawJson, BunkerVersionPayload::class.java)
+                if (info != null && compareVersions(info.version, BuildConfig.VERSION_NAME) > 0) {
+                    LogUtil.i(AppConfig.TAG, "UpdateChecker: Found newer version via version.json: ${info.version}")
+                    return@withContext CheckUpdateResult(
+                        hasUpdate = true,
+                        latestVersion = info.tagName.ifBlank { "v${info.version}" },
+                        releaseNotes = info.releaseNotes,
+                        downloadUrl = info.downloadUrl
+                    )
+                }
+            }
+        }
+
+        // 2. Fallback to GitHub Releases API with User-Agent
         val url = if (includePreRelease) {
             AppConfig.APP_API_URL
         } else {
             AppConfig.APP_API_URL.concatUrl("latest")
         }
 
-        val proxyUsername = SettingsManager.getSocksUsername()
-        val proxyPassword = SettingsManager.getSocksPassword()
-
         var response = HttpUtil.getUrlContent(
             UrlContentRequest(
                 url = url,
-                timeout = 5000
+                timeout = 5000,
+                userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME} (Android; Linux)"
             )
         )
-        if (response.isNullOrEmpty()) {
-            val httpPort = SettingsManager.getHttpPort()
+        if (response.isNullOrEmpty() && httpPort != 0) {
             response = HttpUtil.getUrlContent(
                 UrlContentRequest(
                     url = url,
                     timeout = 5000,
                     httpPort = httpPort,
                     proxyUsername = proxyUsername,
-                    proxyPassword = proxyPassword
+                    proxyPassword = proxyPassword,
+                    userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME} (Android; Linux)"
                 )
             )
-                ?: throw IllegalStateException("Failed to get response")
+        }
+        if (response.isNullOrEmpty()) {
+            return@withContext CheckUpdateResult(hasUpdate = false)
         }
 
         val latestRelease = if (includePreRelease) {
             JsonUtil.fromJsonSafe(response, Array<GitHubRelease>::class.java)
                 ?.firstOrNull()
-                ?: throw IllegalStateException("No pre-release found")
         } else {
             JsonUtil.fromJsonSafe(response, GitHubRelease::class.java)
         }
