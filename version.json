@@ -1,7 +1,7 @@
 {
-  "version": "1.2.5",
-  "versionCode": 1017,
-  "tagName": "v1.2.5-winter",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.5-winter/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "❄️ BunkerVPN v1.2.5 Winter Edition: Оригинальное зимнее лого Бункера Кота со снегом, фикс спидтеста (HTTP 429) и реальный 1-сек Live-виджет!"
+  "version": "1.2.6",
+  "versionCode": 1018,
+  "tagName": "v1.2.6",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.6/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.2.6: Режим «🎯 Авто» (автоподбор лучшего сервера с мин. пингом), адаптивный и сворачиваемый интерфейс для всех экранов (Realme и др.), повышенная контрастность светлой темы, авто-фоллбэк при нерабочих узлах."
 }

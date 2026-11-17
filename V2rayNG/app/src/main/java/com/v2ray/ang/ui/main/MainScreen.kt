@@ -319,6 +319,7 @@ fun MainScreen(
                         onUpdateClick = { handleUpdateClick() },
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
+                        onAutoSelect = { onAction(MainAction.AutoSelectBestServer) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },
                         onSpeedtestClick = { showSpeedtestDialog = true },
                         onUpdateSub = { onAction(MainAction.UpdateSubscriptions) }
@@ -326,7 +327,7 @@ fun MainScreen(
 
                     HorizontalPager(
                         state = pagerState,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxWidth().weight(1f),
                         userScrollEnabled = true,
                         beyondViewportPageCount = 1,
                         key = { page -> groups.getOrNull(page)?.id ?: "group-page-$page" }

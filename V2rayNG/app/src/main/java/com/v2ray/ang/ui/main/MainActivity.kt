@@ -166,6 +166,7 @@ class MainActivity : HelperBaseComponentActivity() {
                         toastInfo("Сортировка по минимальному пингу ⚡")
                         mainViewModel.onAction(action)
                     }
+                    MainAction.AutoSelectBestServer -> handleAutoSelectBestServer()
                     MainAction.ImportQRcode -> importQRcode()
                     MainAction.ImportClipboard -> importClipboard()
                     MainAction.ImportConfigLocal -> importConfigLocal()
@@ -268,10 +269,37 @@ class MainActivity : HelperBaseComponentActivity() {
         }
     }
 
+    private fun handleAutoSelectBestServer() {
+        val prevGuid = mainViewModel.uiState.value.selectedGuid
+        if (mainViewModel.autoSelectBestServer()) {
+            if (mainViewModel.uiState.value.isRunning && prevGuid != mainViewModel.uiState.value.selectedGuid) {
+                LauncherManager.restartService(this)
+            }
+        } else {
+            mainViewModel.isAutoSelectPending = true
+            toastInfo("⚡ Замер пинга... Подбираем лучший сервер")
+            mainViewModel.testAllRealPing()
+        }
+    }
+
     private fun startV2Ray() {
-        if (mainViewModel.uiState.value.selectedGuid.isNullOrEmpty()) {
+        val currentGuid = mainViewModel.uiState.value.selectedGuid
+        if (currentGuid.isNullOrEmpty()) {
             toast(R.string.title_file_chooser)
             return
+        }
+        val groupId = mainViewModel.uiState.value.selectedGroupId
+        val groupState = mainViewModel.serverGroupState(groupId).value
+        val currentServer = groupState.servers.find { it.guid == currentGuid }
+        if (currentServer != null && currentServer.testDelayMillis < 0L) {
+            val working = groupState.servers.filter {
+                it.profile.configType != EConfigType.POLICYGROUP && it.testDelayMillis > 0L
+            }
+            if (working.isNotEmpty()) {
+                val best = working.minByOrNull { it.testDelayMillis }!!
+                mainViewModel.updateSelectedGuid(best.guid)
+                toastInfo("⚡ Выбран рабочий узел: ${best.profile.remarks} (${best.testDelayMillis} мс)")
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN
         ) {

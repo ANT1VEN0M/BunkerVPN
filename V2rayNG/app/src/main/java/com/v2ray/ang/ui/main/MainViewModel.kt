@@ -110,6 +110,8 @@ class MainViewModel(
 
     private val testRequests = MainTestRequests()
     private var bulkTestJob: Job? = null
+    @Volatile
+    var isAutoSelectPending: Boolean = false
 
     private val initialPageReady = CompletableDeferred<Unit>()
 
@@ -311,6 +313,7 @@ class MainViewModel(
             is MainAction.ImportManually,
             MainAction.RestartService,
             MainAction.LocateSelectedServer,
+            MainAction.AutoSelectBestServer,
             is MainAction.EditServer,
             is MainAction.ShareClipboard,
             is MainAction.ShareFullContent,
@@ -846,8 +849,25 @@ class MainViewModel(
         }
     }
 
+    fun autoSelectBestServer(): Boolean {
+        val groupId = uiState.value.selectedGroupId
+        val groupState = mutableServerGroupState(groupId).value
+        val working = groupState.servers.filter {
+            it.profile.configType != EConfigType.POLICYGROUP && it.testDelayMillis > 0L
+        }
+        if (working.isNotEmpty()) {
+            val best = working.minByOrNull { it.testDelayMillis }!!
+            updateSelectedGuid(best.guid)
+            sortByTestResultsAsync()
+            toastSuccess("🎯 Автовыбор: ${best.profile.remarks} (${best.testDelayMillis} мс)")
+            return true
+        }
+        return false
+    }
+
     // ---------- Testing ----------
     fun cancelAllPing() {
+        isAutoSelectPending = false
         bulkTestJob?.cancel()
         bulkTestJob = null
         testRequests.cancelBulk()
@@ -935,6 +955,25 @@ class MainViewModel(
         viewModelScope.launch(ioDispatcher) {
             cacheMutex.withLock { groupDataCache.clear() }
             reloadAllGroups(_uiState.value.groups.map { it.id })
+            if (isAutoSelectPending) {
+                isAutoSelectPending = false
+                delay(350)
+                val groupId = _uiState.value.selectedGroupId
+                val freshServers = loadGroup(groupId, forceRefresh = false)
+                val working = freshServers.filter {
+                    it.profile.configType != EConfigType.POLICYGROUP && it.testDelayMillis > 0L
+                }
+                if (working.isNotEmpty()) {
+                    val best = working.minByOrNull { it.testDelayMillis }!!
+                    updateSelectedGuid(best.guid)
+                    sortByTestResultsInternal()
+                    cacheMutex.withLock { groupDataCache.clear() }
+                    setupGroupTab(forceRefresh = true)
+                    toastSuccess("🎯 Автовыбор: ${best.profile.remarks} (${best.testDelayMillis} мс)")
+                } else {
+                    toastError(R.string.connection_test_fail)
+                }
+            }
         }
     }
 
