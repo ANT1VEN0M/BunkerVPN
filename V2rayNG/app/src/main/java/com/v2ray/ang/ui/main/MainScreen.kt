@@ -1,5 +1,7 @@
 package com.v2ray.ang.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,16 +33,23 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.v2ray.ang.core.LauncherManager
 import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.enums.EConfigType
+import com.v2ray.ang.extension.toast
+import com.v2ray.ang.handler.SettingsManager
+import com.v2ray.ang.handler.UpdateCheckerManager
 import com.v2ray.ang.ui.compose.LocalDarkTheme
 import com.v2ray.ang.ui.compose.QRCodeDialog
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun MainScreen(
@@ -61,6 +70,50 @@ fun MainScreen(
     val isDarkTheme = LocalDarkTheme.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var isAntiRknEnabled by remember {
+        mutableStateOf(SettingsManager.isAntiRknRoutingEnabled())
+    }
+    var availableUpdateVersion by remember { mutableStateOf<String?>(null) }
+    var updateDownloadUrl by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val result = UpdateCheckerManager.checkForUpdate(includePreRelease = true)
+                if (result.hasUpdate) {
+                    withContext(Dispatchers.Main) {
+                        availableUpdateVersion = result.latestVersion
+                        updateDownloadUrl = result.downloadUrl
+                    }
+                }
+            }
+        }
+    }
+
+    val handleToggleAntiRkn = {
+        val nextState = !isAntiRknEnabled
+        SettingsManager.toggleAntiRknRouting(context, nextState)
+        isAntiRknEnabled = nextState
+        if (nextState) {
+            context.toast("⚡ Включен режим Анти-РКН: банки и РФ-сайты идут напрямую!")
+        } else {
+            context.toast("🌐 Включен Полный туннель: весь интернет идет через VPN")
+        }
+        if (isRunning) {
+            LauncherManager.restartService(context)
+        }
+    }
+
+    val handleUpdateClick = {
+        updateDownloadUrl?.let { url ->
+            runCatching {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                context.startActivity(intent)
+            }
+        }
+    }
+
     var showSearch by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     var showDelAllConfirm by remember { mutableStateOf(false) }
@@ -250,6 +303,10 @@ fun MainScreen(
                         totalServersCount = totalServersCount,
                         testedServersCount = testedServersCount,
                         serversInGroup = realServers,
+                        isAntiRknEnabled = isAntiRknEnabled,
+                        onToggleAntiRkn = handleToggleAntiRkn,
+                        availableUpdateVersion = availableUpdateVersion,
+                        onUpdateClick = handleUpdateClick,
                         onToggle = { onAction(MainAction.ToggleService) },
                         onTestPing = { onAction(MainAction.TestRealAllServers) },
                         onSortByPing = { onAction(MainAction.SortByTestResults) },

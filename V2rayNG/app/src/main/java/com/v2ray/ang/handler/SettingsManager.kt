@@ -84,6 +84,27 @@ object SettingsManager {
     }
 
     /**
+     * Checks if Anti-RKN (Bypass Russia domains/IPs) routing mode is enabled.
+     */
+    fun isAntiRknRoutingEnabled(): Boolean {
+        val rules = MmkvManager.decodeRoutingRulesets() ?: return false
+        return rules.any { rule ->
+            rule.domain?.contains("geosite:category-ru") == true && rule.outboundTag == AppConfig.TAG_DIRECT
+        }
+    }
+
+    /**
+     * Toggles between Anti-RKN (Bypass Russia) and Global routing presets.
+     */
+    fun toggleAntiRknRouting(context: Context, enable: Boolean) {
+        if (enable) {
+            resetRoutingRulesetsFromPresets(context, RoutingType.WHITE_RUSSIA)
+        } else {
+            resetRoutingRulesetsFromPresets(context, RoutingType.GLOBAL)
+        }
+    }
+
+    /**
      * Reset routing rulesets.
      * @param content The content of the rulesets.
      * @return True if successful, false otherwise.

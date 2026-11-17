@@ -1,5 +1,6 @@
 package com.v2ray.ang.ui.main
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -173,6 +175,64 @@ private fun ServiceBadge(
 }
 
 @Composable
+private fun CyberTrafficWave(
+    isRunning: Boolean,
+    intensity: Float,
+    modifier: Modifier = Modifier
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "wave_motion")
+    val wavePhase by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 6.28318f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = if (intensity > 0.2f) 850 else 1800, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "wave_phase"
+    )
+
+    val barCount = 14
+    val baseColor = colorFabActive
+    val highColor = Color(0xFF06B6D4)
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(24.dp)
+            .padding(vertical = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        for (i in 0 until barCount) {
+            val distFromCenter = kotlin.math.abs(i - (barCount - 1) / 2.0f) / ((barCount - 1) / 2.0f)
+            val centerWeight = 1f - 0.4f * distFromCenter
+
+            val sineVal = kotlin.math.sin(wavePhase + i * 0.45f).toFloat()
+            val normalizedSine = (sineVal + 1f) / 2f
+
+            val targetHeightDp = if (!isRunning) {
+                3.dp
+            } else {
+                val idleH = 4f + normalizedSine * 3f
+                val activeH = 6f + normalizedSine * 18f * (0.3f + 0.7f * intensity)
+                (idleH + (activeH - idleH) * (if (intensity > 0.05f) 1f else 0f) * centerWeight).dp
+            }
+
+            val barAlpha = if (!isRunning) 0.2f else (0.45f + 0.55f * normalizedSine)
+            val barColor = if (intensity > 0.2f && (i % 2 == 0)) highColor else baseColor
+
+            Box(
+                modifier = Modifier
+                    .width(3.5.dp)
+                    .height(targetHeightDp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(barColor.copy(alpha = barAlpha))
+            )
+        }
+    }
+}
+
+@Composable
 fun BunkerHeroHeader(
     isRunning: Boolean,
     statusText: String,
@@ -182,6 +242,10 @@ fun BunkerHeroHeader(
     totalServersCount: Int = 0,
     testedServersCount: Int = 0,
     serversInGroup: List<ServersCache> = emptyList(),
+    isAntiRknEnabled: Boolean = false,
+    onToggleAntiRkn: () -> Unit = {},
+    availableUpdateVersion: String? = null,
+    onUpdateClick: () -> Unit = {},
     onToggle: () -> Unit,
     onTestPing: () -> Unit,
     onSortByPing: () -> Unit,
@@ -205,12 +269,14 @@ fun BunkerHeroHeader(
     var downSpeedText by remember { mutableStateOf("0 B/s") }
     var upSpeedText by remember { mutableStateOf("0 B/s") }
     var elapsedSeconds by remember { mutableLongStateOf(0L) }
+    var trafficIntensity by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(isRunning) {
         if (!isRunning) {
             downSpeedText = "0 B/s"
             upSpeedText = "0 B/s"
             elapsedSeconds = 0L
+            trafficIntensity = 0f
             return@LaunchedEffect
         }
         var lastTime = System.currentTimeMillis()
@@ -255,6 +321,8 @@ fun BunkerHeroHeader(
 
             downSpeedText = (dDown / dt).toLong().toSpeedString()
             upSpeedText = (dUp / dt).toLong().toSpeedString()
+            val totalBytes = dDown + dUp
+            trafficIntensity = (totalBytes / (dt * 1024.0 * 1024.0 * 2.5)).toFloat().coerceIn(0f, 1f)
         }
     }
 
@@ -455,9 +523,96 @@ fun BunkerHeroHeader(
                 }
             }
 
-            // Realtime Live Traffic & Timer HUD
+            // Anti-RKN Mode Toggle Pill
+            Spacer(modifier = Modifier.height(7.dp))
+            Surface(
+                shape = RoundedCornerShape(10.dp),
+                color = if (isAntiRknEnabled) Color(0xFF064E3B).copy(alpha = 0.5f) else Color(0xFF1E1B4B).copy(alpha = 0.5f),
+                border = BorderStroke(
+                    1.dp,
+                    if (isAntiRknEnabled) Color(0xFF10B981).copy(alpha = 0.7f) else Color(0xFF818CF8).copy(alpha = 0.6f)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp)
+                    .clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onToggleAntiRkn()
+                    }
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = if (isAntiRknEnabled) "⚡" else "🌐",
+                        fontSize = 11.sp
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = if (isAntiRknEnabled) "Режим: Анти-РКН 🇷🇺 (Банки и РФ напрямую)" else "Режим: Полный туннель (Весь трафик)",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isAntiRknEnabled) Color(0xFF34D399) else Color(0xFFA5B4FC)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(if (isAntiRknEnabled) Color(0xFF10B981) else Color(0xFF818CF8))
+                    )
+                }
+            }
+
+            // In-App Update Banner
+            if (!availableUpdateVersion.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(6.dp))
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFF7C3AED).copy(alpha = 0.25f),
+                    border = BorderStroke(1.dp, Color(0xFF06B6D4)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp)
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onUpdateClick()
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "🚀", fontSize = 11.sp)
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text(
+                            text = "Доступно обновление Бункер VPN $availableUpdateVersion!",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF38BDF8)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Обновить ➔",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color(0xFF10B981)
+                        )
+                    }
+                }
+            }
+
+            // Realtime Live Traffic & Timer HUD with Cyber Wave
             if (isRunning) {
                 Spacer(modifier = Modifier.height(10.dp))
+                CyberTrafficWave(
+                    isRunning = isRunning,
+                    intensity = trafficIntensity
+                )
+                Spacer(modifier = Modifier.height(6.dp))
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.65f),
