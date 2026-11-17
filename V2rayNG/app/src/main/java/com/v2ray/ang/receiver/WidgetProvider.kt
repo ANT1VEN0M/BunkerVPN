@@ -63,7 +63,7 @@ class WidgetProvider : AppWidgetProvider() {
             remoteViews.setOnClickPendingIntent(R.id.layout_switch, togglePendingIntent)
 
             val selectedGuid = MmkvManager.getSelectServer()
-            val currentConfig = MmkvManager.decodeServerConfig(selectedGuid)
+            val currentConfig = if (!selectedGuid.isNullOrBlank()) MmkvManager.decodeServerConfig(selectedGuid) else null
             val serverName = currentConfig?.remarks?.takeIf { it.isNotBlank() } ?: "Бункер Кота ⚡"
 
             if (isRunning) {
