@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.dto.ConnectionTestResult
-import com.v2ray.ang.dto.EConfigType
+import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.dto.GroupMapItem
 import com.v2ray.ang.dto.LocateTarget
 import com.v2ray.ang.dto.RealPingResult
