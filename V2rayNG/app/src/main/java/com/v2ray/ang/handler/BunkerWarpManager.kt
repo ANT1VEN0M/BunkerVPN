@@ -2,6 +2,7 @@ package com.v2ray.ang.handler
 
 import android.content.Context
 import com.v2ray.ang.AppConfig
+import com.v2ray.ang.core.CoreServiceManager
 import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.util.LogUtil
@@ -10,6 +11,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.net.URL
 import java.security.KeyPairGenerator
 import java.text.SimpleDateFormat
@@ -38,12 +41,29 @@ object BunkerWarpManager {
 
             // 2. Register via Cloudflare API
             val regUrl = URL("https://api.cloudflareclient.com/v0a2158/reg")
-            val conn = (regUrl.openConnection() as HttpURLConnection).apply {
+            
+            // If BunkerVPN is active, route through internal SOCKS5 proxy (127.0.0.1:10808)
+            // because CoreVpnService excludes selfPackageName from the TUN interface
+            val proxy = if (CoreServiceManager.isRunning()) {
+                try {
+                    Proxy(Proxy.Type.SOCKS, InetSocketAddress(AppConfig.LOOPBACK, AppConfig.PORT_SOCKS.toInt()))
+                } catch (e: Exception) {
+                    Proxy.NO_PROXY
+                }
+            } else {
+                Proxy.NO_PROXY
+            }
+
+            val conn = try {
+                (regUrl.openConnection(proxy) as HttpURLConnection)
+            } catch (e: Exception) {
+                (regUrl.openConnection(Proxy.NO_PROXY) as HttpURLConnection)
+            }.apply {
                 requestMethod = "POST"
                 setRequestProperty("Content-Type", "application/json; charset=UTF-8")
                 setRequestProperty("User-Agent", "okhttp/3.12.1")
-                connectTimeout = 8000
-                readTimeout = 8000
+                connectTimeout = 12000
+                readTimeout = 12000
                 doOutput = true
             }
 
@@ -72,14 +92,26 @@ object BunkerWarpManager {
             val respJson = JSONObject(respText)
 
             val configObj = respJson.getJSONObject("config")
+            
+            // Extract client_id (3 reserved bytes required by Cloudflare WireGuard handshake)
+            val clientId = configObj.optString("client_id", "")
+            val reservedBytes = if (clientId.isNotEmpty()) {
+                try {
+                    val dec = Base64.getDecoder().decode(clientId)
+                    dec.map { it.toInt() and 0xFF }.joinToString(",")
+                } catch (e: Exception) {
+                    ""
+                }
+            } else ""
+
             val peersArr = configObj.getJSONArray("peers")
             val peer0 = peersArr.getJSONObject(0)
             val peerPubKey = peer0.getString("public_key")
-            val endpointObj = peer0.getJSONObject("endpoint")
-            val endpointHost = endpointObj.optString("host", "engage.cloudflareclient.com:2408")
-            val hostParts = endpointHost.split(":")
-            val serverIp = if (hostParts.isNotEmpty() && hostParts[0] != "engage.cloudflareclient.com") hostParts[0] else "162.159.192.1"
-            val serverPort = if (hostParts.size > 1) hostParts[1] else "2408"
+            
+            // In Russia port 2408 is blocked by TSPU. Cloudflare officially supports ports 880, 1701, 500, 4500.
+            // Port 880 has ultra-low latency (~50ms) and bypasses TSPU WireGuard blocks.
+            val serverIp = "162.159.192.1"
+            val serverPort = "880"
 
             val interfaceObj = configObj.getJSONObject("interface")
             val addressesObj = interfaceObj.getJSONObject("addresses")
@@ -89,12 +121,13 @@ object BunkerWarpManager {
 
             // 3. Create WireGuard profile item
             val profile = ProfileItem.create(EConfigType.WIREGUARD).apply {
-                remarks = "🚀 Бункер Личный WARP+ | Cloudflare"
+                remarks = "🚀 Бункер Личный WARP+ | Cloudflare (880)"
                 server = serverIp
                 this.serverPort = serverPort
                 secretKey = privB64
                 publicKey = peerPubKey
                 this.localAddress = localAddress
+                this.reserved = reservedBytes
                 mtu = 1280
                 remoteDNS = "77.88.8.8,1.1.1.1"
             }
