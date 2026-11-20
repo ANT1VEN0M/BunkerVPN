@@ -585,7 +585,8 @@ object RootProxyManager {
     /**
      * Enforce a hard fail-closed kill-switch and Anti-DNS leak protection via iptables/ip6tables.
      * Prevents any packet from escaping the VPN tunnel directly to the mobile carrier during
-     * network interface changes, and drops non-tunneled DNS queries on port 53/853.
+     * network interface changes, while strictly preserving Android system daemons (netd/dns_resolver),
+     * ICMPv6 Neighbor Discovery (NDP), and DHCP negotiation.
      */
     private fun buildKillSwitchSetup(
         context: Context,
@@ -598,37 +599,54 @@ object RootProxyManager {
         val fwd = AppConfig.ROOT_FWD_CHAIN
         return buildString {
             appendLine("set +e")
+
             // 1. IPv4 Filter OUTPUT Kill-Switch chain
             appendLine("iptables -t filter -N $killChain 2>/dev/null || true")
             appendLine("iptables -t filter -F $killChain")
+
             // Allow loopback
             appendLine("iptables -t filter -A $killChain -o lo -j ACCEPT")
-            // Allow traffic over our TUN and Android VpnService tun
+
+            // Allow established & related connections (keeps existing sockets alive)
+            appendLine("iptables -t filter -A $killChain -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT")
+
+            // Allow traffic over our TUN and all Android VpnService tun variants
             appendLine("iptables -t filter -A $killChain -o $TUN -j ACCEPT")
             appendLine("iptables -t filter -A $killChain -o tun+ -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -o v4-tun+ -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -o ppp+ -j ACCEPT")
+
             // Allow the proxy core itself (the app UID) to communicate with external servers
             appendLine("iptables -t filter -A $killChain -m owner --uid-owner $appUid -j ACCEPT")
+
+            // Allow essential Android system network daemons to prevent breaking DNS resolution & OS captive portal checks:
+            // UID 0 (root/netd), UID 1000 (system), UID 1051 (AID_DNS_RESOLVER), UID 1029 (AID_CLAT)
+            appendLine("iptables -t filter -A $killChain -m owner --uid-owner 0 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -m owner --uid-owner 1000 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -m owner --uid-owner 1051 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -m owner --uid-owner 1029 -j ACCEPT")
+
             // Allow helper mark
             appendLine("iptables -t filter -A $killChain -m mark --mark $FWMARK -j ACCEPT")
-            // Allow local DHCP broadcast / negotiation so connection isn't lost
+
+            // Allow local DHCP broadcast / negotiation so Wi-Fi/LTE lease is never lost
             appendLine("iptables -t filter -A $killChain -p udp --sport 67:68 --dport 67:68 -j ACCEPT")
+
             // Allow LAN private subnets (local network access)
-            appendLine("iptables -t filter -A $killChain -d 10.0.0.0/8 -j ACCEPT")
-            appendLine("iptables -t filter -A $killChain -d 172.16.0.0/12 -j ACCEPT")
-            appendLine("iptables -t filter -A $killChain -d 192.168.0.0/16 -j ACCEPT")
-            appendLine("iptables -t filter -A $killChain -d 127.0.0.0/8 -j ACCEPT")
-            appendLine("iptables -t filter -A $killChain -d 169.254.0.0/16 -j ACCEPT")
-            appendLine("iptables -t filter -A $killChain -d 224.0.0.0/4 -j ACCEPT")
+            bypassCidrs.forEach { appendLine("iptables -t filter -A $killChain -d $it -j ACCEPT") }
             appendLine("iptables -t filter -A $killChain -d 255.255.255.255 -j ACCEPT")
-            // Anti-DNS Leak: Drop any unencrypted DNS or DoT trying to escape directly to mobile carrier
-            appendLine("iptables -t filter -A $killChain -p udp --dport 53 -j DROP")
-            appendLine("iptables -t filter -A $killChain -p tcp --dport 53 -j DROP")
-            appendLine("iptables -t filter -A $killChain -p tcp --dport 853 -j DROP")
-            appendLine("iptables -t filter -A $killChain -p udp --dport 5353 -j DROP")
-            // If capturing device traffic in root mode, drop any unmarked external traffic
+
+            // Fail-closed enforcement:
+            // Drop any outgoing traffic to physical network interfaces from unauthorized user apps that bypass the tunnel
             if (captureDeviceTraffic) {
                 appendLine("iptables -t filter -A $killChain -m mark --mark $MARK -j ACCEPT")
                 appendLine("iptables -t filter -A $killChain -j DROP")
+            } else {
+                appendLine("iptables -t filter -A $killChain -o wlan+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("iptables -t filter -A $killChain -o rmnet+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("iptables -t filter -A $killChain -o ccmni+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("iptables -t filter -A $killChain -o pdp+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("iptables -t filter -A $killChain -o eth+ -m owner ! --uid-owner $appUid -j DROP")
             }
             appendLine("iptables -t filter -D OUTPUT -j $killChain 2>/dev/null || true")
             appendLine("iptables -t filter -I OUTPUT -j $killChain")
@@ -645,20 +663,44 @@ object RootProxyManager {
             // 3. IPv6 Kill-Switch
             appendLine("ip6tables -t filter -N $v6KillChain 2>/dev/null || true")
             appendLine("ip6tables -t filter -F $v6KillChain")
+
+            // Allow loopback
             appendLine("ip6tables -t filter -A $v6KillChain -o lo -j ACCEPT")
+
+            // CRITICAL: NEVER DROP ICMPv6! Essential for IPv6 Neighbor Discovery (NDP),
+            // Router Advertisements, and link-local operations.
+            appendLine("ip6tables -t filter -A $v6KillChain -p ipv6-icmp -j ACCEPT")
+
+            // Allow established & related IPv6 connections
+            appendLine("ip6tables -t filter -A $v6KillChain -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT")
+
+            // Allow all IPv6 tunnel interfaces
             appendLine("ip6tables -t filter -A $v6KillChain -o $TUN -j ACCEPT")
             appendLine("ip6tables -t filter -A $v6KillChain -o tun+ -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -o v6-tun+ -j ACCEPT")
+
+            // Allow proxy core
             appendLine("ip6tables -t filter -A $v6KillChain -m owner --uid-owner $appUid -j ACCEPT")
+
+            // Allow system daemons on IPv6
+            appendLine("ip6tables -t filter -A $v6KillChain -m owner --uid-owner 0 -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -m owner --uid-owner 1000 -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -m owner --uid-owner 1051 -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -m owner --uid-owner 1029 -j ACCEPT")
             appendLine("ip6tables -t filter -A $v6KillChain -m mark --mark $FWMARK -j ACCEPT")
+
             bypassCidrsV6.forEach { appendLine("ip6tables -t filter -A $v6KillChain -d $it -j ACCEPT") }
-            appendLine("ip6tables -t filter -A $v6KillChain -p udp --dport 53 -j DROP")
-            appendLine("ip6tables -t filter -A $v6KillChain -p tcp --dport 53 -j DROP")
-            appendLine("ip6tables -t filter -A $v6KillChain -p tcp --dport 853 -j DROP")
+
             if (captureDeviceTraffic && ipv6) {
                 appendLine("ip6tables -t filter -A $v6KillChain -m mark --mark $MARK -j ACCEPT")
                 appendLine("ip6tables -t filter -A $v6KillChain -j DROP")
             } else if (!ipv6) {
-                appendLine("ip6tables -t filter -A $v6KillChain -j DROP")
+                // When IPv6 is disabled in proxy, block non-system apps on physical interfaces
+                appendLine("ip6tables -t filter -A $v6KillChain -o wlan+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("ip6tables -t filter -A $v6KillChain -o rmnet+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("ip6tables -t filter -A $v6KillChain -o ccmni+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("ip6tables -t filter -A $v6KillChain -o pdp+ -m owner ! --uid-owner $appUid -j DROP")
+                appendLine("ip6tables -t filter -A $v6KillChain -o eth+ -m owner ! --uid-owner $appUid -j DROP")
             }
             appendLine("ip6tables -t filter -D OUTPUT -j $v6KillChain 2>/dev/null || true")
             appendLine("ip6tables -t filter -I OUTPUT -j $v6KillChain")

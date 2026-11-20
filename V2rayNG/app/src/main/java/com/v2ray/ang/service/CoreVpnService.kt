@@ -178,6 +178,14 @@ class CoreVpnService : VpnService(), ServiceControl {
         // Configure platform-specific features
         configurePlatformFeatures(builder)
 
+        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_KILL_SWITCH, false) == true) {
+            try {
+                builder.setBlocking(true)
+            } catch (e: Exception) {
+                LogUtil.w(AppConfig.TAG, "Failed to setBlocking on VPN builder", e)
+            }
+        }
+
         // Create a new interface using the builder and save the parameters
         try {
             mInterface = builder.establish()!!
