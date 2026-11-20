@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bunker_ping_concurrency_entries">
+        <item>16 потоков (Стандарт)</item>
+        <item>32 потока (Быстро ⚡ По умолчанию)</item>
+        <item>48 потоков (Турбо 🚀)</item>
+        <item>64 потока (Максимум 🔥)</item>
+        <item>96 потоков (Экстрим 💥)</item>
+        <item>128 потоков (Ультра ⚡)</item>
+    </string-array>
+
+    <string-array name="bunker_theme_palette_entries">
+        <item>🔮 Кибер Фиолетовый (Bunker)</item>
+        <item>⚡ Изумрудная Матрица (Зелёный)</item>
+        <item>❄️ Арктический Циан (Зимний Лед)</item>
+        <item>🌇 Янтарный Неон (Золотой)</item>
+        <item>🩸 Кровавый Рубин (Красный)</item>
+        <item>🖤 Черный Титан (AMOLED)</item>
+    </string-array>
+</resources>

@@ -109,12 +109,12 @@ fun AboutScreen(
             )
             SettingsMenuItem(
                 icon = painterResource(R.drawable.ic_telegram_24dp),
-                title = "Канал: Бункер Кота 📢",
+                title = stringResource(R.string.about_telegram_channel),
                 onClick = { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
             )
             SettingsMenuItem(
                 icon = painterResource(R.drawable.ic_telegram_24dp),
-                title = "Чат сообщества: Бункер 💬",
+                title = stringResource(R.string.about_telegram_chat),
                 onClick = { Utils.openUri(context, AppConfig.TG_CHAT_URL) }
             )
             SettingsMenuItem(

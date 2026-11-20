@@ -220,24 +220,10 @@ fun SettingsScreen(
     val observatoryLeastLoadMethodValues = stringArrayResource(R.array.observatory_least_load_method).toList()
     val modeEntries = stringArrayResource(R.array.mode_entries).toList()
     val modeValues = stringArrayResource(R.array.mode_value).toList()
-    val pingConcurrencyEntries = listOf(
-        "16 потоков (Стандарт)",
-        "32 потока (Быстро ⚡ По умолчанию)",
-        "48 потоков (Турбо 🚀)",
-        "64 потока (Максимум 🔥)",
-        "96 потоков (Экстрим 💥)",
-        "128 потоков (Ультра ⚡)"
-    )
+    val pingConcurrencyEntries = stringArrayResource(R.array.bunker_ping_concurrency_entries).toList()
     val pingConcurrencyValues = listOf("16", "32", "48", "64", "96", "128")
 
-    val themePaletteEntries = listOf(
-        "🔮 Кибер Фиолетовый (Bunker)",
-        "⚡ Изумрудная Матрица (Зелёный)",
-        "❄️ Арктический Циан (Зимний Лед)",
-        "🌇 Янтарный Неон (Золотой)",
-        "🩸 Кровавый Рубин (Красный)",
-        "🖤 Черный Титан (AMOLED)"
-    )
+    val themePaletteEntries = stringArrayResource(R.array.bunker_theme_palette_entries).toList()
     val themePaletteValues = listOf(
         "cyber_violet",
         "emerald_matrix",

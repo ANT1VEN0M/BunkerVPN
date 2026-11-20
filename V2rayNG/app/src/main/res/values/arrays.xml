@@ -223,5 +223,22 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="bunker_ping_concurrency_entries">
+        <item>16 threads (Standard)</item>
+        <item>32 threads (Fast ⚡ Default)</item>
+        <item>48 threads (Turbo 🚀)</item>
+        <item>64 threads (Maximum 🔥)</item>
+        <item>96 threads (Extreme 💥)</item>
+        <item>128 threads (Ultra ⚡)</item>
+    </string-array>
+
+    <string-array name="bunker_theme_palette_entries">
+        <item>🔮 Cyber Purple (Bunker)</item>
+        <item>⚡ Emerald Matrix (Green)</item>
+        <item>❄️ Arctic Cyan (Winter Ice)</item>
+        <item>🌇 Amber Neon (Gold)</item>
+        <item>🩸 Blood Ruby (Red)</item>
+        <item>🖤 Black Titan (AMOLED)</item>
+    </string-array>
 
 </resources>

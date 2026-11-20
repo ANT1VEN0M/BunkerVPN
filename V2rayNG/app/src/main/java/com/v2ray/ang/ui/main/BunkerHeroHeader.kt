@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -402,9 +403,10 @@ fun BunkerHeroHeader(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         val statusTitle = if (isRunning) {
-                            if (downSpeedText != "0 B/s") "⚡ АКТИВЕН • $downSpeedText" else "⚡ БУНКЕР АКТИВЕН"
+                            if (downSpeedText != "0 B/s") stringResource(R.string.bunker_hero_status_active_speed, downSpeedText)
+                            else stringResource(R.string.bunker_hero_status_active)
                         } else {
-                            "🛡 ЗАЩИТА ВЫКЛ"
+                            stringResource(R.string.bunker_hero_status_off)
                         }
                         Text(
                             text = statusTitle,
@@ -418,7 +420,7 @@ fun BunkerHeroHeader(
                         )
                     }
                     Text(
-                        text = currentServerRemark ?: "Нажмите на кота для подключения",
+                        text = currentServerRemark ?: stringResource(R.string.bunker_hero_tap_to_connect),
                         style = MaterialTheme.typography.bodySmall,
                         fontSize = 10.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
@@ -441,7 +443,7 @@ fun BunkerHeroHeader(
                     }
                 ) {
                     Text(
-                        text = "🎯 Авто",
+                        text = "🎯 " + stringResource(R.string.bunker_btn_auto),
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = colorFabActive,
@@ -532,7 +534,7 @@ fun BunkerHeroHeader(
                         if (hideOfflineServers) {
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "• Онлайн",
+                                text = stringResource(R.string.bunker_hero_badge_online),
                                 fontSize = 8.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF10B981)
@@ -541,7 +543,7 @@ fun BunkerHeroHeader(
                         if (isAntiRknEnabled) {
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "• Анти-РКН 🇷🇺",
+                                text = stringResource(R.string.bunker_hero_badge_anti_rkn),
                                 fontSize = 8.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF38BDF8)
@@ -558,7 +560,7 @@ fun BunkerHeroHeader(
                         }
                     ) {
                         Text(
-                            text = "▲ Свернуть",
+                            text = stringResource(R.string.bunker_hero_collapse),
                             style = MaterialTheme.typography.labelSmall,
                             fontSize = 9.5.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -609,7 +611,7 @@ fun BunkerHeroHeader(
                     // Status and Server Info
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = if (isRunning) "⚡ БУНКЕР АКТИВЕН" else "🛡 ЗАЩИТА ОТКЛЮЧЕНА",
+                            text = if (isRunning) stringResource(R.string.bunker_hero_status_active) else stringResource(R.string.bunker_hero_status_protection_off),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp,
@@ -641,7 +643,7 @@ fun BunkerHeroHeader(
                             }
                         } else {
                             Text(
-                                text = "Нажмите на кота для подключения",
+                                text = stringResource(R.string.bunker_hero_tap_to_connect),
                                 style = MaterialTheme.typography.bodySmall,
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
@@ -709,7 +711,7 @@ fun BunkerHeroHeader(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "⚡ Проверка серверов: $testedServersCount / $totalServersCount • Онлайн: $workingServersCount",
+                                text = stringResource(R.string.bunker_hero_testing_progress, testedServersCount, totalServersCount, workingServersCount),
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = if (isDarkTheme) Color(0xFF38BDF8) else Color(0xFF0284C7)
@@ -729,7 +731,12 @@ fun BunkerHeroHeader(
                             1.dp,
                             if (workingServersCount > 0) Color(0xFF10B981).copy(alpha = 0.5f) else Color(0xFFEF4444).copy(alpha = 0.5f)
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = workingServersCount > 0) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onToggleHideOffline()
+                            }
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
@@ -738,9 +745,10 @@ fun BunkerHeroHeader(
                         ) {
                             Text(
                                 text = if (workingServersCount > 0) {
-                                    "⚡ Рабочих узлов: $workingServersCount из $totalServersCount онлайн ($percent%)"
+                                    if (!hideOfflineServers) stringResource(R.string.bunker_hero_working_nodes_filter, workingServersCount, totalServersCount, percent)
+                                    else stringResource(R.string.bunker_hero_working_nodes, workingServersCount, totalServersCount, percent)
                                 } else {
-                                    "✕ Нет доступных серверов (0 из $totalServersCount)"
+                                    stringResource(R.string.bunker_hero_no_servers, totalServersCount)
                                 },
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
@@ -775,14 +783,14 @@ fun BunkerHeroHeader(
                             Text(text = "🚀", fontSize = 10.sp)
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Обновление $availableUpdateVersion!",
+                                text = stringResource(R.string.bunker_hero_update_available, availableUpdateVersion),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 10.sp,
                                 color = Color(0xFF38BDF8)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Обновить ➔",
+                                text = stringResource(R.string.bunker_hero_update_btn),
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 10.sp,
                                 color = Color(0xFF10B981)
@@ -793,7 +801,7 @@ fun BunkerHeroHeader(
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // Essential Clean Action Row: Авто | Пинг | Фильтры | Тест
+                // Essential Clean Action Row: Auto | Ping | Filters | Test
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -819,7 +827,7 @@ fun BunkerHeroHeader(
                             Text(text = "🎯", fontSize = 11.sp)
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
-                                text = "Авто",
+                                text = stringResource(R.string.bunker_btn_auto),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 11.sp,
@@ -854,7 +862,7 @@ fun BunkerHeroHeader(
                             )
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
-                                text = "Пинг",
+                                text = stringResource(R.string.bunker_btn_ping),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 11.sp,
@@ -885,7 +893,7 @@ fun BunkerHeroHeader(
                             Text(text = "🎛️", fontSize = 11.sp)
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
-                                text = "Фильтры",
+                                text = stringResource(R.string.bunker_btn_filters),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 11.sp,
@@ -924,7 +932,7 @@ fun BunkerHeroHeader(
                             Text(text = "🚀", fontSize = 11.sp)
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
-                                text = "Тест",
+                                text = stringResource(R.string.bunker_btn_test),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 11.sp,

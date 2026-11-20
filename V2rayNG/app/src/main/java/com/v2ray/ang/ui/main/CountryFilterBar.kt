@@ -29,6 +29,11 @@ object CountryFilterHelper {
     // Regex for flag emoji: pair of Regional Indicator Symbols (\uD83C[\uDDE6-\uDDFF])
     private val FLAG_REGEX = Regex("([\\uD83C][\\uDDE6-\\uDDFF]){2}")
 
+    const val ID_ALL = "__ALL__"
+    const val ID_ONLINE = "__ONLINE__"
+    const val ID_AUTO = "__AUTO__"
+    const val ID_OTHER = "__OTHER__"
+
     fun extractFilterKey(remarks: String): String {
         val flagMatch = FLAG_REGEX.find(remarks)
         if (flagMatch != null) {
@@ -39,7 +44,7 @@ object CountryFilterHelper {
 
         val lower = remarks.lowercase()
         if (lower.contains("автовыбор") || lower.contains("auto") || lower.contains("balancer")) {
-            return "⚡ Авто"
+            return ID_AUTO
         }
         if (lower.contains("герман") || lower.contains("germany") || lower.contains("frankfurt")) return "🇩🇪 DE"
         if (lower.contains("нидерланд") || lower.contains("netherland") || lower.contains("голланди") || lower.contains("amsterdam")) return "🇳🇱 NL"
@@ -57,7 +62,7 @@ object CountryFilterHelper {
         if (lower.contains("швейцар") || lower.contains("switzerland")) return "🇨🇭 CH"
         if (lower.contains("австри") || lower.contains("austria")) return "🇦🇹 AT"
 
-        return "🏳 Другие"
+        return ID_OTHER
     }
 
     private fun getCountryCodeFromFlag(flag: String): String {
@@ -72,14 +77,20 @@ object CountryFilterHelper {
     }
 }
 
+data class CountryFilterItem(
+    val id: String,
+    val label: String,
+    val count: Int
+)
+
 @Composable
 fun CountryFilterBar(
-    filters: List<Pair<String, Int>>,
+    filters: List<CountryFilterItem>,
     selectedFilter: String?,
     onSelectFilter: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (filters.size <= 2) return // Don't show if only "Все" and 1 country
+    if (filters.size <= 2) return // Don't show if only "All" and 1 country
 
     val haptic = LocalHapticFeedback.current
 
@@ -89,8 +100,8 @@ fun CountryFilterBar(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items(filters, key = { it.first }) { (key, count) ->
-            val isSelected = (selectedFilter == null && key == "🌐 Все") || (selectedFilter == key)
+        items(filters, key = { it.id }) { item ->
+            val isSelected = (selectedFilter == null && item.id == CountryFilterHelper.ID_ALL) || (selectedFilter == item.id)
 
             val bgColor = if (isSelected) {
                 MaterialTheme.colorScheme.primary
@@ -123,10 +134,10 @@ fun CountryFilterBar(
                 modifier = Modifier
                     .clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        if (key == "🌐 Все" || selectedFilter == key) {
+                        if (item.id == CountryFilterHelper.ID_ALL || selectedFilter == item.id) {
                             onSelectFilter(null)
                         } else {
-                            onSelectFilter(key)
+                            onSelectFilter(item.id)
                         }
                     }
             ) {
@@ -135,14 +146,14 @@ fun CountryFilterBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = key,
+                        text = item.label,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = textColor
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "$count",
+                        text = "${item.count}",
                         style = MaterialTheme.typography.labelSmall,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,

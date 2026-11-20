@@ -1,7 +1,7 @@
 {
-  "version": "1.2.9",
-  "versionCode": 1021,
-  "tagName": "v1.2.9",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.2.9/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.2.9: Разгружен главный экран (новая Cyber-панель «🎛️ Фильтры»), авто-сортировка по пингу после теста, мгновенный фильтр «⚡ Только онлайн», устранение бага верстки на Samsung A-11 и полная поддержка авто-планшетов Teyes CC3 2K."
+  "version": "1.3.0",
+  "versionCode": 1022,
+  "tagName": "v1.3.0",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.0/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.3.0: Полная локализация интерфейса (English & Русский — переведены все карточки, кнопки, диалоги и фильтры), переключатель «🛡️ Обход блокировок Т2 / DPI (Fragment)» для мобильных операторов (Т2 Москва, МТС, Мегафон), и интерактивный клик по плашке результатов пинга для мгновенной фильтрации рабочих узлов."
 }

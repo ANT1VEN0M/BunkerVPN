@@ -49,13 +49,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.BuildConfig
+import com.v2ray.ang.R
 import com.v2ray.ang.ui.compose.colorFabActive
 import com.v2ray.ang.util.LogUtil
 import com.v2ray.ang.util.Utils
@@ -306,7 +309,7 @@ fun InAppUpdateDialog(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "ОБНОВЛЕНИЕ БУНКЕР VPN",
+                    text = stringResource(R.string.bunker_update_dialog_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = colorFabActive,
@@ -314,7 +317,7 @@ fun InAppUpdateDialog(
                 )
 
                 Text(
-                    text = "Версия $latestVersion",
+                    text = stringResource(R.string.bunker_update_dialog_version, latestVersion),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -352,7 +355,7 @@ fun InAppUpdateDialog(
                                 .clickable { startDownload() }
                         ) {
                             Text(
-                                text = "⚡ Обновить прямо сейчас (In-App)",
+                                text = stringResource(R.string.bunker_update_dialog_btn_now),
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black,
@@ -364,7 +367,7 @@ fun InAppUpdateDialog(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Позже",
+                            text = stringResource(R.string.bunker_update_dialog_btn_later),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
@@ -375,7 +378,7 @@ fun InAppUpdateDialog(
 
                     UpdateDownloadState.DOWNLOADING -> {
                         Text(
-                            text = "Скачивание обновления...",
+                            text = stringResource(R.string.bunker_update_downloading),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -423,7 +426,7 @@ fun InAppUpdateDialog(
                             }
                         ) {
                             Text(
-                                text = "Отмена",
+                                text = stringResource(R.string.action_cancel),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
@@ -434,7 +437,7 @@ fun InAppUpdateDialog(
                     UpdateDownloadState.READY -> {
                         val hasPermission = InAppUpdateInstaller.canInstallPackages(context)
                         Text(
-                            text = if (hasPermission) "Файл обновления загружен!" else "Требуется разрешение",
+                            text = if (hasPermission) stringResource(R.string.bunker_update_download_success) else stringResource(R.string.bunker_update_permission_required),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = if (hasPermission) Color(0xFF10B981) else Color(0xFFF59E0B)
@@ -442,9 +445,9 @@ fun InAppUpdateDialog(
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = if (hasPermission) {
-                                "Запуск системного установщика пакетов..."
+                                stringResource(R.string.bunker_update_launching_installer)
                             } else {
-                                "Разрешите установку из приложения Бункер VPN в настройках телефона"
+                                stringResource(R.string.bunker_update_grant_permission_hint)
                             },
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -467,7 +470,7 @@ fun InAppUpdateDialog(
                                 }
                         ) {
                             Text(
-                                text = if (hasPermission) "⚡ Установить обновление" else "⚙️ Разрешить установку в настройках",
+                                text = if (hasPermission) stringResource(R.string.bunker_update_btn_install) else stringResource(R.string.bunker_update_btn_grant_permission),
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black,
@@ -479,7 +482,7 @@ fun InAppUpdateDialog(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Закрыть",
+                            text = stringResource(R.string.action_cancel),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier

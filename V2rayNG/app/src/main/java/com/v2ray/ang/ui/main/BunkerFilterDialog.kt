@@ -37,13 +37,17 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
+import com.v2ray.ang.core.LauncherManager
 import com.v2ray.ang.dto.entities.ServersCache
+import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.ui.compose.colorFabActive
 import com.v2ray.ang.util.Utils
 
@@ -69,6 +73,9 @@ fun BunkerFilterDialog(
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
     var showThemeDialog by remember { mutableStateOf(false) }
+    var isFragmentEnabled by remember {
+        mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_FRAGMENT_ENABLED, false) == true)
+    }
 
     val services = remember(currentServerRemark, serversInGroup, isRunning, workingServersCount) {
         detectBunkerServices(currentServerRemark, serversInGroup, isRunning, workingServersCount)
@@ -98,7 +105,7 @@ fun BunkerFilterDialog(
                         Text(text = "🎛️", fontSize = 20.sp)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "ФИЛЬТРЫ И УПРАВЛЕНИЕ",
+                            text = stringResource(R.string.bunker_filter_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = colorFabActive,
@@ -128,13 +135,13 @@ fun BunkerFilterDialog(
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                     // SECTION 1: Отображение серверов
-                    FilterSectionHeader(title = "СЕРВЕРЫ И СПИСОК")
+                    FilterSectionHeader(title = stringResource(R.string.bunker_filter_sec_servers))
 
                     // Toggle: Скрыть недоступные
                     FilterSwitchItem(
                         icon = "⚡",
-                        title = "Скрыть недоступные узлы",
-                        subtitle = "Показывать только рабочие сервера (без таймаута)",
+                        title = stringResource(R.string.bunker_filter_hide_offline),
+                        subtitle = stringResource(R.string.bunker_filter_hide_offline_desc),
                         checked = hideOfflineServers,
                         onCheckedChange = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -145,8 +152,8 @@ fun BunkerFilterDialog(
                     // Toggle: Два столбца
                     FilterSwitchItem(
                         icon = "📱",
-                        title = "Два столбца (плитка)",
-                        subtitle = "Компактный вид списка для широких экранов и планшетов",
+                        title = stringResource(R.string.bunker_filter_two_columns),
+                        subtitle = stringResource(R.string.bunker_filter_two_columns_desc),
                         checked = doubleColumnDisplay,
                         onCheckedChange = {
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -179,7 +186,7 @@ fun BunkerFilterDialog(
                                 Text(text = "📶", fontSize = 14.sp)
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Топ пинг",
+                                    text = stringResource(R.string.bunker_filter_btn_top_ping),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = colorFabActive
@@ -207,7 +214,7 @@ fun BunkerFilterDialog(
                                 Text(text = "🗑️", fontSize = 14.sp)
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Очистить оффлайн",
+                                    text = stringResource(R.string.bunker_filter_btn_clear_offline),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -217,13 +224,13 @@ fun BunkerFilterDialog(
                     }
 
                     // SECTION 2: Сеть и Защита
-                    FilterSectionHeader(title = "СЕТЕВОЙ ЩИТ")
+                    FilterSectionHeader(title = stringResource(R.string.bunker_filter_sec_network))
 
                     // Toggle: Анти-РКН
                     FilterSwitchItem(
                         icon = "🇷🇺",
-                        title = "Режим «Анти-РКН»",
-                        subtitle = "Банки, Госуслуги и РФ-сайты идут напрямую без VPN",
+                        title = stringResource(R.string.bunker_filter_anti_rkn),
+                        subtitle = stringResource(R.string.bunker_filter_anti_rkn_desc),
                         checked = isAntiRknEnabled,
                         onCheckedChange = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -231,8 +238,25 @@ fun BunkerFilterDialog(
                         }
                     )
 
+                    // Toggle: Обход блокировок Т2 / DPI (Fragment)
+                    FilterSwitchItem(
+                        icon = "🛡️",
+                        title = stringResource(R.string.bunker_filter_fragment),
+                        subtitle = stringResource(R.string.bunker_filter_fragment_desc),
+                        checked = isFragmentEnabled,
+                        onCheckedChange = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            val newState = !isFragmentEnabled
+                            isFragmentEnabled = newState
+                            MmkvManager.encodeSettings(AppConfig.PREF_FRAGMENT_ENABLED, newState)
+                            if (isRunning) {
+                                LauncherManager.restartService(context)
+                            }
+                        }
+                    )
+
                     // SECTION 3: Инструменты
-                    FilterSectionHeader(title = "ИНСТРУМЕНТЫ")
+                    FilterSectionHeader(title = stringResource(R.string.bunker_filter_sec_tools))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -257,7 +281,7 @@ fun BunkerFilterDialog(
                                 Text(text = "🚀", fontSize = 14.sp)
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Спидтест",
+                                    text = stringResource(R.string.bunker_filter_speedtest),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -289,7 +313,7 @@ fun BunkerFilterDialog(
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Обновить узлы",
+                                    text = stringResource(R.string.bunker_filter_update_nodes),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -319,13 +343,13 @@ fun BunkerFilterDialog(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Column {
                                     Text(
-                                        text = "Тема оформления",
+                                        text = stringResource(R.string.bunker_filter_ui_theme),
                                         style = MaterialTheme.typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Кибер-фиолетовая, Светлая контрастная, Неон",
+                                        text = stringResource(R.string.bunker_filter_ui_theme_desc),
                                         style = MaterialTheme.typography.bodySmall,
                                         fontSize = 11.sp,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -338,7 +362,20 @@ fun BunkerFilterDialog(
 
                     // SECTION 4: Быстрый доступ к сервисам
                     if (services.isNotEmpty()) {
-                        FilterSectionHeader(title = "БЫСТРЫЙ ДОСТУП К СЕРВИСАМ")
+                        FilterSectionHeader(title = stringResource(R.string.bunker_filter_sec_services))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            services.forEach { service ->
+                                ServiceBadge(
+                                    service = service,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(6.dp),

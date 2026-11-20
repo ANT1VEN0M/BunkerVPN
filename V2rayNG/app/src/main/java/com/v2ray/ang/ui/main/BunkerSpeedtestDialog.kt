@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -110,7 +111,7 @@ fun BunkerSpeedtestDialog(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "БУНКЕР СПИДТЕСТ",
+                        text = stringResource(R.string.bunker_speedtest_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFE9D5FF),
@@ -122,7 +123,7 @@ fun BunkerSpeedtestDialog(
 
                 // Server Subtitle
                 Text(
-                    text = serverName?.takeIf { it.isNotBlank() } ?: "Сервер Бункера",
+                    text = serverName?.takeIf { it.isNotBlank() } ?: stringResource(R.string.bunker_speedtest_default_server),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFF94A3B8),
                     maxLines = 1,
@@ -162,7 +163,7 @@ fun BunkerSpeedtestDialog(
                             color = speedColor
                         )
                         Text(
-                            text = "Мбит/с",
+                            text = stringResource(R.string.bunker_speedtest_mbps),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = Color(0xFFCBD5E1)
@@ -170,7 +171,7 @@ fun BunkerSpeedtestDialog(
                         if (progressState.pingMs > 0) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Пинг: ${progressState.pingMs} ms",
+                                text = stringResource(R.string.bunker_speedtest_ping, progressState.pingMs),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = colorFabActive,
                                 fontWeight = FontWeight.Medium
@@ -195,16 +196,17 @@ fun BunkerSpeedtestDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Status text below bar
+                val defaultError = stringResource(R.string.bunker_speedtest_default_error)
                 val statusText = when (progressState.stage) {
-                    SpeedtestStage.IDLE -> "Инициализация..."
-                    SpeedtestStage.TESTING_PING -> "Замер задержки..."
+                    SpeedtestStage.IDLE -> stringResource(R.string.bunker_speedtest_stage_idle)
+                    SpeedtestStage.TESTING_PING -> stringResource(R.string.bunker_speedtest_stage_ping)
                     SpeedtestStage.TESTING_DOWNLOAD -> {
                         val mbDownloaded = progressState.downloadedBytes / (1024.0 * 1024.0)
                         val mbTotal = progressState.totalBytes / (1024.0 * 1024.0)
-                        String.format(Locale.US, "Загрузка: %.1f / %.1f МБ (%d%%)", mbDownloaded, mbTotal, progressState.progressPercent)
+                        stringResource(R.string.bunker_speedtest_stage_download, mbDownloaded, mbTotal, progressState.progressPercent)
                     }
-                    SpeedtestStage.COMPLETED -> "Тест завершён успешно! ⚡"
-                    SpeedtestStage.FAILED -> "Ошибка: ${progressState.errorMessage ?: "Сбой соединения"}"
+                    SpeedtestStage.COMPLETED -> stringResource(R.string.bunker_speedtest_stage_completed)
+                    SpeedtestStage.FAILED -> stringResource(R.string.bunker_speedtest_stage_failed, progressState.errorMessage ?: defaultError)
                 }
 
                 Text(
@@ -229,7 +231,7 @@ fun BunkerSpeedtestDialog(
                             },
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Отмена", color = Color(0xFFE2E8F0))
+                            Text(stringResource(R.string.action_cancel), color = Color(0xFFE2E8F0))
                         }
                     } else {
                         Button(
@@ -237,7 +239,7 @@ fun BunkerSpeedtestDialog(
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Повторить", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.bunker_speedtest_btn_retry), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     }
 
@@ -247,7 +249,7 @@ fun BunkerSpeedtestDialog(
                             onDismiss()
                         }
                     ) {
-                        Text("Закрыть", color = Color(0xFF94A3B8))
+                        Text(stringResource(R.string.action_cancel), color = Color(0xFF94A3B8))
                     }
                 }
             }

@@ -584,4 +584,106 @@
     <string name="sub_info_traffic" translatable="false">%1$s / %2$s</string>
     <string name="sub_info_unlimited">Unlimited</string>
 
+    <!-- Bunker Hero Header & Status -->
+    <string name="bunker_hero_status_active">⚡ BUNKER ACTIVE</string>
+    <string name="bunker_hero_status_active_speed">⚡ ACTIVE • %s</string>
+    <string name="bunker_hero_status_off">🛡 SHIELD OFF</string>
+    <string name="bunker_hero_status_protection_off">🛡 PROTECTION OFF</string>
+    <string name="bunker_hero_tap_to_connect">Tap the cat to connect</string>
+    <string name="bunker_hero_badge_online">• Online</string>
+    <string name="bunker_hero_badge_anti_rkn">• Anti-Censorship 🇷🇺</string>
+    <string name="bunker_hero_collapse">▲ Collapse</string>
+    <string name="bunker_hero_expand">▼ Expand</string>
+    <string name="bunker_hero_testing_progress">⚡ Testing: %1$d / %2$d • Online: %3$d</string>
+    <string name="bunker_hero_working_nodes">⚡ Working nodes: %1$d of %2$d online (%3$d%%)</string>
+    <string name="bunker_hero_working_nodes_filter">⚡ Working nodes: %1$d of %2$d online (%3$d%%) • Tap to filter</string>
+    <string name="bunker_hero_no_servers">✕ No servers available (0 of %d)</string>
+    <string name="bunker_hero_update_available">Update %s!</string>
+    <string name="bunker_hero_update_btn">Update ➔</string>
+    <string name="bunker_btn_auto">Auto</string>
+    <string name="bunker_btn_ping">Ping</string>
+    <string name="bunker_btn_filters">Filters</string>
+    <string name="bunker_btn_test">Test</string>
+
+    <!-- Bunker Filters & Controls Dialog -->
+    <string name="bunker_filter_title">FILTERS &amp; CONTROLS</string>
+    <string name="bunker_filter_sec_servers">SERVERS &amp; LIST</string>
+    <string name="bunker_filter_hide_offline">Hide offline nodes</string>
+    <string name="bunker_filter_hide_offline_desc">Show only working servers (without timeout)</string>
+    <string name="bunker_filter_two_columns">Two columns (grid)</string>
+    <string name="bunker_filter_two_columns_desc">Compact grid view for wide screens and tablets</string>
+    <string name="bunker_filter_btn_top_ping">Top ping</string>
+    <string name="bunker_filter_btn_clear_offline">Clear offline</string>
+    <string name="bunker_filter_sec_network">NETWORK SHIELD</string>
+    <string name="bunker_filter_anti_rkn">Anti-Censorship mode</string>
+    <string name="bunker_filter_anti_rkn_desc">Banks, Gosuslugi and RU sites go directly without VPN</string>
+    <string name="bunker_filter_fragment">Bypass mobile DPI (Fragment)</string>
+    <string name="bunker_filter_fragment_desc">Split TLS packets to bypass mobile operator blocks (T2, MTS, MegaFon)</string>
+    <string name="bunker_filter_sec_tools">TOOLS</string>
+    <string name="bunker_filter_speedtest">Speedtest</string>
+    <string name="bunker_filter_update_nodes">Update nodes</string>
+    <string name="bunker_filter_ui_theme">UI Theme</string>
+    <string name="bunker_filter_ui_theme_desc">Cyber Purple, Light Contrast, Neon</string>
+    <string name="bunker_filter_sec_services">QUICK ACCESS TO SERVICES</string>
+
+    <!-- Bunker Custom Wallpaper & Themes Dialog -->
+    <string name="bunker_custom_theme_title">Custom Wallpaper &amp; Themes 🎨</string>
+    <string name="bunker_custom_theme_has_wallpaper">Custom background is currently set. You can choose another image or restore default Cyber Purple theme.</string>
+    <string name="bunker_custom_theme_no_wallpaper">You can set any image or photo from your gallery as the app background with adaptive opacity.</string>
+    <string name="bunker_custom_theme_pick">Choose wallpaper from gallery 🖼️</string>
+    <string name="bunker_custom_theme_reset">Reset wallpaper (AMOLED) 🔄</string>
+
+    <!-- Bunker About Screen Items -->
+    <string name="about_telegram_channel">Channel: Bunker Kota 📢</string>
+    <string name="about_telegram_chat">Community Chat: Bunker 💬</string>
+
+    <!-- Bunker Server Cards & Ping Badge -->
+    <string name="bunker_policy_desc">All subscription servers • Automatic selection</string>
+    <string name="bunker_balancer_type">⚡ Smart balancer (lowest ping)</string>
+    <string name="bunker_badge_timeout">✕ Timeout</string>
+
+    <!-- Bunker Country Filter Chips -->
+    <string name="bunker_filter_all">🌐 All</string>
+    <string name="bunker_filter_online">⚡ Online</string>
+    <string name="bunker_filter_auto">⚡ Auto</string>
+    <string name="bunker_filter_other">🏳 Other</string>
+
+    <!-- Bunker Color Themes -->
+    <string name="bunker_theme_dialog_title">🎨 Bunker Color Theme</string>
+    <string name="bunker_theme_dialog_subtitle">Select neon theme palette:</string>
+    <string name="bunker_theme_done">Done</string>
+    <string name="theme_cyber_purple">🔮 Cyber Purple</string>
+    <string name="theme_emerald_matrix">⚡ Emerald Matrix</string>
+    <string name="theme_arctic_cyan">❄️ Arctic Cyan</string>
+    <string name="theme_amber_neon">🌇 Amber Neon</string>
+    <string name="theme_blood_ruby">🩸 Blood Ruby</string>
+    <string name="theme_black_titan">🖤 Black Titan</string>
+
+    <!-- Bunker Speedtest Dialog -->
+    <string name="bunker_speedtest_title">BUNKER SPEEDTEST</string>
+    <string name="bunker_speedtest_default_server">Bunker Server</string>
+    <string name="bunker_speedtest_mbps">Mbps</string>
+    <string name="bunker_speedtest_ping">Ping: %d ms</string>
+    <string name="bunker_speedtest_stage_idle">Initializing…</string>
+    <string name="bunker_speedtest_stage_ping">Testing latency…</string>
+    <string name="bunker_speedtest_stage_download">Download: %1$.1f / %2$.1f MB (%3$d%%)</string>
+    <string name="bunker_speedtest_stage_completed">Test completed successfully! ⚡</string>
+    <string name="bunker_speedtest_stage_failed">Error: %s</string>
+    <string name="bunker_speedtest_default_error">Connection failed</string>
+    <string name="bunker_speedtest_btn_retry">Retry</string>
+
+    <!-- Bunker In-App Update Dialog -->
+    <string name="bunker_update_dialog_title">BUNKER VPN UPDATE</string>
+    <string name="bunker_update_dialog_version">Version %s</string>
+    <string name="bunker_update_dialog_btn_now">⚡ Update right now (In-App)</string>
+    <string name="bunker_update_dialog_btn_later">Later</string>
+    <string name="bunker_update_downloading">Downloading update…</string>
+    <string name="bunker_update_download_success">Update file downloaded!</string>
+    <string name="bunker_update_permission_required">Permission required</string>
+    <string name="bunker_update_launching_installer">Launching system package installer…</string>
+    <string name="bunker_update_grant_permission_hint">Allow installation from Bunker VPN in phone settings</string>
+    <string name="bunker_update_btn_install">Install APK 🚀</string>
+    <string name="bunker_update_btn_grant_permission">Grant permission</string>
+    <string name="bunker_update_failed">Failed to download update file</string>
+
 </resources>

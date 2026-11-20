@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.v2ray.ang.AppConfig
+import com.v2ray.ang.R
 import com.v2ray.ang.handler.MmkvManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,6 +41,7 @@ import java.io.File
  */
 enum class BunkerThemePalette(
     val id: String,
+    val titleRes: Int,
     val title: String,
     val primaryColor: Color,
     val secondaryColor: Color,
@@ -51,7 +53,8 @@ enum class BunkerThemePalette(
 ) {
     CYBER_VIOLET(
         id = "cyber_violet",
-        title = "🔮 Кибер Фиолетовый",
+        titleRes = R.string.theme_cyber_purple,
+        title = "🔮 Cyber Purple",
         primaryColor = Color(0xFFA855F7),
         secondaryColor = Color(0xFFC084FC),
         tertiaryColor = Color(0xFF818CF8),
@@ -62,7 +65,8 @@ enum class BunkerThemePalette(
     ),
     EMERALD_MATRIX(
         id = "emerald_matrix",
-        title = "⚡ Изумрудная Матрица",
+        titleRes = R.string.theme_emerald_matrix,
+        title = "⚡ Emerald Matrix",
         primaryColor = Color(0xFF10B981),
         secondaryColor = Color(0xFF34D399),
         tertiaryColor = Color(0xFF6EE7B7),
@@ -73,7 +77,8 @@ enum class BunkerThemePalette(
     ),
     ARCTIC_CYAN(
         id = "arctic_cyan",
-        title = "❄️ Арктический Циан",
+        titleRes = R.string.theme_arctic_cyan,
+        title = "❄️ Arctic Cyan",
         primaryColor = Color(0xFF06B6D4),
         secondaryColor = Color(0xFF38BDF8),
         tertiaryColor = Color(0xFF7DD3FC),
@@ -84,7 +89,8 @@ enum class BunkerThemePalette(
     ),
     CYBER_AMBER(
         id = "cyber_amber",
-        title = "🌇 Янтарный Неон",
+        titleRes = R.string.theme_amber_neon,
+        title = "🌇 Amber Neon",
         primaryColor = Color(0xFFF59E0B),
         secondaryColor = Color(0xFFFBBF24),
         tertiaryColor = Color(0xFFFCD34D),
@@ -95,7 +101,8 @@ enum class BunkerThemePalette(
     ),
     CRIMSON_RED(
         id = "crimson_red",
-        title = "🩸 Кровавый Рубин",
+        titleRes = R.string.theme_blood_ruby,
+        title = "🩸 Blood Ruby",
         primaryColor = Color(0xFFEF4444),
         secondaryColor = Color(0xFFF87171),
         tertiaryColor = Color(0xFFFCA5A5),
@@ -106,7 +113,8 @@ enum class BunkerThemePalette(
     ),
     STEALTH_MONO(
         id = "stealth_mono",
-        title = "🖤 Черный Титан",
+        titleRes = R.string.theme_black_titan,
+        title = "🖤 Black Titan",
         primaryColor = Color(0xFF94A3B8),
         secondaryColor = Color(0xFFCBD5E1),
         tertiaryColor = Color(0xFFE2E8F0),

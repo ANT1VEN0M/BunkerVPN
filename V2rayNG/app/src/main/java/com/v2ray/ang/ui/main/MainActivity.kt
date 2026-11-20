@@ -428,12 +428,12 @@ private fun CustomThemeDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Свои обои и темы 🎨", style = MaterialTheme.typography.titleLarge) },
+        title = { Text(text = stringResource(R.string.bunker_custom_theme_title), style = MaterialTheme.typography.titleLarge) },
         text = {
             Column {
                 Text(
-                    text = if (hasWallpaper) "Сейчас установлен собственный фон. Вы можете выбрать другое изображение или вернуть стандартную тему Cyber Purple."
-                    else "Вы можете установить любое изображение или фото из галереи в качестве фона для приложения с адаптивной прозрачностью.",
+                    text = if (hasWallpaper) stringResource(R.string.bunker_custom_theme_has_wallpaper)
+                    else stringResource(R.string.bunker_custom_theme_no_wallpaper),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -443,7 +443,7 @@ private fun CustomThemeDialog(
                 ) {
                     Icon(painterResource(R.drawable.ic_image_24dp), contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Выбрать обои из галереи 🖼️")
+                    Text(text = stringResource(R.string.bunker_custom_theme_pick))
                 }
                 if (hasWallpaper) {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -453,7 +453,7 @@ private fun CustomThemeDialog(
                     ) {
                         Icon(painterResource(R.drawable.ic_delete_24dp), contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Сбросить обои (AMOLED) 🔄")
+                        Text(text = stringResource(R.string.bunker_custom_theme_reset))
                     }
                 }
             }
@@ -461,7 +461,7 @@ private fun CustomThemeDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(android.R.string.cancel))
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )

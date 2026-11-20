@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.res.stringResource
+import com.v2ray.ang.R
 import com.v2ray.ang.ui.compose.BunkerThemePalette
 import com.v2ray.ang.ui.compose.ThemeManager
 
@@ -69,14 +71,14 @@ fun BunkerThemeDialog(
             ) {
                 // Header
                 Text(
-                    text = "🎨 Цветовая тема Бункера",
+                    text = stringResource(R.string.bunker_theme_dialog_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Выберите неоновую палитру оформления:",
+                    text = stringResource(R.string.bunker_theme_dialog_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -143,7 +145,7 @@ fun BunkerThemeDialog(
                                     Spacer(modifier = Modifier.width(12.dp))
 
                                     Text(
-                                        text = palette.title,
+                                        text = stringResource(palette.titleRes),
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                         color = if (isSelected) palette.primaryColor else MaterialTheme.colorScheme.onSurface
@@ -192,7 +194,7 @@ fun BunkerThemeDialog(
                     )
                 ) {
                     Text(
-                        text = "Готово",
+                        text = stringResource(R.string.bunker_theme_done),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
                     )

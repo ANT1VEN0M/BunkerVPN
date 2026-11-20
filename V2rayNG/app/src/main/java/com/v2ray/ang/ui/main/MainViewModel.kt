@@ -454,7 +454,8 @@ class MainViewModel(
         return servers.map { server ->
             buildServerRowUiModel(
                 server = server,
-                subscriptionRemarks = subscriptionRemarks[server.profile.subscriptionId].orEmpty()
+                subscriptionRemarks = subscriptionRemarks[server.profile.subscriptionId].orEmpty(),
+                context = getApplication()
             )
         }
     }

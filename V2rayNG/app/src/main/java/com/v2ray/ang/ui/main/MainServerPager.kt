@@ -104,13 +104,18 @@ fun GroupPagerPage(
 
     var selectedCountryKey by rememberSaveable(groupId) { mutableStateOf<String?>(null) }
 
+    val strAll = stringResource(R.string.bunker_filter_all)
+    val strOnline = stringResource(R.string.bunker_filter_online)
+    val strAuto = stringResource(R.string.bunker_filter_auto)
+    val strOther = stringResource(R.string.bunker_filter_other)
+
     val onlineCount = remember(groupState.rows) {
         groupState.rows.count {
             it.profile.configType == EConfigType.POLICYGROUP || it.testDelayMillis > 0L
         }
     }
 
-    val countryFilters = remember(groupState.rows, onlineCount) {
+    val countryFilters = remember(groupState.rows, onlineCount, strAll, strOnline, strAuto, strOther) {
         if (groupState.rows.isEmpty()) emptyList()
         else {
             val counts = mutableMapOf<String, Int>()
@@ -120,28 +125,35 @@ fun GroupPagerPage(
             }
             val sortedEntries = counts.entries.sortedWith(
                 compareBy<Map.Entry<String, Int>> { (key, _) ->
-                    when {
-                        key.contains("Авто") -> 0
-                        key.contains("Друг") || key.contains("Проч") -> 2
+                    when (key) {
+                        CountryFilterHelper.ID_AUTO -> 0
+                        CountryFilterHelper.ID_OTHER -> 2
                         else -> 1
                     }
                 }.thenByDescending { it.value }
             )
-            val baseList = mutableListOf<Pair<String, Int>>()
-            baseList.add("🌐 Все" to groupState.rows.size)
+            val baseList = mutableListOf<CountryFilterItem>()
+            baseList.add(CountryFilterItem(CountryFilterHelper.ID_ALL, strAll, groupState.rows.size))
             if (onlineCount > 0 && onlineCount < groupState.rows.size) {
-                baseList.add("⚡ Онлайн" to onlineCount)
+                baseList.add(CountryFilterItem(CountryFilterHelper.ID_ONLINE, strOnline, onlineCount))
             }
-            baseList + sortedEntries.map { it.key to it.value }
+            baseList + sortedEntries.map { entry ->
+                val label = when (entry.key) {
+                    CountryFilterHelper.ID_AUTO -> strAuto
+                    CountryFilterHelper.ID_OTHER -> strOther
+                    else -> entry.key
+                }
+                CountryFilterItem(entry.key, label, entry.value)
+            }
         }
     }
 
     val displayedRows = remember(groupState.rows, selectedCountryKey, hideOfflineServers) {
         var list = groupState.rows
-        if (hideOfflineServers || selectedCountryKey == "⚡ Онлайн") {
+        if (hideOfflineServers || selectedCountryKey == CountryFilterHelper.ID_ONLINE) {
             list = list.filter { it.profile.configType == EConfigType.POLICYGROUP || it.testDelayMillis > 0L }
         }
-        if (selectedCountryKey != null && selectedCountryKey != "🌐 Все" && selectedCountryKey != "⚡ Онлайн") {
+        if (selectedCountryKey != null && selectedCountryKey != CountryFilterHelper.ID_ALL && selectedCountryKey != CountryFilterHelper.ID_ONLINE) {
             list = list.filter { row ->
                 CountryFilterHelper.extractFilterKey(row.remarks) == selectedCountryKey
             }
@@ -149,7 +161,7 @@ fun GroupPagerPage(
         list
     }
 
-    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty() && !hideOfflineServers && (selectedCountryKey == null || selectedCountryKey == "🌐 Все")
+    val canReorder = groupId.isNotEmpty() && searchQuery.isEmpty() && !hideOfflineServers && (selectedCountryKey == null || selectedCountryKey == CountryFilterHelper.ID_ALL)
     val actions = remember(
         onSelectServer,
         onEditServer,
@@ -499,8 +511,9 @@ private fun ServerListItem(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 if (row.testDelayMillis != 0L) {
+                    val timeoutText = stringResource(R.string.bunker_badge_timeout)
                     val (badgeText, badgeColor, badgeBg) = when {
-                        row.testDelayMillis < 0L -> Triple("✕ Таймаут", Color(0xFFEF4444), Color(0xFFEF4444).copy(alpha = 0.16f))
+                        row.testDelayMillis < 0L -> Triple(timeoutText, Color(0xFFEF4444), Color(0xFFEF4444).copy(alpha = 0.16f))
                         row.testDelayMillis <= 120L -> Triple("⚡ ${row.testDelayMillis} ms", Color(0xFF10B981), Color(0xFF10B981).copy(alpha = 0.16f))
                         row.testDelayMillis <= 250L -> Triple("● ${row.testDelayMillis} ms", Color(0xFF06B6D4), Color(0xFF06B6D4).copy(alpha = 0.16f))
                         else -> Triple("▲ ${row.testDelayMillis} ms", Color(0xFFF59E0B), Color(0xFFF59E0B).copy(alpha = 0.16f))

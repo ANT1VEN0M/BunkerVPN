@@ -1,5 +1,7 @@
 package com.v2ray.ang.ui.main
 
+import android.content.Context
+import com.v2ray.ang.R
 import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.dto.entities.ServersCache
 import com.v2ray.ang.enums.EConfigType
@@ -25,10 +27,11 @@ internal data class ServerGroupUiState(
 internal fun buildServerRowUiModel(
     server: ServersCache,
     subscriptionRemarks: String,
+    context: Context? = null
 ): ServerRowUiModel {
     val profile = server.profile
     val stats = if (profile.configType == EConfigType.POLICYGROUP) {
-        "Все серверы подписки • Автоматический выбор"
+        context?.getString(R.string.bunker_policy_desc) ?: "All subscription servers • Automatic selection"
     } else {
         profile.description.nullIfBlank()
             ?: AngConfigManager.generateDescription(profile)
@@ -38,15 +41,15 @@ internal fun buildServerRowUiModel(
         profile = profile,
         remarks = profile.remarks,
         statistics = stats,
-        typeDescription = serverProtocolDescription(profile),
+        typeDescription = serverProtocolDescription(profile, context),
         testDelayMillis = server.testDelayMillis,
         subscriptionBadge = subscriptionRemarks.firstOrNull()?.toString().orEmpty(),
     )
 }
 
-private fun serverProtocolDescription(profile: ProfileItem): String {
+private fun serverProtocolDescription(profile: ProfileItem, context: Context? = null): String {
     if (profile.configType == EConfigType.POLICYGROUP) {
-        return "⚡ Умный балансировщик (наименьший пинг)"
+        return context?.getString(R.string.bunker_balancer_type) ?: "⚡ Smart balancer (lowest ping)"
     }
     if (profile.configType.isComplexType()) return profile.configType.name
     val parts = mutableListOf(profile.configType.name)

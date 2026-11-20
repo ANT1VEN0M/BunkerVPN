@@ -587,4 +587,106 @@
     <string name="sub_info_open_page">Открыть страницу подписки</string>
     <string name="sub_info_unlimited">Без ограничений</string>
 
+    <!-- Bunker Hero Header & Status -->
+    <string name="bunker_hero_status_active">⚡ БУНКЕР АКТИВЕН</string>
+    <string name="bunker_hero_status_active_speed">⚡ АКТИВЕН • %s</string>
+    <string name="bunker_hero_status_off">🛡 ЗАЩИТА ВЫКЛ</string>
+    <string name="bunker_hero_status_protection_off">🛡 ЗАЩИТА ОТКЛЮЧЕНА</string>
+    <string name="bunker_hero_tap_to_connect">Нажмите на кота для подключения</string>
+    <string name="bunker_hero_badge_online">• Онлайн</string>
+    <string name="bunker_hero_badge_anti_rkn">• Анти-РКН 🇷🇺</string>
+    <string name="bunker_hero_collapse">▲ Свернуть</string>
+    <string name="bunker_hero_expand">▼ Развернуть</string>
+    <string name="bunker_hero_testing_progress">⚡ Проверка серверов: %1$d / %2$d • Онлайн: %3$d</string>
+    <string name="bunker_hero_working_nodes">⚡ Рабочих узлов: %1$d из %2$d онлайн (%3$d%%)</string>
+    <string name="bunker_hero_working_nodes_filter">⚡ Рабочих узлов: %1$d из %2$d онлайн (%3$d%%) • Нажмите, чтобы отфильтровать</string>
+    <string name="bunker_hero_no_servers">✕ Нет доступных серверов (0 из %d)</string>
+    <string name="bunker_hero_update_available">Обновление %s!</string>
+    <string name="bunker_hero_update_btn">Обновить ➔</string>
+    <string name="bunker_btn_auto">Авто</string>
+    <string name="bunker_btn_ping">Пинг</string>
+    <string name="bunker_btn_filters">Фильтры</string>
+    <string name="bunker_btn_test">Тест</string>
+
+    <!-- Bunker Filters & Controls Dialog -->
+    <string name="bunker_filter_title">ФИЛЬТРЫ И УПРАВЛЕНИЕ</string>
+    <string name="bunker_filter_sec_servers">СЕРВЕРЫ И СПИСОК</string>
+    <string name="bunker_filter_hide_offline">Скрыть недоступные узлы</string>
+    <string name="bunker_filter_hide_offline_desc">Показывать только рабочие сервера (без таймаута)</string>
+    <string name="bunker_filter_two_columns">Два столбца (плитка)</string>
+    <string name="bunker_filter_two_columns_desc">Компактный вид списка для широких экранов и планшетов</string>
+    <string name="bunker_filter_btn_top_ping">Топ пинг</string>
+    <string name="bunker_filter_btn_clear_offline">Очистить оффлайн</string>
+    <string name="bunker_filter_sec_network">СЕТЕВОЙ ЩИТ</string>
+    <string name="bunker_filter_anti_rkn">Режим «Анти-РКН»</string>
+    <string name="bunker_filter_anti_rkn_desc">Банки, Госуслуги и РФ-сайты идут напрямую без VPN</string>
+    <string name="bunker_filter_fragment">Обход блокировок Т2 / DPI (Fragment)</string>
+    <string name="bunker_filter_fragment_desc">Разбивать TLS-пакеты для обхода блокировок операторов (Т2, МТС, Мегафон)</string>
+    <string name="bunker_filter_sec_tools">ИНСТРУМЕНТЫ</string>
+    <string name="bunker_filter_speedtest">Спидтест</string>
+    <string name="bunker_filter_update_nodes">Обновить узлы</string>
+    <string name="bunker_filter_ui_theme">Тема оформления</string>
+    <string name="bunker_filter_ui_theme_desc">Кибер-фиолетовая, Изумруд, Арктика, Неон</string>
+    <string name="bunker_filter_sec_services">БЫСТРЫЙ ДОСТУП К СЕРВИСАМ</string>
+
+    <!-- Bunker Custom Wallpaper & Themes Dialog -->
+    <string name="bunker_custom_theme_title">Свои обои и темы 🎨</string>
+    <string name="bunker_custom_theme_has_wallpaper">Сейчас установлен собственный фон. Вы можете выбрать другое изображение или вернуть стандартную тему Cyber Purple.</string>
+    <string name="bunker_custom_theme_no_wallpaper">Вы можете установить любое изображение или фото из галереи в качестве фона для приложения с адаптивной прозрачностью.</string>
+    <string name="bunker_custom_theme_pick">Выбрать обои из галереи 🖼️</string>
+    <string name="bunker_custom_theme_reset">Сбросить обои (AMOLED) 🔄</string>
+
+    <!-- Bunker About Screen Items -->
+    <string name="about_telegram_channel">Канал: Бункер Кота 📢</string>
+    <string name="about_telegram_chat">Чат сообщества: Бункер 💬</string>
+
+    <!-- Bunker Server Cards & Ping Badge -->
+    <string name="bunker_policy_desc">Все серверы подписки • Автоматический выбор</string>
+    <string name="bunker_balancer_type">⚡ Умный балансировщик (наименьший пинг)</string>
+    <string name="bunker_badge_timeout">✕ Таймаут</string>
+
+    <!-- Bunker Country Filter Chips -->
+    <string name="bunker_filter_all">🌐 Все</string>
+    <string name="bunker_filter_online">⚡ Онлайн</string>
+    <string name="bunker_filter_auto">⚡ Авто</string>
+    <string name="bunker_filter_other">🏳 Другие</string>
+
+    <!-- Bunker Color Themes -->
+    <string name="bunker_theme_dialog_title">🎨 Цветовая тема Бункера</string>
+    <string name="bunker_theme_dialog_subtitle">Выберите неоновую палитру оформления:</string>
+    <string name="bunker_theme_done">Готово</string>
+    <string name="theme_cyber_purple">🔮 Кибер Фиолетовый</string>
+    <string name="theme_emerald_matrix">⚡ Изумрудная Матрица</string>
+    <string name="theme_arctic_cyan">❄️ Арктический Циан</string>
+    <string name="theme_amber_neon">🌇 Янтарный Неон</string>
+    <string name="theme_blood_ruby">🩸 Кровавый Рубин</string>
+    <string name="theme_black_titan">🖤 Черный Титан</string>
+
+    <!-- Bunker Speedtest Dialog -->
+    <string name="bunker_speedtest_title">БУНКЕР СПИДТЕСТ</string>
+    <string name="bunker_speedtest_default_server">Сервер Бункера</string>
+    <string name="bunker_speedtest_mbps">Мбит/с</string>
+    <string name="bunker_speedtest_ping">Пинг: %d ms</string>
+    <string name="bunker_speedtest_stage_idle">Инициализация…</string>
+    <string name="bunker_speedtest_stage_ping">Замер задержки…</string>
+    <string name="bunker_speedtest_stage_download">Загрузка: %1$.1f / %2$.1f МБ (%3$d%%)</string>
+    <string name="bunker_speedtest_stage_completed">Тест завершён успешно! ⚡</string>
+    <string name="bunker_speedtest_stage_failed">Ошибка: %s</string>
+    <string name="bunker_speedtest_default_error">Сбой соединения</string>
+    <string name="bunker_speedtest_btn_retry">Повторить</string>
+
+    <!-- Bunker In-App Update Dialog -->
+    <string name="bunker_update_dialog_title">ОБНОВЛЕНИЕ БУНКЕР VPN</string>
+    <string name="bunker_update_dialog_version">Версия %s</string>
+    <string name="bunker_update_dialog_btn_now">⚡ Обновить прямо сейчас (In-App)</string>
+    <string name="bunker_update_dialog_btn_later">Позже</string>
+    <string name="bunker_update_downloading">Скачивание обновления…</string>
+    <string name="bunker_update_download_success">Файл обновления загружен!</string>
+    <string name="bunker_update_permission_required">Требуется разрешение</string>
+    <string name="bunker_update_launching_installer">Запуск системного установщика пакетов…</string>
+    <string name="bunker_update_grant_permission_hint">Разрешите установку из приложения Бункер VPN в настройках телефона</string>
+    <string name="bunker_update_btn_install">Установить APK 🚀</string>
+    <string name="bunker_update_btn_grant_permission">Предоставить доступ</string>
+    <string name="bunker_update_failed">Не удалось загрузить файл обновления</string>
+
 </resources>
