@@ -1,7 +1,7 @@
 {
-  "version": "1.3.8",
-  "versionCode": 1030,
-  "tagName": "v1.3.8",
-  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.8/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.3.8: Встроенные WireGuard WARP+ ноды (порт 880, reserved bytes) прямо в авто-подписках + безотказный облачный fallback для создания Личного WARP+ даже при выключенном VPN."
+  "version": "1.3.9",
+  "versionCode": 1031,
+  "tagName": "v1.3.9",
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.9/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🖤 BunkerVPN v1.3.9: Новый режим «Stealth» (чистый строгий OLED минимализм без AI-графики и светящегося неона), ультра-компактная шапка и быстрое переключение стилей интерфейса."
 }

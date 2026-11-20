@@ -59,7 +59,10 @@ import com.v2ray.ang.core.CoreServiceManager
 import com.v2ray.ang.dto.entities.ServersCache
 import com.v2ray.ang.extension.toSpeedString
 import com.v2ray.ang.handler.MmkvManager
+import com.v2ray.ang.ui.compose.LocalStealthMode
+import com.v2ray.ang.ui.compose.ThemeManager
 import com.v2ray.ang.ui.compose.colorFabActive
+import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
@@ -277,6 +280,7 @@ fun BunkerHeroHeader(
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
+    val isStealth = LocalStealthMode.current || ThemeManager.isStealthMode.collectAsState().value
     var isCollapsed by rememberSaveable { mutableStateOf(false) }
     var showFilterDialog by remember { mutableStateOf(false) }
     val isDarkTheme = MaterialTheme.colorScheme.surface.luminance() < 0.5f
@@ -351,14 +355,14 @@ fun BunkerHeroHeader(
         }
     }
 
-    if (isCollapsed) {
+    if (isCollapsed || isStealth) {
         Surface(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 3.dp),
             shape = RoundedCornerShape(14.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+            color = if (isStealth) Color(0xFF0F131A) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
+            border = BorderStroke(1.dp, if (isStealth) Color(0xFF222834) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
         ) {
             Row(
                 modifier = Modifier
@@ -366,7 +370,7 @@ fun BunkerHeroHeader(
                     .padding(horizontal = 10.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Mini Cat Button
+                // Button
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -376,21 +380,38 @@ fun BunkerHeroHeader(
                             onToggle()
                         }
                 ) {
-                    if (isRunning) {
+                    if (isStealth) {
                         Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(36.dp)
+                                .size(32.dp)
                                 .clip(CircleShape)
-                                .border(1.5.dp, colorFabActive.copy(alpha = pulseAlpha), CircleShape)
+                                .background(if (isRunning) Color(0x2610B981) else MaterialTheme.colorScheme.surfaceContainerHigh)
+                        ) {
+                            Icon(
+                                painter = painterResource(if (isRunning) R.drawable.ic_action_done else R.drawable.ic_lock_24dp),
+                                contentDescription = "VPN Status",
+                                tint = if (isRunning) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    } else {
+                        if (isRunning) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .border(1.5.dp, colorFabActive.copy(alpha = pulseAlpha), CircleShape)
+                            )
+                        }
+                        Image(
+                            painter = painterResource(R.drawable.bunker_logo),
+                            contentDescription = "Bunker Cat Button",
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
                         )
                     }
-                    Image(
-                        painter = painterResource(R.drawable.bunker_logo),
-                        contentDescription = "Bunker Cat Button",
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                    )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -419,7 +440,7 @@ fun BunkerHeroHeader(
                             maxLines = 1,
                             softWrap = false,
                             overflow = TextOverflow.Ellipsis,
-                            color = if (isRunning) colorFabActive else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if (isRunning) (if (isStealth) Color(0xFF10B981) else colorFabActive) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Text(
@@ -439,17 +460,17 @@ fun BunkerHeroHeader(
                 Surface(
                     shape = RoundedCornerShape(8.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    border = BorderStroke(1.dp, colorFabActive.copy(alpha = 0.35f)),
+                    border = BorderStroke(1.dp, if (isStealth) Color(0xFF263042) else colorFabActive.copy(alpha = 0.35f)),
                     modifier = Modifier.clickable {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         onAutoSelect()
                     }
                 ) {
                     Text(
-                        text = "🎯 " + stringResource(R.string.bunker_btn_auto),
+                        text = if (isStealth) stringResource(R.string.bunker_btn_auto) else ("🎯 " + stringResource(R.string.bunker_btn_auto)),
                         fontSize = 10.5.sp,
                         fontWeight = FontWeight.Bold,
-                        color = colorFabActive,
+                        color = if (isStealth) Color(0xFF38BDF8) else colorFabActive,
                         modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
                     )
                 }
@@ -470,7 +491,7 @@ fun BunkerHeroHeader(
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "🎛️", fontSize = 11.sp)
+                        Text(text = if (isStealth) "⚙" else "🎛️", fontSize = 11.sp)
                         if (hideOfflineServers || isAntiRknEnabled) {
                             Spacer(modifier = Modifier.width(2.dp))
                             Box(
@@ -483,24 +504,26 @@ fun BunkerHeroHeader(
                     }
                 }
 
-                Spacer(modifier = Modifier.width(4.dp))
+                if (!isStealth) {
+                    Spacer(modifier = Modifier.width(4.dp))
 
-                // Expand toggle button
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f),
-                    modifier = Modifier.clickable {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        isCollapsed = false
+                    // Expand toggle button
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f),
+                        modifier = Modifier.clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            isCollapsed = false
+                        }
+                    ) {
+                        Text(
+                            text = "▼",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
+                        )
                     }
-                ) {
-                    Text(
-                        text = "▼",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 5.dp)
-                    )
                 }
             }
         }

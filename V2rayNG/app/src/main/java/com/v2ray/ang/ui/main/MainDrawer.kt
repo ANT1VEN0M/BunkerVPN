@@ -36,9 +36,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.collectAsState
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.ui.compose.AppDivider
+import com.v2ray.ang.ui.compose.LocalStealthMode
+import com.v2ray.ang.ui.compose.ThemeManager
 import com.v2ray.ang.ui.compose.verticalScrollbar
 import com.v2ray.ang.util.Utils
 
@@ -78,6 +81,7 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
     val drawerScrollState = rememberScrollState()
     val context = LocalContext.current
     var showAdvanced by remember { mutableStateOf(false) }
+    val isStealth = LocalStealthMode.current || ThemeManager.isStealthMode.collectAsState().value
 
     ModalDrawerSheet(
         drawerState = drawerState,
@@ -97,19 +101,37 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 28.dp, bottom = 20.dp),
+                        .padding(top = if (isStealth) 20.dp else 28.dp, bottom = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.bunker_logo),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(96.dp)
-                            .clip(CircleShape)
-                            .clickable { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    if (isStealth) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF1E2638))
+                                .clickable { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_lock_24dp),
+                                contentDescription = null,
+                                tint = Color(0xFF38BDF8),
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                    } else {
+                        Image(
+                            painter = painterResource(R.drawable.bunker_logo),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(96.dp)
+                                .clip(CircleShape)
+                                .clickable { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.titleLarge,
@@ -117,7 +139,7 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "@bunker_kota",
+                        text = if (isStealth) "Stealth Edition" else "@bunker_kota",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable { Utils.openUri(context, AppConfig.TG_CHANNEL_URL) }

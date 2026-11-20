@@ -266,9 +266,19 @@ object ThemeManager {
     )
     val customWallpaper: StateFlow<String?> = _customWallpaper.asStateFlow()
 
+    private val _isStealthMode = MutableStateFlow(
+        MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, false)
+    )
+    val isStealthMode: StateFlow<Boolean> = _isStealthMode.asStateFlow()
+
     fun setThemeMode(mode: String) {
         MmkvManager.encodeSettings(AppConfig.PREF_UI_MODE_NIGHT, mode)
         _themeMode.value = mode
+    }
+
+    fun setStealthMode(enabled: Boolean) {
+        MmkvManager.encodeSettings(AppConfig.PREF_STEALTH_MODE, enabled)
+        _isStealthMode.value = enabled
     }
 
     fun setDynamicColorEnabled(enabled: Boolean) {
@@ -301,6 +311,8 @@ object ThemeManager {
             )
         _customWallpaper.value =
             MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
+        _isStealthMode.value =
+            MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, false)
     }
 }
 
@@ -343,6 +355,7 @@ fun resolveDarkTheme(): Boolean {
 }
 
 val LocalDarkTheme = compositionLocalOf { false }
+val LocalStealthMode = compositionLocalOf { false }
 
 @Composable
 fun AppTheme(
@@ -352,10 +365,34 @@ fun AppTheme(
     val dynamicColor by ThemeManager.dynamicColorEnabled.collectAsState()
     val currentPalette by ThemeManager.themePalette.collectAsState()
     val wallpaperPath by ThemeManager.customWallpaper.collectAsState()
-    val hasWallpaper = !wallpaperPath.isNullOrBlank()
+    val isStealth by ThemeManager.isStealthMode.collectAsState()
+    val hasWallpaper = !wallpaperPath.isNullOrBlank() && !isStealth
 
     val context = LocalContext.current
+    val stealthDarkColorScheme = darkColorScheme(
+        primary = Color(0xFF38BDF8),
+        onPrimary = Color.Black,
+        primaryContainer = Color(0xFF1E293B),
+        onPrimaryContainer = Color(0xFFF1F5F9),
+        secondary = Color(0xFF94A3B8),
+        onSecondary = Color.Black,
+        secondaryContainer = Color(0xFF0F172A),
+        onSecondaryContainer = Color(0xFFE2E8F0),
+        background = Color(0xFF000000),
+        onBackground = Color(0xFFF8FAFC),
+        surface = Color(0xFF0A0D12),
+        onSurface = Color(0xFFF8FAFC),
+        surfaceVariant = Color(0xFF141820),
+        onSurfaceVariant = Color(0xFF94A3B8),
+        outline = Color(0xFF262C36),
+        outlineVariant = Color(0xFF1E232B),
+        surfaceContainer = Color(0xFF0F1218),
+        surfaceContainerHigh = Color(0xFF151921),
+        surfaceContainerHighest = Color(0xFF1B202A)
+    )
+
     val baseColorScheme = when {
+        isStealth && darkTheme -> stealthDarkColorScheme
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
@@ -390,6 +427,7 @@ fun AppTheme(
 
     CompositionLocalProvider(
         LocalDarkTheme provides darkTheme,
+        LocalStealthMode provides isStealth,
         LocalThemePalette provides currentPalette,
         LocalAppSnackbar provides snackbarController
     ) {

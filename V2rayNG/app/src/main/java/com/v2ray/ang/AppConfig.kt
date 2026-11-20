@@ -27,6 +27,7 @@ object AppConfig {
     const val BUNKER_TURBO_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@latest/sub/fast_b64.txt"
     const val BUNKER_TG_SOS_SUB_ID = "__bunker_sub_tg_sos__"
     const val BUNKER_TG_SOS_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@latest/sub/tg_b64.txt"
+    const val PREF_STEALTH_MODE = "pref_stealth_mode"
 
     /** Preferences mapped to MMKV storage. */
     const val PREF_SNIFFING_ENABLED = "pref_sniffing_enabled"
