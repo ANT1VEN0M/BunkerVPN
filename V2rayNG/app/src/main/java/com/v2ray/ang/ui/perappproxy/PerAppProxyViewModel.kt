@@ -229,6 +229,60 @@ class PerAppProxyViewModel(application: Application) : BaseViewModel(application
         }
     }
 
+    // Bunker Presets
+    fun applySocialsPreset() {
+        val installed = appsAll ?: return
+        val targets = setOf(
+            "com.instagram.android",
+            "com.twitter.android",
+            "com.twitter.android.lite",
+            "com.discord",
+            "com.google.android.youtube",
+            "com.spotify.music",
+            "com.openai.chatgpt",
+            "notion.id",
+            "com.facebook.katana",
+            "com.facebook.orca",
+            "com.canva.editor"
+        )
+        val selected = installed.map { it.packageName }.filter { it in targets }.toSet()
+        setBypassAppsEnabled(false) // Only proxy selected apps
+        replaceBlacklist(selected)
+        enablePerAppProxyAndRestart()
+    }
+
+    fun applyRuWhitelistPreset() {
+        val installed = appsAll ?: return
+        val targets = setOf(
+            "ru.sberbankmobile",
+            "com.idamob.tinkoff.android",
+            "ru.vtb24.mobilebanking.android",
+            "ru.alfabank.mobile.android",
+            "ru.gosuslugi.net.app",
+            "ru.rosteleset.gosuslugi",
+            "ru.nspk.mirpay",
+            "ru.nspk.sbp",
+            "ru.wildberries.bank",
+            "ru.yandex.yandexnavi",
+            "ru.yandex.taxi",
+            "ru.ozon.app.android",
+            "com.wildberries.wb"
+        )
+        val selected = installed.map { it.packageName }.filter { it in targets }.toSet()
+        setBypassAppsEnabled(true) // Bypass selected apps directly
+        replaceBlacklist(selected)
+        enablePerAppProxyAndRestart()
+    }
+
+    fun applyGamingDiscordPreset() {
+        val installed = appsAll ?: return
+        val targets = setOf("com.discord")
+        val selected = installed.map { it.packageName }.filter { it in targets }.toSet()
+        setBypassAppsEnabled(false) // Only Discord in VPN, games bypass
+        replaceBlacklist(selected)
+        enablePerAppProxyAndRestart()
+    }
+
     private suspend fun applyProxyAppList(content: String, context: Context, forceGoogleApps: Boolean): Boolean {
         val installedApps = appsAll ?: return false
 

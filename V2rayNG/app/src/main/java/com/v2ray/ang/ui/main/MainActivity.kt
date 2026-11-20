@@ -43,6 +43,7 @@ import com.v2ray.ang.extension.toastError
 import com.v2ray.ang.extension.toastInfo
 import com.v2ray.ang.extension.toastSuccess
 import com.v2ray.ang.handler.AngConfigManager
+import com.v2ray.ang.handler.TelegramSosManager
 import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.handler.SettingsChangeManager
 import com.v2ray.ang.handler.SettingsManager
@@ -178,6 +179,10 @@ class MainActivity : HelperBaseComponentActivity() {
                     is MainAction.ShareClipboard -> shareToClipboard(action.guid)
                     is MainAction.ShareFullContent -> shareFullContentAsync(action.guid)
                     is MainAction.OpenSubscriptionLink -> openSubscriptionLink(action.url)
+                    MainAction.TelegramSos -> {
+                        TelegramSosManager.launchTelegramProxy(this)
+                        toastSuccess("🚀 Подключение к резервному Telegram Proxy...")
+                    }
                     else -> mainViewModel.onAction(action)
                 }
             },

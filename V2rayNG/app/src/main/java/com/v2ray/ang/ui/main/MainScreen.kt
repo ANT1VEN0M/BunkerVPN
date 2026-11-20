@@ -337,7 +337,10 @@ fun MainScreen(
                         onToggleHideOffline = { onAction(MainAction.ToggleHideOfflineServers) },
                         doubleColumnDisplay = doubleColumnDisplay,
                         onToggleDoubleColumn = { onAction(MainAction.ToggleDoubleColumn) },
-                        onRemoveInvalid = { onAction(MainAction.RemoveInvalidServers) }
+                        onRemoveInvalid = { onAction(MainAction.RemoveInvalidServers) },
+                        onTelegramSos = { onAction(MainAction.TelegramSos) },
+                        onGenerateWarp = { onAction(MainAction.GenerateWarp) },
+                        onSmartClean = { onAction(MainAction.SmartCleanServers) }
                     )
 
                     HorizontalPager(

@@ -271,6 +271,9 @@ fun BunkerHeroHeader(
     doubleColumnDisplay: Boolean = false,
     onToggleDoubleColumn: () -> Unit = {},
     onRemoveInvalid: () -> Unit = {},
+    onTelegramSos: () -> Unit = {},
+    onGenerateWarp: () -> Unit = {},
+    onSmartClean: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
@@ -957,6 +960,9 @@ fun BunkerHeroHeader(
             onToggleAntiRkn = onToggleAntiRkn,
             onSortByPing = onSortByPing,
             onRemoveInvalid = onRemoveInvalid,
+            onTelegramSos = onTelegramSos,
+            onGenerateWarp = onGenerateWarp,
+            onSmartClean = onSmartClean,
             onSpeedtestClick = onSpeedtestClick,
             onUpdateSub = onUpdateSub,
             currentServerRemark = currentServerRemark,

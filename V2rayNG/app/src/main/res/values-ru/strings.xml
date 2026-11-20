@@ -637,6 +637,12 @@
     <string name="title_root_kill_switch">Жёсткий Kill-Switch (Root)</string>
     <string name="summary_root_kill_switch">Блокирует любой трафик и DNS-запросы мимо VPN через iptables при скачках сети (Wi-Fi ↔ LTE), исключая утечки оператору</string>
     <string name="bunker_filter_sec_tools">ИНСТРУМЕНТЫ</string>
+    <string name="bunker_filter_telegram_sos">Telegram SOS</string>
+    <string name="bunker_filter_telegram_sos_desc">Мгновенный обход через MTProto прокси</string>
+    <string name="bunker_filter_warp">Личный WARP+</string>
+    <string name="bunker_filter_warp_desc">Генерация чистого Cloudflare WireGuard ключа</string>
+    <string name="bunker_filter_smart_clean">Умная чистка</string>
+    <string name="bunker_filter_smart_clean_desc">Удалить дубликаты и неработающие узлы</string>
     <string name="bunker_filter_speedtest">Спидтест</string>
     <string name="bunker_filter_update_nodes">Обновить узлы</string>
     <string name="bunker_filter_ui_theme">Тема оформления</string>

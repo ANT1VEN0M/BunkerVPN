@@ -21,6 +21,7 @@ import com.v2ray.ang.extension.isComplexType
 import com.v2ray.ang.extension.matchesPattern
 import com.v2ray.ang.extension.moveItem
 import com.v2ray.ang.handler.AngConfigManager
+import com.v2ray.ang.handler.BunkerWarpManager
 import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.handler.SubscriptionInfoParser
 import com.v2ray.ang.ui.base.BaseViewModel
@@ -290,6 +291,8 @@ class MainViewModel(
             MainAction.RemoveAllServers -> removeAllServerAsync()
             MainAction.RemoveDuplicateServers -> removeDuplicateServerAsync()
             MainAction.RemoveInvalidServers -> removeInvalidServerAsync()
+            MainAction.SmartCleanServers -> smartCleanServersAsync()
+            MainAction.GenerateWarp -> generateWarpAsync()
             MainAction.ToggleDoubleColumn -> {
                 val current = _uiState.value.doubleColumnDisplay
                 MmkvManager.encodeSettings(AppConfig.PREF_DOUBLE_COLUMN_DISPLAY, !current)
@@ -734,6 +737,65 @@ class MainViewModel(
             }
         } else {
             dataSource.removeInvalidServersInGroup("")
+        }
+    }
+
+    private fun smartCleanServersAsync() {
+        launchLoading {
+            withContext(ioDispatcher) {
+                try {
+                    val seen = HashSet<ProfileItem>()
+                    val toRemove = LinkedHashSet<String>()
+                    val servers = currentServers()
+                    servers.forEach { server ->
+                        val profile = server.profile
+                        if (!profile.configType.isComplexType()) {
+                            val identity = profile.duplicateIdentity()
+                            if (!seen.add(identity)) {
+                                toRemove.add(server.guid)
+                            }
+                        }
+                        if (server.testDelayMillis < 0L) {
+                            toRemove.add(server.guid)
+                        }
+                    }
+                    toRemove.forEach { dataSource.removeServer(it) }
+                    cacheMutex.withLock { groupDataCache.clear() }
+                    setupGroupTab(forceRefresh = true)
+                    val count = toRemove.size
+                    if (count > 0) {
+                        toast("🧹 Очищено: $count (дубликаты и недоступные узлы)")
+                    } else {
+                        toast("✨ Все узлы в списке активны и уникальны")
+                    }
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (e: Exception) {
+                    LogUtil.e(AppConfig.TAG, "Smart clean failed", e)
+                    toastError(R.string.toast_failure)
+                }
+            }
+        }
+    }
+
+    private fun generateWarpAsync() {
+        launchLoading {
+            withContext(ioDispatcher) {
+                try {
+                    toast("🚀 Генерация личного профиля Cloudflare WARP+...")
+                    val success = BunkerWarpManager.generateWarpConfig(getApplication())
+                    if (success) {
+                        cacheMutex.withLock { groupDataCache.clear() }
+                        setupGroupTab(forceRefresh = true)
+                        toastSuccess("✅ Личный WARP+ создан и выбран!")
+                    } else {
+                        toastError("Не удалось зарегистрировать WARP (проверьте интернет)")
+                    }
+                } catch (e: Exception) {
+                    LogUtil.e(AppConfig.TAG, "WARP creation failed", e)
+                    toastError("Ошибка при создании WARP")
+                }
+            }
         }
     }
 

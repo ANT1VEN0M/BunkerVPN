@@ -1,7 +1,7 @@
 {
-  "version": "1.3.4",
-  "versionCode": 1026,
-  "tagName": "v1.3.4",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.4/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.3.4: Фикс работы на домашнем Wi-Fi и проводных провайдерах (Скайворк/Ростелеком). Переход на неуязвимый Yandex DNS (77.88.8.8) и тест Cloudflare 204. Увеличен тайм-аут пинга до 2500мс. Фильтрация портов SMB/NetBIOS."
+  "version": "1.3.5",
+  "versionCode": 1027,
+  "tagName": "v1.3.5",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.5/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.3.5: 💬 Telegram SOS (мгновенный обход блокировки в 1 клик через MTProto), 🎮 1-тап пресеты Split-Tunneling (Соцсети и ИИ, Белый РФ, Дискорд), ⚡ Создание личного WARP+ (генерация WireGuard ключа Cloudflare с чистым IP), 🧹 Умная чистка (удаление дубликатов и недоступных узлов), 📱 Поддержка шторки Quick Settings и кибер-виджета."
 }

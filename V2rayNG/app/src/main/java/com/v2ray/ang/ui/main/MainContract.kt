@@ -46,6 +46,9 @@ sealed interface MainAction {
     data object RemoveAllServers : MainAction
     data object RemoveDuplicateServers : MainAction
     data object RemoveInvalidServers : MainAction
+    data object SmartCleanServers : MainAction
+    data object GenerateWarp : MainAction
+    data object TelegramSos : MainAction
     data object SortByTestResults : MainAction
     data object AutoSelectBestServer : MainAction
     data object UpdateSubscriptions : MainAction

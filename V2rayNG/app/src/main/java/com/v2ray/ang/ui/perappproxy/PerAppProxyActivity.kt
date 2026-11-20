@@ -3,6 +3,8 @@ package com.v2ray.ang.ui.perappproxy
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.v2ray.ang.R
@@ -92,6 +97,18 @@ class PerAppProxyActivity : BaseComponentActivity() {
             onSelectAll = { viewModel.selectAll() },
             onInvertSelection = { viewModel.invertSelection() },
             onSelectProxyAuto = { viewModel.selectProxyAppAuto(this) },
+            onApplySocialsPreset = {
+                viewModel.applySocialsPreset()
+                toastSuccess(R.string.toast_success)
+            },
+            onApplyRuWhitelistPreset = {
+                viewModel.applyRuWhitelistPreset()
+                toastSuccess(R.string.toast_success)
+            },
+            onApplyGamingDiscordPreset = {
+                viewModel.applyGamingDiscordPreset()
+                toastSuccess(R.string.toast_success)
+            },
             onImportProxyApp = {
                 val content = Utils.getClipboard(applicationContext)
                 viewModel.importProxyApp(content, this)
@@ -120,6 +137,9 @@ fun PerAppProxyScreen(
     onSelectAll: () -> Unit,
     onInvertSelection: () -> Unit,
     onSelectProxyAuto: () -> Unit,
+    onApplySocialsPreset: () -> Unit = {},
+    onApplyRuWhitelistPreset: () -> Unit = {},
+    onApplyGamingDiscordPreset: () -> Unit = {},
     onImportProxyApp: () -> Unit,
     onExportProxyApp: () -> Unit
 ) {
@@ -254,6 +274,67 @@ fun PerAppProxyScreen(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                }
+            }
+            AppDivider()
+
+            // Bunker 1-Tap Split-Tunneling Presets
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onApplySocialsPreset() }
+                ) {
+                    Text(
+                        text = "📱 Соцсети и ИИ",
+                        style = MaterialTheme.typography.labelSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onApplyRuWhitelistPreset() }
+                ) {
+                    Text(
+                        text = "🏦 Белый РФ",
+                        style = MaterialTheme.typography.labelSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onApplyGamingDiscordPreset() }
+                ) {
+                    Text(
+                        text = "🎯 Дискорд",
+                        style = MaterialTheme.typography.labelSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
             AppDivider()

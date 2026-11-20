@@ -634,6 +634,12 @@
     <string name="title_root_kill_switch">Hard Kill-Switch (Root)</string>
     <string name="summary_root_kill_switch">Enforce fail-closed firewall via iptables: blocks any traffic and DNS queries bypassing the VPN tunnel during network switches</string>
     <string name="bunker_filter_sec_tools">TOOLS</string>
+    <string name="bunker_filter_telegram_sos">Telegram SOS</string>
+    <string name="bunker_filter_telegram_sos_desc">Instant unblock via MTProto proxy</string>
+    <string name="bunker_filter_warp">Personal WARP+</string>
+    <string name="bunker_filter_warp_desc">Generate clean Cloudflare WireGuard key</string>
+    <string name="bunker_filter_smart_clean">Smart Clean</string>
+    <string name="bunker_filter_smart_clean_desc">Purge duplicate &amp; dead offline nodes</string>
     <string name="bunker_filter_speedtest">Speedtest</string>
     <string name="bunker_filter_update_nodes">Update nodes</string>
     <string name="bunker_filter_ui_theme">UI Theme</string>
