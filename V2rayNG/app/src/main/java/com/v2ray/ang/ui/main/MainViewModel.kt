@@ -322,6 +322,7 @@ class MainViewModel(
                 _uiState.update { it.copy(shareQRCodeBitmap = null) }
             }
 
+            MainAction.TelegramSos,
             MainAction.ToggleService,
             MainAction.TestCurrentServer,
             MainAction.ImportQRcode,

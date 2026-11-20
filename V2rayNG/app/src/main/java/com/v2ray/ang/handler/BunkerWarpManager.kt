@@ -102,7 +102,7 @@ object BunkerWarpManager {
             // 4. Save to MMKV
             val guid = MmkvManager.encodeServerConfig("", profile)
             if (guid.isNotEmpty()) {
-                MmkvManager.encodeSelectServer(guid)
+                MmkvManager.setSelectServer(guid)
                 return@withContext true
             }
             false
