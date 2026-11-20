@@ -2,6 +2,6 @@
   "version": "1.3.7",
   "versionCode": 1029,
   "tagName": "v1.3.7",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.7/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.3.7: Полный фикс Cloudflare WARP+ для РФ (добавлены client_id reserved bytes для WireGuard handshake, порт переключен на скоростной 880 в обход блокировок ТСПУ 2408, регистрация через внутренний SOCKS5 прокси при активном VPN) + переключение подписок на CDN @latest без задержек кэша."
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.7/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.3.7: Полный фикс Cloudflare WARP+ для РФ (WireGuard handshake reserved bytes, скоростной порт 880 в обход блокировок ТСПУ 2408, регистрация через внутренний SOCKS5 прокси при активном VPN) + переключение подписок на моментальный CDN @latest."
 }
