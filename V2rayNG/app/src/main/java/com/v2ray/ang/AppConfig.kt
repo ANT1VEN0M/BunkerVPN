@@ -93,6 +93,8 @@ object AppConfig {
     const val PREF_ROOT_FIX_TTL = "pref_root_fix_ttl"
     const val PREF_ROOT_TTL_VALUE = "pref_root_ttl_value"
     const val DEFAULT_ROOT_TTL_VALUE = "64"
+    const val PREF_ROOT_KILL_SWITCH = "pref_root_kill_switch"
+    const val PREF_ADBLOCK_ENABLED = "pref_adblock_enabled"
     const val PREF_IS_BOOTED = "pref_is_booted"
     const val PREF_CHECK_UPDATE_PRE_RELEASE = "pref_check_update_pre_release"
     const val PREF_GEO_FILES_SOURCES = "pref_geo_files_sources"
@@ -306,6 +308,8 @@ object AppConfig {
     const val ROOT_OOM_SCORE = "-1000"          // oom_score_adj that makes the LMK never kill us
     const val ROOT_TTL_CHAIN = "BUNKER_TTL"     // iptables mangle chain for TTL fixation
     const val ROOT_HL_CHAIN = "BUNKER_HL"       // ip6tables mangle chain for Hop Limit fixation
+    const val ROOT_KILL_CHAIN = "BUNKER_KILL"   // iptables filter chain for hard Root Kill-Switch & leak protection
+    const val ROOT_V6_KILL_CHAIN = "BUNKER6_KILL" // ip6tables filter chain for IPv6 Kill-Switch
 
     /** hev-sock5-tunnel read-write-timeout value */
     const val HEVTUN_RW_TIMEOUT = "300,60"

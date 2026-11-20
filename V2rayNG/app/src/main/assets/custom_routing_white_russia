@@ -7,6 +7,13 @@
     ]
   },
   {
+    "remarks": "Block Ads & Trackers (AdBlock)",
+    "outboundTag": "block",
+    "domain": [
+      "geosite:category-ads-all"
+    ]
+  },
+  {
     "remarks": "Block udp443 (Anti-QUIC throttling)",
     "outboundTag": "block",
     "port": "443",

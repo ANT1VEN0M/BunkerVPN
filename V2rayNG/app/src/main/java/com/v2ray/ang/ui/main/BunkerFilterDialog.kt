@@ -261,6 +261,26 @@ fun BunkerFilterDialog(
                         }
                     )
 
+                    // Toggle: Блокировка рекламы и трекеров (AdBlock)
+                    var isAdBlockEnabled by remember {
+                        mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_ADBLOCK_ENABLED, true) == true)
+                    }
+                    FilterSwitchItem(
+                        icon = "🚫",
+                        title = stringResource(R.string.bunker_filter_adblock),
+                        subtitle = stringResource(R.string.bunker_filter_adblock_desc),
+                        checked = isAdBlockEnabled,
+                        onCheckedChange = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            val newState = !isAdBlockEnabled
+                            isAdBlockEnabled = newState
+                            MmkvManager.encodeSettings(AppConfig.PREF_ADBLOCK_ENABLED, newState)
+                            if (isRunning) {
+                                LauncherManager.restartService(context)
+                            }
+                        }
+                    )
+
                     // Toggle: Раздача VPN и фиксация TTL = 64 (Root)
                     var isFixTtlEnabled by remember {
                         mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL))
@@ -290,6 +310,41 @@ fun BunkerFilterDialog(
                             } else {
                                 isFixTtlEnabled = target
                                 MmkvManager.encodeSettings(AppConfig.PREF_ROOT_FIX_TTL, target)
+                                if (isRunning) {
+                                    LauncherManager.restartService(context)
+                                }
+                            }
+                        }
+                    )
+
+                    // Toggle: Жёсткий Kill-Switch (Root)
+                    var isRootKillSwitchEnabled by remember {
+                        mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_KILL_SWITCH))
+                    }
+                    FilterSwitchItem(
+                        icon = "🔒",
+                        title = stringResource(R.string.bunker_filter_root_killswitch),
+                        subtitle = stringResource(R.string.bunker_filter_root_killswitch_desc),
+                        checked = isRootKillSwitchEnabled,
+                        onCheckedChange = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            val target = !isRootKillSwitchEnabled
+                            if (target && !RootManager.cachedRoot()) {
+                                coroutineScope.launch {
+                                    val hasRoot = RootManager.refresh()
+                                    if (hasRoot) {
+                                        isRootKillSwitchEnabled = true
+                                        MmkvManager.encodeSettings(AppConfig.PREF_ROOT_KILL_SWITCH, true)
+                                        if (isRunning) {
+                                            LauncherManager.restartService(context)
+                                        }
+                                    } else {
+                                        context.toastError(R.string.toast_root_required)
+                                    }
+                                }
+                            } else {
+                                isRootKillSwitchEnabled = target
+                                MmkvManager.encodeSettings(AppConfig.PREF_ROOT_KILL_SWITCH, target)
                                 if (isRunning) {
                                     LauncherManager.restartService(context)
                                 }

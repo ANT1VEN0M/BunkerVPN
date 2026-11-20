@@ -625,6 +625,14 @@
     <string name="summary_root_fix_ttl">Enforce TTL = 64 via iptables and sysctl to prevent mobile carriers from detecting Wi-Fi hotspot sharing (root required)</string>
     <string name="title_pref_root_ttl_value">TTL Value</string>
     <string name="summary_pref_root_ttl_value">Standard value for Android / mobile carriers is 64</string>
+    <string name="bunker_filter_adblock">Ad &amp; Tracker Blocker</string>
+    <string name="bunker_filter_adblock_desc">Block advertising, tracking, and telemetry domains (geosite:category-ads-all)</string>
+    <string name="title_pref_adblock_enabled">Ad &amp; Tracker Blocker</string>
+    <string name="summary_pref_adblock_enabled">Block ads and telemetry via Xray Core routing (geosite:category-ads-all)</string>
+    <string name="bunker_filter_root_killswitch">Hard Kill-Switch (Root)</string>
+    <string name="bunker_filter_root_killswitch_desc">Block non-VPN traffic and DNS leaks via iptables during network switches</string>
+    <string name="title_root_kill_switch">Hard Kill-Switch (Root)</string>
+    <string name="summary_root_kill_switch">Enforce fail-closed firewall via iptables: blocks any traffic and DNS queries bypassing the VPN tunnel during network switches</string>
     <string name="bunker_filter_sec_tools">TOOLS</string>
     <string name="bunker_filter_speedtest">Speedtest</string>
     <string name="bunker_filter_update_nodes">Update nodes</string>

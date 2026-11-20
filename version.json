@@ -1,7 +1,7 @@
 {
-  "version": "1.3.2",
-  "versionCode": 1024,
-  "tagName": "v1.3.2",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.2/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "☁️ BunkerVPN v1.3.2: Полная интеграция Облака Бункера «из коробки» (5 встроенных подписок: Микс, БС, Завод 443/53, Турбо, Telegram SOS). 100% рабочие ноды с проверкой Xray Core."
+  "version": "1.3.3",
+  "versionCode": 1025,
+  "tagName": "v1.3.3",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.3/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🛡️ BunkerVPN v1.3.3: Встроенный AdBlock (geosite:category-ads-all), жёсткий Root Kill-Switch с защитой от утечек трафика и DNS мимо VPN при смене сети."
 }

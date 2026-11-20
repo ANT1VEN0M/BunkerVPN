@@ -1196,6 +1196,22 @@ object CoreConfigManager {
         rulesetItems?.forEach { key ->
             appendRoutingUserRule(configContext, key, v2rayConfig, policyGroupBalancerTags)
         }
+
+        // Bunker AdBlock: Block ad, tracker, and malware domains at core routing level
+        val isAdBlockEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_ADBLOCK_ENABLED, true) == true
+        if (isAdBlockEnabled) {
+            if (v2rayConfig.routing.rules.none { it.domain?.contains("geosite:category-ads-all") == true && it.outboundTag == AppConfig.TAG_BLOCKED }) {
+                v2rayConfig.routing.rules.add(
+                    0,
+                    V2rayConfig.RoutingBean.RulesBean(
+                        outboundTag = AppConfig.TAG_BLOCKED,
+                        domain = arrayListOf("geosite:category-ads-all")
+                    )
+                )
+            }
+        } else {
+            v2rayConfig.routing.rules.removeAll { it.domain?.contains("geosite:category-ads-all") == true && it.outboundTag == AppConfig.TAG_BLOCKED }
+        }
     }
 
     /**

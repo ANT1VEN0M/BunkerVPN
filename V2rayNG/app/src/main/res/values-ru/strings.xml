@@ -628,6 +628,14 @@
     <string name="summary_root_fix_ttl">Принудительно фиксирует TTL = 64 через iptables и sysctl, скрывая раздачу интернета (hotspot/модем) от мобильных операторов (нужен root)</string>
     <string name="title_pref_root_ttl_value">Значение TTL</string>
     <string name="summary_pref_root_ttl_value">Стандартное значение для Android и мобильных операторов — 64</string>
+    <string name="bunker_filter_adblock">Блокировка рекламы и трекеров</string>
+    <string name="bunker_filter_adblock_desc">Фильтрация баннеров, счётчиков и малвари на уровне ядра Xray (AdBlock)</string>
+    <string name="title_pref_adblock_enabled">Блокировка рекламы (AdBlock)</string>
+    <string name="summary_pref_adblock_enabled">Блокирует рекламные и аналитические домены (geosite:category-ads-all)</string>
+    <string name="bunker_filter_root_killswitch">Жёсткий Kill-Switch (Root)</string>
+    <string name="bunker_filter_root_killswitch_desc">Блокировка любого трафика и утечек DNS мимо VPN при смене сети (iptables)</string>
+    <string name="title_root_kill_switch">Жёсткий Kill-Switch (Root)</string>
+    <string name="summary_root_kill_switch">Блокирует любой трафик и DNS-запросы мимо VPN через iptables при скачках сети (Wi-Fi ↔ LTE), исключая утечки оператору</string>
     <string name="bunker_filter_sec_tools">ИНСТРУМЕНТЫ</string>
     <string name="bunker_filter_speedtest">Спидтест</string>
     <string name="bunker_filter_update_nodes">Обновить узлы</string>

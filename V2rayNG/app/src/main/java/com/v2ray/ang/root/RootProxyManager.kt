@@ -70,21 +70,22 @@ object RootProxyManager {
         teardown(context)
         val lanShareEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING)
         val fixTtlEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL)
+        val killSwitchEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_KILL_SWITCH)
         val ttlValue = MmkvManager.decodeSettingsString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)?.toIntOrNull() ?: 64
 
         val script = when {
             lanShareEnabled -> buildTun2socksSetup(context, captureDeviceTraffic = false, forceLanShare = true)
-            fixTtlEnabled -> buildStandaloneTtlSetup(ttlValue)
+            fixTtlEnabled || killSwitchEnabled -> buildStandaloneRootRules(context, ttlValue, fixTtlEnabled, killSwitchEnabled)
             else -> null
         } ?: return false
 
         val result = RootShell.runScript(context, "setup_rules.sh", script)
         if (!result.success) {
-            LogUtil.e(AppConfig.TAG, "RootProxyManager: client sharing / TTL setup failed:\n${result.output}")
+            LogUtil.e(AppConfig.TAG, "RootProxyManager: client sharing / TTL / Kill-Switch setup failed:\n${result.output}")
             teardown(context)
             return false
         }
-        LogUtil.i(AppConfig.TAG, "RootProxyManager: LAN client sharing / TTL fix installed")
+        LogUtil.i(AppConfig.TAG, "RootProxyManager: LAN client sharing / TTL fix / Kill-Switch installed")
         return true
     }
 
@@ -133,6 +134,7 @@ object RootProxyManager {
         val ipv6 = MmkvManager.decodeSettingsBool(AppConfig.PREF_IPV6_ENABLED)
         val lanShare = forceLanShare || MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING)
         val fixTtl = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL)
+        val killSwitch = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_KILL_SWITCH)
         val ttlValue = MmkvManager.decodeSettingsString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)?.toIntOrNull() ?: 64
         val corePid = Process.myPid()
 
@@ -196,6 +198,10 @@ object RootProxyManager {
             // optionally enforce TTL fixation (64) to bypass mobile carrier tethering restrictions
             if (fixTtl) {
                 append(buildTtlSetup(ttlValue))
+            }
+            // optionally enforce Hard Kill-Switch & Anti-DNS leak protection
+            if (killSwitch) {
+                append(buildKillSwitchSetup(context, captureDeviceTraffic, ipv6))
             }
             if (captureDeviceTraffic) {
                 // IPv6 is best-effort: never fail the (working) IPv4 setup over it.
@@ -559,10 +565,103 @@ object RootProxyManager {
         }
     }
 
-    private fun buildStandaloneTtlSetup(ttlValue: Int = 64): String {
+    private fun buildStandaloneRootRules(
+        context: Context,
+        ttlValue: Int = 64,
+        fixTtl: Boolean,
+        killSwitch: Boolean
+    ): String {
         return buildString {
             appendLine("set +e")
-            append(buildTtlSetup(ttlValue))
+            if (fixTtl) {
+                append(buildTtlSetup(ttlValue))
+            }
+            if (killSwitch) {
+                append(buildKillSwitchSetup(context, captureDeviceTraffic = false, ipv6 = false))
+            }
+        }
+    }
+
+    /**
+     * Enforce a hard fail-closed kill-switch and Anti-DNS leak protection via iptables/ip6tables.
+     * Prevents any packet from escaping the VPN tunnel directly to the mobile carrier during
+     * network interface changes, and drops non-tunneled DNS queries on port 53/853.
+     */
+    private fun buildKillSwitchSetup(
+        context: Context,
+        captureDeviceTraffic: Boolean,
+        ipv6: Boolean
+    ): String {
+        val appUid = context.applicationInfo.uid
+        val killChain = AppConfig.ROOT_KILL_CHAIN
+        val v6KillChain = AppConfig.ROOT_V6_KILL_CHAIN
+        val fwd = AppConfig.ROOT_FWD_CHAIN
+        return buildString {
+            appendLine("set +e")
+            // 1. IPv4 Filter OUTPUT Kill-Switch chain
+            appendLine("iptables -t filter -N $killChain 2>/dev/null || true")
+            appendLine("iptables -t filter -F $killChain")
+            // Allow loopback
+            appendLine("iptables -t filter -A $killChain -o lo -j ACCEPT")
+            // Allow traffic over our TUN and Android VpnService tun
+            appendLine("iptables -t filter -A $killChain -o $TUN -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -o tun+ -j ACCEPT")
+            // Allow the proxy core itself (the app UID) to communicate with external servers
+            appendLine("iptables -t filter -A $killChain -m owner --uid-owner $appUid -j ACCEPT")
+            // Allow helper mark
+            appendLine("iptables -t filter -A $killChain -m mark --mark $FWMARK -j ACCEPT")
+            // Allow local DHCP broadcast / negotiation so connection isn't lost
+            appendLine("iptables -t filter -A $killChain -p udp --sport 67:68 --dport 67:68 -j ACCEPT")
+            // Allow LAN private subnets (local network access)
+            appendLine("iptables -t filter -A $killChain -d 10.0.0.0/8 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -d 172.16.0.0/12 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -d 192.168.0.0/16 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -d 127.0.0.0/8 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -d 169.254.0.0/16 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -d 224.0.0.0/4 -j ACCEPT")
+            appendLine("iptables -t filter -A $killChain -d 255.255.255.255 -j ACCEPT")
+            // Anti-DNS Leak: Drop any unencrypted DNS or DoT trying to escape directly to mobile carrier
+            appendLine("iptables -t filter -A $killChain -p udp --dport 53 -j DROP")
+            appendLine("iptables -t filter -A $killChain -p tcp --dport 53 -j DROP")
+            appendLine("iptables -t filter -A $killChain -p tcp --dport 853 -j DROP")
+            appendLine("iptables -t filter -A $killChain -p udp --dport 5353 -j DROP")
+            // If capturing device traffic in root mode, drop any unmarked external traffic
+            if (captureDeviceTraffic) {
+                appendLine("iptables -t filter -A $killChain -m mark --mark $MARK -j ACCEPT")
+                appendLine("iptables -t filter -A $killChain -j DROP")
+            }
+            appendLine("iptables -t filter -D OUTPUT -j $killChain 2>/dev/null || true")
+            appendLine("iptables -t filter -I OUTPUT -j $killChain")
+
+            // 2. FORWARD Chain fail-closed: Drop any forwarded packet not going through tun
+            appendLine("iptables -A $fwd -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || true")
+            appendLine("iptables -A $fwd -i $TUN -j ACCEPT 2>/dev/null || true")
+            appendLine("iptables -A $fwd -o $TUN -j ACCEPT 2>/dev/null || true")
+            appendLine("iptables -A $fwd -d 10.0.0.0/8 -j ACCEPT 2>/dev/null || true")
+            appendLine("iptables -A $fwd -d 172.16.0.0/12 -j ACCEPT 2>/dev/null || true")
+            appendLine("iptables -A $fwd -d 192.168.0.0/16 -j ACCEPT 2>/dev/null || true")
+            appendLine("iptables -A $fwd -j DROP 2>/dev/null || true")
+
+            // 3. IPv6 Kill-Switch
+            appendLine("ip6tables -t filter -N $v6KillChain 2>/dev/null || true")
+            appendLine("ip6tables -t filter -F $v6KillChain")
+            appendLine("ip6tables -t filter -A $v6KillChain -o lo -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -o $TUN -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -o tun+ -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -m owner --uid-owner $appUid -j ACCEPT")
+            appendLine("ip6tables -t filter -A $v6KillChain -m mark --mark $FWMARK -j ACCEPT")
+            bypassCidrsV6.forEach { appendLine("ip6tables -t filter -A $v6KillChain -d $it -j ACCEPT") }
+            appendLine("ip6tables -t filter -A $v6KillChain -p udp --dport 53 -j DROP")
+            appendLine("ip6tables -t filter -A $v6KillChain -p tcp --dport 53 -j DROP")
+            appendLine("ip6tables -t filter -A $v6KillChain -p tcp --dport 853 -j DROP")
+            if (captureDeviceTraffic && ipv6) {
+                appendLine("ip6tables -t filter -A $v6KillChain -m mark --mark $MARK -j ACCEPT")
+                appendLine("ip6tables -t filter -A $v6KillChain -j DROP")
+            } else if (!ipv6) {
+                appendLine("ip6tables -t filter -A $v6KillChain -j DROP")
+            }
+            appendLine("ip6tables -t filter -D OUTPUT -j $v6KillChain 2>/dev/null || true")
+            appendLine("ip6tables -t filter -I OUTPUT -j $v6KillChain")
         }
     }
 
@@ -622,6 +721,15 @@ object RootProxyManager {
             appendLine("ip6tables -t mangle -D PREROUTING -j $hlChain 2>/dev/null || true")
             appendLine("ip6tables -t mangle -F $hlChain 2>/dev/null || true")
             appendLine("ip6tables -t mangle -X $hlChain 2>/dev/null || true")
+            // Kill-Switch cleanup (always cleaned, harmless if it was never set up)
+            val killChain = AppConfig.ROOT_KILL_CHAIN
+            val v6KillChain = AppConfig.ROOT_V6_KILL_CHAIN
+            appendLine("iptables -t filter -D OUTPUT -j $killChain 2>/dev/null || true")
+            appendLine("iptables -t filter -F $killChain 2>/dev/null || true")
+            appendLine("iptables -t filter -X $killChain 2>/dev/null || true")
+            appendLine("ip6tables -t filter -D OUTPUT -j $v6KillChain 2>/dev/null || true")
+            appendLine("ip6tables -t filter -F $v6KillChain 2>/dev/null || true")
+            appendLine("ip6tables -t filter -X $v6KillChain 2>/dev/null || true")
             for (pref in listOf(5000, 5010, 5020, 5025, 5026, 5027, 5030, 5040, 5050, 6000)) {
                 appendLine("ip rule del pref $pref 2>/dev/null || true")
             }

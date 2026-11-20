@@ -25,8 +25,9 @@ object RootLanSharing {
     fun startClientSharing(context: Context): Boolean {
         val lanShare = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING)
         val fixTtl = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL)
+        val killSwitch = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_KILL_SWITCH)
 
-        if (lanShare || fixTtl) {
+        if (lanShare || fixTtl || killSwitch) {
             if (lanShareJob != null) return false
 
             lanSharingStarted = true

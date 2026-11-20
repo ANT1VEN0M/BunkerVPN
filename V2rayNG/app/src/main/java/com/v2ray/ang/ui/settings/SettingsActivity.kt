@@ -145,6 +145,8 @@ fun SettingsScreen(
     var lanSharing by rememberMmkvBool(AppConfig.PREF_ROOT_LAN_SHARING, false)
     var fixTtl by rememberMmkvBool(AppConfig.PREF_ROOT_FIX_TTL, false)
     var ttlValue by rememberMmkvString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)
+    var rootKillSwitch by rememberMmkvBool(AppConfig.PREF_ROOT_KILL_SWITCH, false)
+    var adblockEnabled by rememberMmkvBool(AppConfig.PREF_ADBLOCK_ENABLED, true)
 
     var hevTunLogLevel by rememberMmkvString(AppConfig.PREF_HEV_TUNNEL_LOGLEVEL, AppConfig.DEFAULT_HEV_TUNNEL_LOGLEVEL)
     var hevTunRwTimeout by rememberMmkvString(AppConfig.PREF_HEV_TUNNEL_RW_TIMEOUT, "")
@@ -461,6 +463,12 @@ fun SettingsScreen(
             )
             if (coreSettingsExpanded) {
                 SettingsSwitchItem(
+                    title = stringResource(R.string.title_pref_adblock_enabled),
+                    summary = stringResource(R.string.summary_pref_adblock_enabled),
+                    checked = adblockEnabled,
+                    onCheckedChange = { adblockEnabled = it }
+                )
+                SettingsSwitchItem(
                     title = stringResource(R.string.title_pref_sniffing_enabled),
                     summary = stringResource(R.string.summary_pref_sniffing_enabled),
                     checked = sniffingEnabled,
@@ -768,6 +776,20 @@ fun SettingsScreen(
                             }
                         } else {
                             fixTtl = newValue
+                        }
+                    }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.title_root_kill_switch),
+                    summary = stringResource(R.string.summary_root_kill_switch),
+                    checked = rootKillSwitch,
+                    onCheckedChange = { newValue ->
+                        if (newValue && !RootManager.cachedRoot()) {
+                            viewModel.checkAndRequestRoot {
+                                rootKillSwitch = true
+                            }
+                        } else {
+                            rootKillSwitch = newValue
                         }
                     }
                 )
