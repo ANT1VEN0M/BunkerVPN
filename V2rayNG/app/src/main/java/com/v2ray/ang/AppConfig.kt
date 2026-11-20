@@ -18,9 +18,15 @@ object AppConfig {
 
     // Default subscription ID for ungrouped servers
     const val DEFAULT_SUBSCRIPTION_ID = "__bunker_subscription__"
-    const val BUNKER_DEFAULT_SUB_URL = "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/BLWL_MIX.txt"
+    const val BUNKER_DEFAULT_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/mix_b64.txt"
     const val BUNKER_WHITELIST_SUB_ID = "__bunker_sub_whitelist__"
-    const val BUNKER_WHITELIST_SUB_URL = "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/WHITE_LIST.txt"
+    const val BUNKER_WHITELIST_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/bs_b64.txt"
+    const val BUNKER_FACTORY_SUB_ID = "__bunker_sub_factory__"
+    const val BUNKER_FACTORY_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/factory_b64.txt"
+    const val BUNKER_TURBO_SUB_ID = "__bunker_sub_turbo__"
+    const val BUNKER_TURBO_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/fast_b64.txt"
+    const val BUNKER_TG_SOS_SUB_ID = "__bunker_sub_tg_sos__"
+    const val BUNKER_TG_SOS_SUB_URL = "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/tg_b64.txt"
 
     /** Preferences mapped to MMKV storage. */
     const val PREF_SNIFFING_ENABLED = "pref_sniffing_enabled"

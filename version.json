@@ -1,7 +1,7 @@
 {
-  "version": "1.3.1",
-  "versionCode": 1023,
-  "tagName": "v1.3.1",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.1/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🛰️ BunkerVPN v1.3.1: Принудительная фиксация TTL (64) для root-пользователей для автоматического обхода ограничений мобильных операторов на раздачу интернета (Wi-Fi hotspot / USB-модем) через iptables и sysctl."
+  "version": "1.3.2",
+  "versionCode": 1024,
+  "tagName": "v1.3.2",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.2/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "☁️ BunkerVPN v1.3.2: Полная интеграция Облака Бункера «из коробки» (5 встроенных подписок: Микс, БС, Завод 443/53, Турбо, Telegram SOS). 100% рабочие ноды с проверкой Xray Core."
 }
