@@ -622,6 +622,12 @@
     <string name="bunker_filter_anti_rkn_desc">Банки, Госуслуги и РФ-сайты идут напрямую без VPN</string>
     <string name="bunker_filter_fragment">Обход блокировок Т2 / DPI (Fragment)</string>
     <string name="bunker_filter_fragment_desc">Разбивать TLS-пакеты для обхода блокировок операторов (Т2, МТС, Мегафон)</string>
+    <string name="bunker_filter_fix_ttl">Раздача интернета с TTL 64 (Root)</string>
+    <string name="bunker_filter_fix_ttl_desc">Фиксация TTL = 64 для обхода блокировок и платы за раздачу операторами</string>
+    <string name="title_root_fix_ttl">Фиксация TTL = 64 (обход лимитов раздачи)</string>
+    <string name="summary_root_fix_ttl">Принудительно фиксирует TTL = 64 через iptables и sysctl, скрывая раздачу интернета (hotspot/модем) от мобильных операторов (нужен root)</string>
+    <string name="title_pref_root_ttl_value">Значение TTL</string>
+    <string name="summary_pref_root_ttl_value">Стандартное значение для Android и мобильных операторов — 64</string>
     <string name="bunker_filter_sec_tools">ИНСТРУМЕНТЫ</string>
     <string name="bunker_filter_speedtest">Спидтест</string>
     <string name="bunker_filter_update_nodes">Обновить узлы</string>

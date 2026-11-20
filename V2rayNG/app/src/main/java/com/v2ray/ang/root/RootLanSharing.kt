@@ -18,17 +18,23 @@ object RootLanSharing {
 
     /**
      * Optional root feature: share the proxy with tethered LAN/USB clients while the
-     * device itself stays on the VpnService. Runs a dedicated client hev-socks5-tunnel
-     * off the main thread so the su calls don't block service startup.
-     * The cheap, usually-false preference is checked first so the common path
-     * short-circuits before touching root state.
+     * device itself stays on the VpnService, or enforce TTL fixation (64) for carrier bypass.
+     * Runs a dedicated client hev-socks5-tunnel / TTL mangle script off the main thread
+     * so the su calls don't block service startup.
      */
     fun startClientSharing(context: Context): Boolean {
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING) && RootManager.cachedRoot()) {
+        val lanShare = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING)
+        val fixTtl = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL)
+
+        if (lanShare || fixTtl) {
             if (lanShareJob != null) return false
 
             lanSharingStarted = true
-            lanShareJob = CoroutineScope(Dispatchers.IO).launch { RootProxyManager.startClientSharing(context) }
+            lanShareJob = CoroutineScope(Dispatchers.IO).launch {
+                if (RootManager.isRootAvailable()) {
+                    RootProxyManager.startClientSharing(context)
+                }
+            }
         }
 
         return true

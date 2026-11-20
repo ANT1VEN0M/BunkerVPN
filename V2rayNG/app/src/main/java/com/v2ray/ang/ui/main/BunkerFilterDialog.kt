@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,9 +48,14 @@ import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.core.LauncherManager
 import com.v2ray.ang.dto.entities.ServersCache
+import com.v2ray.ang.extension.toastError
 import com.v2ray.ang.handler.MmkvManager
+import com.v2ray.ang.root.RootManager
 import com.v2ray.ang.ui.compose.colorFabActive
 import com.v2ray.ang.util.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -251,6 +257,42 @@ fun BunkerFilterDialog(
                             MmkvManager.encodeSettings(AppConfig.PREF_FRAGMENT_ENABLED, newState)
                             if (isRunning) {
                                 LauncherManager.restartService(context)
+                            }
+                        }
+                    )
+
+                    // Toggle: Раздача VPN и фиксация TTL = 64 (Root)
+                    var isFixTtlEnabled by remember {
+                        mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL))
+                    }
+                    val coroutineScope = rememberCoroutineScope()
+                    FilterSwitchItem(
+                        icon = "📡",
+                        title = stringResource(R.string.bunker_filter_fix_ttl),
+                        subtitle = stringResource(R.string.bunker_filter_fix_ttl_desc),
+                        checked = isFixTtlEnabled,
+                        onCheckedChange = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            val target = !isFixTtlEnabled
+                            if (target && !RootManager.cachedRoot()) {
+                                coroutineScope.launch {
+                                    val hasRoot = RootManager.refresh()
+                                    if (hasRoot) {
+                                        isFixTtlEnabled = true
+                                        MmkvManager.encodeSettings(AppConfig.PREF_ROOT_FIX_TTL, true)
+                                        if (isRunning) {
+                                            LauncherManager.restartService(context)
+                                        }
+                                    } else {
+                                        context.toastError(R.string.toast_root_required)
+                                    }
+                                }
+                            } else {
+                                isFixTtlEnabled = target
+                                MmkvManager.encodeSettings(AppConfig.PREF_ROOT_FIX_TTL, target)
+                                if (isRunning) {
+                                    LauncherManager.restartService(context)
+                                }
                             }
                         }
                     )

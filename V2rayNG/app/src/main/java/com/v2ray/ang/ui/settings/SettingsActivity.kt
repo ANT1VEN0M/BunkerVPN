@@ -143,6 +143,8 @@ fun SettingsScreen(
     var mode by rememberMmkvString(AppConfig.PREF_MODE, VPN)
     var enableRootMode by rememberMmkvBool(AppConfig.PREF_ROOT_MODE_ENABLE, false)
     var lanSharing by rememberMmkvBool(AppConfig.PREF_ROOT_LAN_SHARING, false)
+    var fixTtl by rememberMmkvBool(AppConfig.PREF_ROOT_FIX_TTL, false)
+    var ttlValue by rememberMmkvString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)
 
     var hevTunLogLevel by rememberMmkvString(AppConfig.PREF_HEV_TUNNEL_LOGLEVEL, AppConfig.DEFAULT_HEV_TUNNEL_LOGLEVEL)
     var hevTunRwTimeout by rememberMmkvString(AppConfig.PREF_HEV_TUNNEL_RW_TIMEOUT, "")
@@ -755,6 +757,29 @@ fun SettingsScreen(
                         }
                     }
                 )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.title_root_fix_ttl),
+                    summary = stringResource(R.string.summary_root_fix_ttl),
+                    checked = fixTtl,
+                    onCheckedChange = { newValue ->
+                        if (newValue && !RootManager.cachedRoot()) {
+                            viewModel.checkAndRequestRoot {
+                                fixTtl = true
+                            }
+                        } else {
+                            fixTtl = newValue
+                        }
+                    }
+                )
+                if (fixTtl) {
+                    SettingsEditItem(
+                        title = stringResource(R.string.title_pref_root_ttl_value),
+                        value = ttlValue,
+                        enabled = true,
+                        keyboardNumber = true,
+                        onValueChanged = { ttlValue = it.ifBlank { AppConfig.DEFAULT_ROOT_TTL_VALUE } }
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

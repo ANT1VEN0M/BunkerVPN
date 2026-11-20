@@ -619,6 +619,12 @@
     <string name="bunker_filter_anti_rkn_desc">Banks, Gosuslugi and RU sites go directly without VPN</string>
     <string name="bunker_filter_fragment">Bypass mobile DPI (Fragment)</string>
     <string name="bunker_filter_fragment_desc">Split TLS packets to bypass mobile operator blocks (T2, MTS, MegaFon)</string>
+    <string name="bunker_filter_fix_ttl">Hotspot TTL 64 Fix (Root)</string>
+    <string name="bunker_filter_fix_ttl_desc">Enforce TTL 64 to bypass mobile carrier tethering restrictions</string>
+    <string name="title_root_fix_ttl">Fix TTL to 64 (bypass hotspot limits)</string>
+    <string name="summary_root_fix_ttl">Enforce TTL = 64 via iptables and sysctl to prevent mobile carriers from detecting Wi-Fi hotspot sharing (root required)</string>
+    <string name="title_pref_root_ttl_value">TTL Value</string>
+    <string name="summary_pref_root_ttl_value">Standard value for Android / mobile carriers is 64</string>
     <string name="bunker_filter_sec_tools">TOOLS</string>
     <string name="bunker_filter_speedtest">Speedtest</string>
     <string name="bunker_filter_update_nodes">Update nodes</string>

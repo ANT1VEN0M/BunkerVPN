@@ -84,6 +84,9 @@ object AppConfig {
     const val PREF_MODE = "pref_mode"
     const val PREF_ROOT_MODE_ENABLE = "pref_root_mode_enabled"
     const val PREF_ROOT_LAN_SHARING = "pref_root_lan_sharing"
+    const val PREF_ROOT_FIX_TTL = "pref_root_fix_ttl"
+    const val PREF_ROOT_TTL_VALUE = "pref_root_ttl_value"
+    const val DEFAULT_ROOT_TTL_VALUE = "64"
     const val PREF_IS_BOOTED = "pref_is_booted"
     const val PREF_CHECK_UPDATE_PRE_RELEASE = "pref_check_update_pre_release"
     const val PREF_GEO_FILES_SOURCES = "pref_geo_files_sources"
@@ -295,6 +298,8 @@ object AppConfig {
     const val ROOT_V6_PRE_CHAIN = "CORE6_PRE" // ip6tables mangle/PREROUTING chain: mark forwarded clients' IPv6 into the tun
     const val ROOT_LAN_DNS = "1.1.1.1"          // fallback resolver for tethered clients when no plain-IPv4 DNS is configured
     const val ROOT_OOM_SCORE = "-1000"          // oom_score_adj that makes the LMK never kill us
+    const val ROOT_TTL_CHAIN = "BUNKER_TTL"     // iptables mangle chain for TTL fixation
+    const val ROOT_HL_CHAIN = "BUNKER_HL"       // ip6tables mangle chain for Hop Limit fixation
 
     /** hev-sock5-tunnel read-write-timeout value */
     const val HEVTUN_RW_TIMEOUT = "300,60"

@@ -1,7 +1,7 @@
 {
-  "version": "1.3.0",
-  "versionCode": 1022,
-  "tagName": "v1.3.0",
-  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.0/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "🚀 BunkerVPN v1.3.0: Полная локализация интерфейса (English & Русский — переведены все карточки, кнопки, диалоги и фильтры), переключатель «🛡️ Обход блокировок Т2 / DPI (Fragment)» для мобильных операторов (Т2 Москва, МТС, Мегафон), и интерактивный клик по плашке результатов пинга для мгновенной фильтрации рабочих узлов."
+  "version": "1.3.1",
+  "versionCode": 1023,
+  "tagName": "v1.3.1",
+  "downloadUrl": "https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.3.1/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🛰️ BunkerVPN v1.3.1: Принудительная фиксация TTL (64) для root-пользователей для автоматического обхода ограничений мобильных операторов на раздачу интернета (Wi-Fi hotspot / USB-модем) через iptables и sysctl."
 }

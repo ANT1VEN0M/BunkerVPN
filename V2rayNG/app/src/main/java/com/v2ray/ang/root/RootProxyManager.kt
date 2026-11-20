@@ -61,22 +61,30 @@ object RootProxyManager {
     }
 
     /**
-     * Set up LAN/tethering sharing while the device itself uses another mode (e.g. VPN
-     * mode). Runs a dedicated client tun2socks into the in-process core's SOCKS inbound
-     * and forwards tethered clients into it, WITHOUT capturing the device's own traffic
-     * (that keeps flowing through the VpnService). Requires root.
+     * Set up LAN/tethering sharing or TTL fixation while the device itself uses another mode
+     * (e.g. VPN mode). Runs a dedicated client tun2socks into the in-process core's SOCKS inbound
+     * and forwards tethered clients into it, and/or applies TTL fixation to bypass carrier limits.
+     * Requires root.
      */
     fun startClientSharing(context: Context): Boolean {
         teardown(context)
-        val script = buildTun2socksSetup(context, captureDeviceTraffic = false, forceLanShare = true)
-            ?: return false
+        val lanShareEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING)
+        val fixTtlEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL)
+        val ttlValue = MmkvManager.decodeSettingsString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)?.toIntOrNull() ?: 64
+
+        val script = when {
+            lanShareEnabled -> buildTun2socksSetup(context, captureDeviceTraffic = false, forceLanShare = true)
+            fixTtlEnabled -> buildStandaloneTtlSetup(ttlValue)
+            else -> null
+        } ?: return false
+
         val result = RootShell.runScript(context, "setup_rules.sh", script)
         if (!result.success) {
-            LogUtil.e(AppConfig.TAG, "RootProxyManager: client sharing setup failed:\n${result.output}")
+            LogUtil.e(AppConfig.TAG, "RootProxyManager: client sharing / TTL setup failed:\n${result.output}")
             teardown(context)
             return false
         }
-        LogUtil.i(AppConfig.TAG, "RootProxyManager: LAN client sharing installed")
+        LogUtil.i(AppConfig.TAG, "RootProxyManager: LAN client sharing / TTL fix installed")
         return true
     }
 
@@ -124,6 +132,8 @@ object RootProxyManager {
         val oomGuardPid = File(runDir, "oomguard.pid").absolutePath
         val ipv6 = MmkvManager.decodeSettingsBool(AppConfig.PREF_IPV6_ENABLED)
         val lanShare = forceLanShare || MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_LAN_SHARING)
+        val fixTtl = MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL)
+        val ttlValue = MmkvManager.decodeSettingsString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)?.toIntOrNull() ?: 64
         val corePid = Process.myPid()
 
         val config = buildHevConfig(socksUsername, socksPassword, port, ipv6, SettingsManager.getVpnMtu(), lanShare)
@@ -182,6 +192,10 @@ object RootProxyManager {
             // optionally route hotspot / USB-tethered clients through the tun too
             if (lanShare) {
                 append(buildLanShareSetup(captureDeviceTraffic, ipv6))
+            }
+            // optionally enforce TTL fixation (64) to bypass mobile carrier tethering restrictions
+            if (fixTtl) {
+                append(buildTtlSetup(ttlValue))
             }
             if (captureDeviceTraffic) {
                 // IPv6 is best-effort: never fail the (working) IPv4 setup over it.
@@ -509,6 +523,49 @@ object RootProxyManager {
         }
     }
 
+    // -------------------------------------------------- TTL / Hop Limit fixation
+
+    /**
+     * Fix outgoing and forwarded packet TTL (e.g. 64) via iptables mangle and Linux sysctl
+     * to prevent mobile carriers from detecting Wi-Fi hotspot sharing and tethering.
+     */
+    private fun buildTtlSetup(ttlValue: Int = 64): String {
+        val ttlChain = AppConfig.ROOT_TTL_CHAIN
+        val hlChain = AppConfig.ROOT_HL_CHAIN
+        return buildString {
+            appendLine("set +e")
+            // 1. Linux sysctl default TTL for locally generated packets
+            appendLine("echo $ttlValue > /proc/sys/net/ipv4/ip_default_ttl 2>/dev/null || true")
+            appendLine("echo $ttlValue > /proc/sys/net/ipv6/conf/all/hop_limit 2>/dev/null || true")
+            appendLine("echo $ttlValue > /proc/sys/net/ipv6/conf/default/hop_limit 2>/dev/null || true")
+
+            // 2. IPv4 iptables mangle POSTROUTING & PREROUTING rules
+            appendLine("iptables -t mangle -N $ttlChain 2>/dev/null || true")
+            appendLine("iptables -t mangle -F $ttlChain")
+            appendLine("iptables -t mangle -A $ttlChain -j TTL --ttl-set $ttlValue")
+            appendLine("iptables -t mangle -D POSTROUTING -j $ttlChain 2>/dev/null || true")
+            appendLine("iptables -t mangle -I POSTROUTING -j $ttlChain")
+            appendLine("iptables -t mangle -D PREROUTING -j $ttlChain 2>/dev/null || true")
+            appendLine("iptables -t mangle -I PREROUTING -j $ttlChain")
+
+            // 3. IPv6 Hop Limit (HL) mangle rules
+            appendLine("ip6tables -t mangle -N $hlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -F $hlChain")
+            appendLine("ip6tables -t mangle -A $hlChain -j HL --hl-set $ttlValue")
+            appendLine("ip6tables -t mangle -D POSTROUTING -j $hlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -I POSTROUTING -j $hlChain")
+            appendLine("ip6tables -t mangle -D PREROUTING -j $hlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -I PREROUTING -j $hlChain")
+        }
+    }
+
+    private fun buildStandaloneTtlSetup(ttlValue: Int = 64): String {
+        return buildString {
+            appendLine("set +e")
+            append(buildTtlSetup(ttlValue))
+        }
+    }
+
     // ---------------------------------------------------------------- teardown
 
     private fun buildTeardown(context: Context): String {
@@ -554,6 +611,17 @@ object RootProxyManager {
             appendLine("ip6tables -t mangle -D PREROUTING -j ${AppConfig.ROOT_V6_PRE_CHAIN} 2>/dev/null || true")
             appendLine("ip6tables -t mangle -F ${AppConfig.ROOT_V6_PRE_CHAIN} 2>/dev/null || true")
             appendLine("ip6tables -t mangle -X ${AppConfig.ROOT_V6_PRE_CHAIN} 2>/dev/null || true")
+            // TTL & Hop Limit cleanup (always cleaned, harmless if it was never set up)
+            val ttlChain = AppConfig.ROOT_TTL_CHAIN
+            val hlChain = AppConfig.ROOT_HL_CHAIN
+            appendLine("iptables -t mangle -D POSTROUTING -j $ttlChain 2>/dev/null || true")
+            appendLine("iptables -t mangle -D PREROUTING -j $ttlChain 2>/dev/null || true")
+            appendLine("iptables -t mangle -F $ttlChain 2>/dev/null || true")
+            appendLine("iptables -t mangle -X $ttlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -D POSTROUTING -j $hlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -D PREROUTING -j $hlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -F $hlChain 2>/dev/null || true")
+            appendLine("ip6tables -t mangle -X $hlChain 2>/dev/null || true")
             for (pref in listOf(5000, 5010, 5020, 5025, 5026, 5027, 5030, 5040, 5050, 6000)) {
                 appendLine("ip rule del pref $pref 2>/dev/null || true")
             }
