@@ -8,6 +8,7 @@ import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.util.LogUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -84,8 +85,8 @@ object BunkerWarpManager {
             OutputStreamWriter(conn.outputStream).use { it.write(reqObj.toString()) }
 
             if (conn.responseCode !in 200..299) {
-                LogUtil.e(AppConfig.TAG, "WARP registration error: code ${conn.responseCode}")
-                return@withContext false
+                LogUtil.e(AppConfig.TAG, "WARP registration error: code ${conn.responseCode}, trying pool fallback")
+                return@withContext fetchFallbackWarpFromPool()
             }
 
             val respText = conn.inputStream.bufferedReader().use { it.readText() }
@@ -138,9 +139,58 @@ object BunkerWarpManager {
                 MmkvManager.setSelectServer(guid)
                 return@withContext true
             }
+            fetchFallbackWarpFromPool()
+        } catch (e: Exception) {
+            LogUtil.e(AppConfig.TAG, "Direct WARP registration failed, falling back to cloud pool", e)
+            fetchFallbackWarpFromPool()
+        }
+    }
+
+    private fun fetchFallbackWarpFromPool(): Boolean {
+        return try {
+            val urls = listOf(
+                "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@latest/sub/warp_pool.json",
+                "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/warp_pool.json"
+            )
+            for (u in urls) {
+                try {
+                    val conn = (URL(u).openConnection() as HttpURLConnection).apply {
+                        connectTimeout = 6000
+                        readTimeout = 6000
+                        setRequestProperty("User-Agent", "BunkerVPN/1.3.7")
+                    }
+                    if (conn.responseCode in 200..299) {
+                        val text = conn.inputStream.bufferedReader().use { it.readText() }
+                        val arr = JSONArray(text)
+                        if (arr.length() > 0) {
+                            val idx = (0 until arr.length()).random()
+                            val item = arr.getJSONObject(idx)
+                            val profile = ProfileItem.create(EConfigType.WIREGUARD).apply {
+                                remarks = "🚀 Бункер Личный WARP+ | Cloudflare (880)"
+                                server = item.optString("server", "162.159.192.1")
+                                serverPort = item.optString("server_port", "880")
+                                secretKey = item.getString("private_key")
+                                publicKey = item.getString("public_key")
+                                localAddress = item.optString("local_address", "172.16.0.2/32")
+                                reserved = item.optString("reserved", "0,0,0")
+                                mtu = item.optInt("mtu", 1280)
+                                remoteDNS = item.optString("remote_dns", "77.88.8.8,1.1.1.1")
+                            }
+                            val guid = MmkvManager.encodeServerConfig("", profile)
+                            if (guid.isNotEmpty()) {
+                                MmkvManager.setSelectServer(guid)
+                                LogUtil.i(AppConfig.TAG, "Successfully acquired fallback WARP profile from pool")
+                                return true
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    LogUtil.w(AppConfig.TAG, "Failed to load warp from $u: $e")
+                }
+            }
             false
         } catch (e: Exception) {
-            LogUtil.e(AppConfig.TAG, "Failed to generate WARP config", e)
+            LogUtil.e(AppConfig.TAG, "fetchFallbackWarpFromPool error", e)
             false
         }
     }
