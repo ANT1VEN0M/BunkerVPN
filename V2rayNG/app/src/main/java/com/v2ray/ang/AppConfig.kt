@@ -189,7 +189,7 @@ object AppConfig {
         "ru.nspk.sbp",                 // СБПэй
         "ru.wildberries.bank"          // WB Банк
     )
-    const val DELAY_TEST_URL = "https://www.gstatic.com/generate_204"
+    const val DELAY_TEST_URL = "http://cp.cloudflare.com/generate_204"
     const val DELAY_TEST_URL2 = "https://www.google.com/generate_204"
     const val OBSERVATORY_LEAST_PING_INTERVAL = "3m"
     const val OBSERVATORY_LEAST_LOAD_INTERVAL = "5m"
@@ -201,9 +201,9 @@ object AppConfig {
     const val IP_API_URL = "https://api.ip.sb/geoip"
 
     /** DNS server addresses. */
-    const val DNS_PROXY = "https://cloudflare-dns.com/dns-query"
-    const val DNS_DIRECT = "223.5.5.5"
-    const val DNS_VPN = "1.1.1.1"
+    const val DNS_PROXY = "https://dns.yandex.ru/dns-query"
+    const val DNS_DIRECT = "77.88.8.8"
+    const val DNS_VPN = "77.88.8.8"
     const val GEOSITE_PRIVATE = "geosite:private"
     const val GEOSITE_CN = "geosite:cn"
     const val GEOIP_PRIVATE = "geoip:private"
@@ -304,7 +304,7 @@ object AppConfig {
     const val ROOT_V6_CHAIN = "CORE6_FILTER"       // ip6tables filter/OUTPUT chain: blackhole native IPv6 when it isn't tunneled
     const val ROOT_V6_FWD_CHAIN = "CORE6_FWD" // ip6tables FORWARD chain: route or reject tethered clients' native IPv6
     const val ROOT_V6_PRE_CHAIN = "CORE6_PRE" // ip6tables mangle/PREROUTING chain: mark forwarded clients' IPv6 into the tun
-    const val ROOT_LAN_DNS = "1.1.1.1"          // fallback resolver for tethered clients when no plain-IPv4 DNS is configured
+    const val ROOT_LAN_DNS = "77.88.8.8"          // fallback resolver for tethered clients when no plain-IPv4 DNS is configured
     const val ROOT_OOM_SCORE = "-1000"          // oom_score_adj that makes the LMK never kill us
     const val ROOT_TTL_CHAIN = "BUNKER_TTL"     // iptables mangle chain for TTL fixation
     const val ROOT_HL_CHAIN = "BUNKER_HL"       // ip6tables mangle chain for Hop Limit fixation

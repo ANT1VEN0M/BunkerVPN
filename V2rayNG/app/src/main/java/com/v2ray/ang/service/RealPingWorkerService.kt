@@ -117,7 +117,7 @@ class RealPingWorkerService(
         ) {
             val url = config.server.orEmpty()
             val port = config.serverPort.orEmpty().toInt()
-            val tcpTime = SpeedtestManager.socketConnectTime(url, port, 800)
+            val tcpTime = SpeedtestManager.socketConnectTime(url, port, 2500)
             if (tcpTime <= -1L) {
                 return retFailure
             }
@@ -145,7 +145,7 @@ class RealPingWorkerService(
         ) {
             val url = config.server.orEmpty()
             val port = config.serverPort.orEmpty().toInt()
-            val tcpTime = SpeedtestManager.socketConnectTime(url, port, 800)
+            val tcpTime = SpeedtestManager.socketConnectTime(url, port, 2500)
 
             return tcpTime
         }
