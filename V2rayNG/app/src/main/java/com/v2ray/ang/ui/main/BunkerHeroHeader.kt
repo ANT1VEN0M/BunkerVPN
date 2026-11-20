@@ -550,7 +550,7 @@ fun BunkerHeroHeader(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "BUNKER CYBER SHIELD",
+                            text = "BUNKER VPN",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.8.sp,
@@ -850,8 +850,6 @@ fun BunkerHeroHeader(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "🎯", fontSize = 11.sp)
-                            Spacer(modifier = Modifier.width(3.dp))
                             Text(
                                 text = stringResource(R.string.bunker_btn_auto),
                                 style = MaterialTheme.typography.labelMedium,
@@ -916,7 +914,12 @@ fun BunkerHeroHeader(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "🎛️", fontSize = 11.sp)
+                            Icon(
+                                painter = painterResource(R.drawable.ic_outline_filter_alt_24),
+                                contentDescription = null,
+                                tint = if (hideOfflineServers || isAntiRknEnabled) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(13.dp)
+                            )
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
                                 text = stringResource(R.string.bunker_btn_filters),
@@ -955,7 +958,12 @@ fun BunkerHeroHeader(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text(text = "🚀", fontSize = 11.sp)
+                            Icon(
+                                painter = painterResource(R.drawable.ic_play_24dp),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(12.dp)
+                            )
                             Spacer(modifier = Modifier.width(3.dp))
                             Text(
                                 text = stringResource(R.string.bunker_btn_test),

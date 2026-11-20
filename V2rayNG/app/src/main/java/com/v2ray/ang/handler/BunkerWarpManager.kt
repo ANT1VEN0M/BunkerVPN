@@ -24,6 +24,15 @@ import java.util.TimeZone
 
 object BunkerWarpManager {
 
+    private val EMBEDDED_WARP_POOL = listOf(
+        Triple("OAQNqqSYW896A5fpOp26BtmIUCv6mz4aR19RPX2mWGo=", "1,255,117", "162.159.192.1"),
+        Triple("AENE4iNCD/eY6UCLVHfCFXLb7bpStzpFi/3Q+EKU+0E=", "47,231,208", "162.159.193.1"),
+        Triple("ABmxmVxLkiR59vGlb2/W2kEOY3T4y2PgywkNrPrOf1g=", "87,188,150", "162.159.195.1"),
+        Triple("ODaJIHDFprxr6xNwbplneqIegMpjtbIME7gPTztAvkE=", "214,190,145", "188.114.96.1"),
+        Triple("CL2Rkq2AjFpy4FbQVmbJOz/ERr1kEzQZDgEg1dkCpn4=", "93,159,246", "188.114.97.1"),
+        Triple("8OsHjfdv8YYCzY66JeL7vTE4ZCpPl4BX4Zq+dbznyFU=", "160,98,123", "162.159.192.2")
+    )
+
     suspend fun generateWarpConfig(context: Context): Boolean = withContext(Dispatchers.IO) {
         try {
             // 1. Generate standard X25519 keypair
@@ -44,7 +53,6 @@ object BunkerWarpManager {
             val regUrl = URL("https://api.cloudflareclient.com/v0a2158/reg")
             
             // If BunkerVPN is active, route through internal SOCKS5 proxy (127.0.0.1:10808)
-            // because CoreVpnService excludes selfPackageName from the TUN interface
             val proxy = if (CoreServiceManager.isRunning()) {
                 try {
                     Proxy(Proxy.Type.SOCKS, InetSocketAddress(AppConfig.LOOPBACK, AppConfig.PORT_SOCKS.toInt()))
@@ -63,8 +71,8 @@ object BunkerWarpManager {
                 requestMethod = "POST"
                 setRequestProperty("Content-Type", "application/json; charset=UTF-8")
                 setRequestProperty("User-Agent", "okhttp/3.12.1")
-                connectTimeout = 12000
-                readTimeout = 12000
+                connectTimeout = 6000
+                readTimeout = 6000
                 doOutput = true
             }
 
@@ -85,7 +93,7 @@ object BunkerWarpManager {
             OutputStreamWriter(conn.outputStream).use { it.write(reqObj.toString()) }
 
             if (conn.responseCode !in 200..299) {
-                LogUtil.e(AppConfig.TAG, "WARP registration error: code ${conn.responseCode}, trying pool fallback")
+                LogUtil.w(AppConfig.TAG, "WARP API status ${conn.responseCode}, switching to cloud pool")
                 return@withContext fetchFallbackWarpFromPool()
             }
 
@@ -109,8 +117,7 @@ object BunkerWarpManager {
             val peer0 = peersArr.getJSONObject(0)
             val peerPubKey = peer0.getString("public_key")
             
-            // In Russia port 2408 is blocked by TSPU. Cloudflare officially supports ports 880, 1701, 500, 4500.
-            // Port 880 has ultra-low latency (~50ms) and bypasses TSPU WireGuard blocks.
+            // Port 880 bypasses Russian TSPU WireGuard blocks with ultra-low latency
             val serverIp = "162.159.192.1"
             val serverPort = "880"
 
@@ -122,7 +129,7 @@ object BunkerWarpManager {
 
             // 3. Create WireGuard profile item
             val profile = ProfileItem.create(EConfigType.WIREGUARD).apply {
-                remarks = "🚀 Бункер Личный WARP+ | Cloudflare (880)"
+                remarks = "Cloudflare WARP+ (880)"
                 server = serverIp
                 this.serverPort = serverPort
                 secretKey = privB64
@@ -141,56 +148,82 @@ object BunkerWarpManager {
             }
             fetchFallbackWarpFromPool()
         } catch (e: Exception) {
-            LogUtil.e(AppConfig.TAG, "Direct WARP registration failed, falling back to cloud pool", e)
+            LogUtil.w(AppConfig.TAG, "WARP API error, falling back to cloud pool: ${e.message}")
             fetchFallbackWarpFromPool()
         }
     }
 
     private fun fetchFallbackWarpFromPool(): Boolean {
-        return try {
-            val urls = listOf(
-                "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@latest/sub/warp_pool.json",
-                "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/warp_pool.json"
-            )
-            for (u in urls) {
-                try {
-                    val conn = (URL(u).openConnection() as HttpURLConnection).apply {
-                        connectTimeout = 6000
-                        readTimeout = 6000
-                        setRequestProperty("User-Agent", "BunkerVPN/1.3.7")
-                    }
-                    if (conn.responseCode in 200..299) {
-                        val text = conn.inputStream.bufferedReader().use { it.readText() }
-                        val arr = JSONArray(text)
-                        if (arr.length() > 0) {
-                            val idx = (0 until arr.length()).random()
-                            val item = arr.getJSONObject(idx)
-                            val profile = ProfileItem.create(EConfigType.WIREGUARD).apply {
-                                remarks = "🚀 Бункер Личный WARP+ | Cloudflare (880)"
-                                server = item.optString("server", "162.159.192.1")
-                                serverPort = item.optString("server_port", "880")
-                                secretKey = item.getString("private_key")
-                                publicKey = item.getString("public_key")
-                                localAddress = item.optString("local_address", "172.16.0.2/32")
-                                reserved = item.optString("reserved", "0,0,0")
-                                mtu = item.optInt("mtu", 1280)
-                                remoteDNS = item.optString("remote_dns", "77.88.8.8,1.1.1.1")
-                            }
-                            val guid = MmkvManager.encodeServerConfig("", profile)
-                            if (guid.isNotEmpty()) {
-                                MmkvManager.setSelectServer(guid)
-                                LogUtil.i(AppConfig.TAG, "Successfully acquired fallback WARP profile from pool")
-                                return true
-                            }
+        val urls = listOf(
+            "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/warp_pool.json",
+            "https://raw.gitmirror.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/warp_pool.json",
+            "https://fastly.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@latest/sub/warp_pool.json",
+            "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@latest/sub/warp_pool.json",
+            "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/warp_pool.json"
+        )
+        for (u in urls) {
+            try {
+                val conn = (URL(u).openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 5000
+                    readTimeout = 5000
+                    setRequestProperty("User-Agent", "BunkerVPN/1.3.9")
+                }
+                if (conn.responseCode in 200..299) {
+                    val text = conn.inputStream.bufferedReader().use { it.readText() }
+                    val arr = JSONArray(text)
+                    if (arr.length() > 0) {
+                        val idx = (0 until arr.length()).random()
+                        val item = arr.getJSONObject(idx)
+                        val profile = ProfileItem.create(EConfigType.WIREGUARD).apply {
+                            remarks = "Cloudflare WARP+ (880)"
+                            server = item.optString("server", "162.159.192.1")
+                            serverPort = item.optString("server_port", "880")
+                            secretKey = item.getString("private_key")
+                            publicKey = item.getString("public_key")
+                            localAddress = item.optString("local_address", "172.16.0.2/32")
+                            reserved = item.optString("reserved", "0,0,0")
+                            mtu = item.optInt("mtu", 1280)
+                            remoteDNS = item.optString("remote_dns", "77.88.8.8,1.1.1.1")
+                        }
+                        val guid = MmkvManager.encodeServerConfig("", profile)
+                        if (guid.isNotEmpty()) {
+                            MmkvManager.setSelectServer(guid)
+                            LogUtil.i(AppConfig.TAG, "Successfully acquired cloud pool WARP profile from $u")
+                            return true
                         }
                     }
-                } catch (e: Exception) {
-                    LogUtil.w(AppConfig.TAG, "Failed to load warp from $u: $e")
                 }
+            } catch (e: Exception) {
+                LogUtil.w(AppConfig.TAG, "Failed to load warp from $u: ${e.message}")
             }
-            false
+        }
+        return applyEmbeddedWarpProfile()
+    }
+
+    private fun applyEmbeddedWarpProfile(): Boolean {
+        return try {
+            val selected = EMBEDDED_WARP_POOL.random()
+            val profile = ProfileItem.create(EConfigType.WIREGUARD).apply {
+                remarks = "Cloudflare WARP+ (880)"
+                server = selected.third
+                serverPort = "880"
+                secretKey = selected.first
+                publicKey = "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
+                localAddress = "172.16.0.2/32"
+                reserved = selected.second
+                mtu = 1280
+                remoteDNS = "77.88.8.8,1.1.1.1"
+            }
+            val guid = MmkvManager.encodeServerConfig("", profile)
+            if (guid.isNotEmpty()) {
+                MmkvManager.setSelectServer(guid)
+                LogUtil.i(AppConfig.TAG, "Successfully acquired embedded offline WARP profile")
+                true
+            } else {
+                false
+            }
         } catch (e: Exception) {
-            LogUtil.e(AppConfig.TAG, "fetchFallbackWarpFromPool error", e)
+            LogUtil.e(AppConfig.TAG, "applyEmbeddedWarpProfile error", e)
             false
         }
     }

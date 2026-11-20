@@ -615,7 +615,7 @@ object SettingsManager {
         val existingDefault = decodeSubscription(DEFAULT_SUBSCRIPTION_ID)
         if (existingDefault == null) {
             val defaultSub = SubscriptionItem(
-                remarks = "Бункер | Микс 🌍",
+                remarks = "Микс",
                 url = AppConfig.BUNKER_DEFAULT_SUB_URL,
                 enabled = true,
                 autoUpdate = true,
@@ -628,70 +628,119 @@ object SettingsManager {
             if (subsList.moveItem(subsList.lastIndex, 0)) {
                 MmkvManager.encodeSubsList(subsList)
             }
-        } else if (existingDefault.url.contains("hub.mos.ru") || existingDefault.url.contains("@main")) {
-            existingDefault.url = AppConfig.BUNKER_DEFAULT_SUB_URL
-            existingDefault.remarks = "Бункер | Микс 🌍"
-            encodeSubscription(DEFAULT_SUBSCRIPTION_ID, existingDefault)
+        } else {
+            var updated = false
+            if (existingDefault.url.contains("hub.mos.ru") || existingDefault.url.contains("@main")) {
+                existingDefault.url = AppConfig.BUNKER_DEFAULT_SUB_URL
+                updated = true
+            }
+            if (existingDefault.remarks.contains("Бункер") || existingDefault.remarks.contains("🌍")) {
+                existingDefault.remarks = "Микс"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(DEFAULT_SUBSCRIPTION_ID, existingDefault)
+            }
         }
 
         val existingWL = decodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID)
         if (existingWL == null) {
             val whiteListSub = SubscriptionItem(
-                remarks = "Бункер | Белый список (БС) 🛡",
+                remarks = "Белый список",
                 url = AppConfig.BUNKER_WHITELIST_SUB_URL,
                 enabled = true,
                 autoUpdate = true,
                 allowInsecureUrl = true
             )
             encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, whiteListSub)
-        } else if (existingWL.url.contains("hub.mos.ru") || existingWL.url.contains("@main")) {
-            existingWL.url = AppConfig.BUNKER_WHITELIST_SUB_URL
-            encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, existingWL)
+        } else {
+            var updated = false
+            if (existingWL.url.contains("hub.mos.ru") || existingWL.url.contains("@main")) {
+                existingWL.url = AppConfig.BUNKER_WHITELIST_SUB_URL
+                updated = true
+            }
+            if (existingWL.remarks.contains("Бункер") || existingWL.remarks.contains("🛡")) {
+                existingWL.remarks = "Белый список"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, existingWL)
+            }
         }
 
         val existingFactory = decodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID)
         if (existingFactory == null) {
             val factorySub = SubscriptionItem(
-                remarks = "Бункер | Завод 443 & 53 🏭",
+                remarks = "Завод 443/53",
                 url = AppConfig.BUNKER_FACTORY_SUB_URL,
                 enabled = true,
                 autoUpdate = true,
                 allowInsecureUrl = true
             )
             encodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID, factorySub)
-        } else if (existingFactory.url.contains("@main")) {
-            existingFactory.url = AppConfig.BUNKER_FACTORY_SUB_URL
-            encodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID, existingFactory)
+        } else {
+            var updated = false
+            if (existingFactory.url.contains("@main")) {
+                existingFactory.url = AppConfig.BUNKER_FACTORY_SUB_URL
+                updated = true
+            }
+            if (existingFactory.remarks.contains("Бункер") || existingFactory.remarks.contains("🏭")) {
+                existingFactory.remarks = "Завод 443/53"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID, existingFactory)
+            }
         }
 
         val existingTurbo = decodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID)
         if (existingTurbo == null) {
             val turboSub = SubscriptionItem(
-                remarks = "Бункер | Турбо ⚡",
+                remarks = "Турбо",
                 url = AppConfig.BUNKER_TURBO_SUB_URL,
                 enabled = true,
                 autoUpdate = true,
                 allowInsecureUrl = true
             )
             encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, turboSub)
-        } else if (existingTurbo.url.contains("@main")) {
-            existingTurbo.url = AppConfig.BUNKER_TURBO_SUB_URL
-            encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, existingTurbo)
+        } else {
+            var updated = false
+            if (existingTurbo.url.contains("@main")) {
+                existingTurbo.url = AppConfig.BUNKER_TURBO_SUB_URL
+                updated = true
+            }
+            if (existingTurbo.remarks.contains("Бункер") || existingTurbo.remarks.contains("⚡")) {
+                existingTurbo.remarks = "Турбо"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, existingTurbo)
+            }
         }
 
         val existingTg = decodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID)
         if (existingTg == null) {
             val tgSosSub = SubscriptionItem(
-                remarks = "Бункер | Telegram SOS 💬",
+                remarks = "Telegram SOS",
                 url = AppConfig.BUNKER_TG_SOS_SUB_URL,
                 enabled = true,
                 autoUpdate = true,
                 allowInsecureUrl = true
             )
             encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, tgSosSub)
-        } else if (existingTg.url.contains("@main")) {
-            existingTg.url = AppConfig.BUNKER_TG_SOS_SUB_URL
-            encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, existingTg)
+        } else {
+            var updated = false
+            if (existingTg.url.contains("@main")) {
+                existingTg.url = AppConfig.BUNKER_TG_SOS_SUB_URL
+                updated = true
+            }
+            if (existingTg.remarks.contains("Бункер") || existingTg.remarks.contains("💬")) {
+                existingTg.remarks = "Telegram SOS"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, existingTg)
+            }
         }
     }
 }

@@ -267,7 +267,7 @@ object ThemeManager {
     val customWallpaper: StateFlow<String?> = _customWallpaper.asStateFlow()
 
     private val _isStealthMode = MutableStateFlow(
-        MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, false)
+        MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, true)
     )
     val isStealthMode: StateFlow<Boolean> = _isStealthMode.asStateFlow()
 
@@ -312,7 +312,7 @@ object ThemeManager {
         _customWallpaper.value =
             MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
         _isStealthMode.value =
-            MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, false)
+            MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, true)
     }
 }
 

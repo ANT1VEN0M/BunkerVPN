@@ -424,8 +424,8 @@
     <string name="connection_test_error">Connection test failed: %s</string>
     <string name="connection_test_fail">Internet unavailable</string>
     <string name="connection_test_error_status_code">Error code: #%d</string>
-    <string name="connection_connected">⚡ BUNKER ACTIVE • Tap to test</string>
-    <string name="connection_not_connected">🛡 PROTECTION DISABLED • Tap start</string>
+    <string name="connection_connected">Connected • Tap to test</string>
+    <string name="connection_not_connected">Not connected</string>
     <string name="connection_running_task_left">Tests running: %s</string>
 
     <string name="import_subscription_success">Subscription imported successfully</string>
@@ -585,19 +585,19 @@
     <string name="sub_info_unlimited">Unlimited</string>
 
     <!-- Bunker Hero Header & Status -->
-    <string name="bunker_hero_status_active">⚡ BUNKER ACTIVE</string>
-    <string name="bunker_hero_status_active_speed">⚡ ACTIVE • %s</string>
-    <string name="bunker_hero_status_off">🛡 SHIELD OFF</string>
-    <string name="bunker_hero_status_protection_off">🛡 PROTECTION OFF</string>
-    <string name="bunker_hero_tap_to_connect">Tap the cat to connect</string>
+    <string name="bunker_hero_status_active">Bunker active</string>
+    <string name="bunker_hero_status_active_speed">Active • %s</string>
+    <string name="bunker_hero_status_off">Protection off</string>
+    <string name="bunker_hero_status_protection_off">Protection off</string>
+    <string name="bunker_hero_tap_to_connect">Tap start to connect</string>
     <string name="bunker_hero_badge_online">• Online</string>
-    <string name="bunker_hero_badge_anti_rkn">• Anti-Censorship 🇷🇺</string>
-    <string name="bunker_hero_collapse">▲ Collapse</string>
-    <string name="bunker_hero_expand">▼ Expand</string>
-    <string name="bunker_hero_testing_progress">⚡ Testing: %1$d / %2$d • Online: %3$d</string>
-    <string name="bunker_hero_working_nodes">⚡ Working nodes: %1$d of %2$d online (%3$d%%)</string>
-    <string name="bunker_hero_working_nodes_filter">⚡ Working nodes: %1$d of %2$d online (%3$d%%) • Tap to filter</string>
-    <string name="bunker_hero_no_servers">✕ No servers available (0 of %d)</string>
+    <string name="bunker_hero_badge_anti_rkn">• Anti-Censorship</string>
+    <string name="bunker_hero_collapse">Collapse</string>
+    <string name="bunker_hero_expand">Expand</string>
+    <string name="bunker_hero_testing_progress">Testing: %1$d / %2$d • Online: %3$d</string>
+    <string name="bunker_hero_working_nodes">Working nodes: %1$d of %2$d (%3$d%%)</string>
+    <string name="bunker_hero_working_nodes_filter">Working nodes: %1$d of %2$d (%3$d%%) • Hide offline</string>
+    <string name="bunker_hero_no_servers">No servers available (0 of %d)</string>
     <string name="bunker_hero_update_available">Update %s!</string>
     <string name="bunker_hero_update_btn">Update ➔</string>
     <string name="bunker_btn_auto">Auto</string>

@@ -428,8 +428,8 @@
     <string name="connection_test_error">Ошибка проверки соединения: %s</string>
     <string name="connection_test_fail">Интернет недоступен</string>
     <string name="connection_test_error_status_code">Код ошибки: #%d</string>
-    <string name="connection_connected">⚡ БУНКЕР АКТИВЕН • Нажмите для проверки</string>
-    <string name="connection_not_connected">🛡 ЗАЩИТА ОТКЛЮЧЕНА • Нажмите кнопку запуска</string>
+    <string name="connection_connected">Подключено • Проверить пинг</string>
+    <string name="connection_not_connected">Не подключено</string>
     <string name="connection_running_task_left">Выполняется проверок: %s</string>
 
     <string name="import_subscription_success">Подписка импортирована</string>
@@ -588,19 +588,19 @@
     <string name="sub_info_unlimited">Без ограничений</string>
 
     <!-- Bunker Hero Header & Status -->
-    <string name="bunker_hero_status_active">⚡ БУНКЕР АКТИВЕН</string>
-    <string name="bunker_hero_status_active_speed">⚡ АКТИВЕН • %s</string>
-    <string name="bunker_hero_status_off">🛡 ЗАЩИТА ВЫКЛ</string>
-    <string name="bunker_hero_status_protection_off">🛡 ЗАЩИТА ОТКЛЮЧЕНА</string>
-    <string name="bunker_hero_tap_to_connect">Нажмите на кота для подключения</string>
+    <string name="bunker_hero_status_active">Бункер активен</string>
+    <string name="bunker_hero_status_active_speed">Активен • %s</string>
+    <string name="bunker_hero_status_off">Защита выключена</string>
+    <string name="bunker_hero_status_protection_off">Защита отключена</string>
+    <string name="bunker_hero_tap_to_connect">Нажмите кнопку запуска для подключения</string>
     <string name="bunker_hero_badge_online">• Онлайн</string>
-    <string name="bunker_hero_badge_anti_rkn">• Анти-РКН 🇷🇺</string>
-    <string name="bunker_hero_collapse">▲ Свернуть</string>
-    <string name="bunker_hero_expand">▼ Развернуть</string>
-    <string name="bunker_hero_testing_progress">⚡ Проверка серверов: %1$d / %2$d • Онлайн: %3$d</string>
-    <string name="bunker_hero_working_nodes">⚡ Рабочих узлов: %1$d из %2$d онлайн (%3$d%%)</string>
-    <string name="bunker_hero_working_nodes_filter">⚡ Рабочих узлов: %1$d из %2$d онлайн (%3$d%%) • Нажмите, чтобы отфильтровать</string>
-    <string name="bunker_hero_no_servers">✕ Нет доступных серверов (0 из %d)</string>
+    <string name="bunker_hero_badge_anti_rkn">• Анти-РКН</string>
+    <string name="bunker_hero_collapse">Свернуть</string>
+    <string name="bunker_hero_expand">Развернуть</string>
+    <string name="bunker_hero_testing_progress">Проверка серверов: %1$d / %2$d • Онлайн: %3$d</string>
+    <string name="bunker_hero_working_nodes">Рабочих узлов: %1$d из %2$d (%3$d%%)</string>
+    <string name="bunker_hero_working_nodes_filter">Рабочих узлов: %1$d из %2$d (%3$d%%) • Скрыть офлайн</string>
+    <string name="bunker_hero_no_servers">Нет доступных серверов (0 из %d)</string>
     <string name="bunker_hero_update_available">Обновление %s!</string>
     <string name="bunker_hero_update_btn">Обновить ➔</string>
     <string name="bunker_btn_auto">Авто</string>
