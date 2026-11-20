@@ -693,14 +693,5 @@ object SettingsManager {
             existingTg.url = AppConfig.BUNKER_TG_SOS_SUB_URL
             encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, existingTg)
         }
-                remarks = "Бункер | Telegram SOS 💬",
-                url = AppConfig.BUNKER_TG_SOS_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, tgSosSub)
-        }
     }
-
 }

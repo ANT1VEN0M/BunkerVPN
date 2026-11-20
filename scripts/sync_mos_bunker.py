@@ -18,11 +18,11 @@ import sys
 
 MOS_BLWL_URL = os.environ.get(
     "MOS_BLWL_URL",
-    "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/BLWL_MIX.txt"
+    "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/mix.txt"
 )
 MOS_WHITELIST_URL = os.environ.get(
     "MOS_WHITELIST_URL",
-    "https://hub.mos.ru/akelladejavu/bunker/-/raw/main/WHITE_LIST.txt"
+    "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/bs.txt"
 )
 
 FLAG_TO_COUNTRY = {
