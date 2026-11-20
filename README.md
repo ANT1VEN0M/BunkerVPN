@@ -21,7 +21,11 @@
   </a>
   &nbsp;
   <a href="https://ant1ven0m.github.io/Bunker-Auto-Engine/">
-    <img src="https://img.shields.io/badge/🍏_iPhone_/_ПК-Web_Портал-10B981?style=for-the-badge&logo=safari&logoColor=white" alt="Web Portal"/>
+    <img src="https://img.shields.io/badge/📲_iOS_/_ПК-Telegram_Mini_App-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Mini App"/>
+  </a>
+  &nbsp;
+  <a href="https://t.me/BunkerCatOSBot">
+    <img src="https://img.shields.io/badge/🤖_Бот-@BunkerCatOSBot-10B981?style=for-the-badge&logo=telegram&logoColor=white" alt="Bunker Bot"/>
   </a>
 </p>
 
