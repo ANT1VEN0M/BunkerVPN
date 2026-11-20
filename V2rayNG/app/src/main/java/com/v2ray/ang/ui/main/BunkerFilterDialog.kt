@@ -376,19 +376,6 @@ fun BunkerFilterDialog(
                             }
                         }
                     }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            services.forEach { service ->
-                                ServiceBadge(
-                                    service = service,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                        }
-                    }
                 }
             }
         }
