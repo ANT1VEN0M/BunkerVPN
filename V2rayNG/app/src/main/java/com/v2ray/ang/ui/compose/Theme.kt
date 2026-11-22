@@ -1,6 +1,7 @@
 package com.v2ray.ang.ui.compose
 
 import android.app.Activity
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.compose.foundation.Image
@@ -267,7 +268,7 @@ object ThemeManager {
     val customWallpaper: StateFlow<String?> = _customWallpaper.asStateFlow()
 
     private val _isStealthMode = MutableStateFlow(
-        MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, true)
+        MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, false)
     )
     val isStealthMode: StateFlow<Boolean> = _isStealthMode.asStateFlow()
 
@@ -298,6 +299,10 @@ object ThemeManager {
     fun setCustomWallpaper(path: String?) {
         MmkvManager.encodeSettings(AppConfig.PREF_CUSTOM_WALLPAPER, path ?: "")
         _customWallpaper.value = path?.takeIf { it.isNotBlank() }
+        if (!path.isNullOrBlank()) {
+            // User explicitly chose a wallpaper: disable stealth mode so wallpaper displays immediately
+            setStealthMode(false)
+        }
     }
 
     fun refresh() {
@@ -312,19 +317,40 @@ object ThemeManager {
         _customWallpaper.value =
             MmkvManager.decodeSettingsString(AppConfig.PREF_CUSTOM_WALLPAPER)?.takeIf { it.isNotBlank() }
         _isStealthMode.value =
-            MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, true)
+            MmkvManager.decodeSettingsBool(AppConfig.PREF_STEALTH_MODE, false)
+    }
+}
+
+private fun decodeSampledBitmap(path: String, reqWidth: Int = 1440, reqHeight: Int = 3120): Bitmap? {
+    return try {
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(path, options)
+        if (options.outWidth <= 0 || options.outHeight <= 0) return null
+
+        var inSampleSize = 1
+        val halfHeight = options.outHeight / 2
+        val halfWidth = options.outWidth / 2
+        while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+            inSampleSize *= 2
+        }
+        options.inJustDecodeBounds = false
+        options.inSampleSize = inSampleSize
+        BitmapFactory.decodeFile(path, options)
+    } catch (e: Throwable) {
+        null
     }
 }
 
 @Composable
 fun WallpaperBackground(wallpaperPath: String) {
-    val bitmap = remember(wallpaperPath) {
+    val file = remember(wallpaperPath) { File(wallpaperPath) }
+    val lastMod = remember(wallpaperPath) { if (file.exists()) file.lastModified() else 0L }
+    val bitmap = remember(wallpaperPath, lastMod) {
         try {
-            val file = File(wallpaperPath)
             if (file.exists() && file.length() > 0) {
-                BitmapFactory.decodeFile(file.absolutePath)?.asImageBitmap()
+                decodeSampledBitmap(file.absolutePath)?.asImageBitmap()
             } else null
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             null
         }
     }
@@ -356,6 +382,7 @@ fun resolveDarkTheme(): Boolean {
 
 val LocalDarkTheme = compositionLocalOf { false }
 val LocalStealthMode = compositionLocalOf { false }
+val LocalHasWallpaper = compositionLocalOf { false }
 
 @Composable
 fun AppTheme(
@@ -366,7 +393,7 @@ fun AppTheme(
     val currentPalette by ThemeManager.themePalette.collectAsState()
     val wallpaperPath by ThemeManager.customWallpaper.collectAsState()
     val isStealth by ThemeManager.isStealthMode.collectAsState()
-    val hasWallpaper = !wallpaperPath.isNullOrBlank() && !isStealth
+    val hasWallpaper = !wallpaperPath.isNullOrBlank()
 
     val context = LocalContext.current
     val stealthDarkColorScheme = darkColorScheme(
@@ -428,6 +455,7 @@ fun AppTheme(
     CompositionLocalProvider(
         LocalDarkTheme provides darkTheme,
         LocalStealthMode provides isStealth,
+        LocalHasWallpaper provides hasWallpaper,
         LocalThemePalette provides currentPalette,
         LocalAppSnackbar provides snackbarController
     ) {

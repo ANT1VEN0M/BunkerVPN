@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.compose.BackHandler
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
@@ -88,7 +89,7 @@ class MainActivity : HelperBaseComponentActivity() {
     private var showThemeDialog by mutableStateOf(false)
 
     private val wallpaperPickerLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
             if (uri != null) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     try {
@@ -194,7 +195,9 @@ class MainActivity : HelperBaseComponentActivity() {
                 onDismiss = { showThemeDialog = false },
                 onPickWallpaper = {
                     showThemeDialog = false
-                    wallpaperPickerLauncher.launch("image/*")
+                    wallpaperPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
                 },
                 onResetWallpaper = {
                     showThemeDialog = false

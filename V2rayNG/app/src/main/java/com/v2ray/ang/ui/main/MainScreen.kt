@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -47,6 +48,7 @@ import com.v2ray.ang.handler.InAppUpdateDialog
 import com.v2ray.ang.handler.SettingsManager
 import com.v2ray.ang.handler.UpdateCheckerManager
 import com.v2ray.ang.ui.compose.LocalDarkTheme
+import com.v2ray.ang.ui.compose.LocalHasWallpaper
 import com.v2ray.ang.ui.compose.QRCodeDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -232,8 +234,10 @@ fun MainScreen(
             )
         }
     ) {
+        val hasWallpaper = LocalHasWallpaper.current
         Scaffold(
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
+            containerColor = if (hasWallpaper) Color.Transparent else MaterialTheme.colorScheme.background,
             topBar = {
                 MainTopBar(
                     isLoading = isLoading,
