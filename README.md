@@ -65,13 +65,13 @@
 
 ---
 
-## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.0)
+## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.1)
 
 Теперь у Бункера есть собственный нативный клиент для компьютеров и ноутбуков:
 * 👉 **[Репозиторий BunkerVPN-Windows](https://github.com/ANT1VEN0M/BunkerVPN-Windows)**
 * 🚀 **TUN-режим (WinTUN):** весь трафик ПК, Discord Voice (без лагов RTC) и онлайн-игры.
 * 🛡️ **Умный обход (Bypass Russia):** сайты РФ напрямую, заблокированные — через туннель.
-* 📥 [Скачать установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.0/BunkerVPN-Windows-v1.0.0-Setup.exe) | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.0/BunkerVPN-Windows-v1.0.0-Portable.zip)
+* 📥 [Скачать установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.1/BunkerVPN-Windows-v1.0.1-Setup.exe) | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.1/BunkerVPN-Windows-v1.0.1-Portable.zip)
 
 ---
 
