@@ -630,7 +630,7 @@ object SettingsManager {
             }
         } else {
             var updated = false
-            if (existingDefault.url.contains("hub.mos.ru") || existingDefault.url.contains("@main")) {
+            if (existingDefault.url.contains("hub.mos.ru") || existingDefault.url.contains("@latest") || existingDefault.url.contains("jsdelivr.net") || existingDefault.url != AppConfig.BUNKER_DEFAULT_SUB_URL) {
                 existingDefault.url = AppConfig.BUNKER_DEFAULT_SUB_URL
                 updated = true
             }
@@ -655,7 +655,7 @@ object SettingsManager {
             encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, whiteListSub)
         } else {
             var updated = false
-            if (existingWL.url.contains("hub.mos.ru") || existingWL.url.contains("@main")) {
+            if (existingWL.url.contains("hub.mos.ru") || existingWL.url.contains("@latest") || existingWL.url.contains("jsdelivr.net") || existingWL.url != AppConfig.BUNKER_WHITELIST_SUB_URL) {
                 existingWL.url = AppConfig.BUNKER_WHITELIST_SUB_URL
                 updated = true
             }
@@ -680,7 +680,7 @@ object SettingsManager {
             encodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID, factorySub)
         } else {
             var updated = false
-            if (existingFactory.url.contains("@main")) {
+            if (existingFactory.url.contains("@latest") || existingFactory.url.contains("jsdelivr.net") || existingFactory.url != AppConfig.BUNKER_FACTORY_SUB_URL) {
                 existingFactory.url = AppConfig.BUNKER_FACTORY_SUB_URL
                 updated = true
             }
@@ -705,7 +705,7 @@ object SettingsManager {
             encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, turboSub)
         } else {
             var updated = false
-            if (existingTurbo.url.contains("@main")) {
+            if (existingTurbo.url.contains("@latest") || existingTurbo.url.contains("jsdelivr.net") || existingTurbo.url != AppConfig.BUNKER_TURBO_SUB_URL) {
                 existingTurbo.url = AppConfig.BUNKER_TURBO_SUB_URL
                 updated = true
             }
@@ -730,7 +730,7 @@ object SettingsManager {
             encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, tgSosSub)
         } else {
             var updated = false
-            if (existingTg.url.contains("@main")) {
+            if (existingTg.url.contains("@latest") || existingTg.url.contains("jsdelivr.net") || existingTg.url != AppConfig.BUNKER_TG_SOS_SUB_URL) {
                 existingTg.url = AppConfig.BUNKER_TG_SOS_SUB_URL
                 updated = true
             }
@@ -740,6 +740,31 @@ object SettingsManager {
             }
             if (updated) {
                 encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, existingTg)
+            }
+        }
+
+        val existingDiscord = decodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID)
+        if (existingDiscord == null) {
+            val discordSub = SubscriptionItem(
+                remarks = "Discord / Игры",
+                url = AppConfig.BUNKER_DISCORD_SUB_URL,
+                enabled = true,
+                autoUpdate = true,
+                allowInsecureUrl = true
+            )
+            encodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID, discordSub)
+        } else {
+            var updated = false
+            if (existingDiscord.url.contains("@latest") || existingDiscord.url.contains("jsdelivr.net") || existingDiscord.url != AppConfig.BUNKER_DISCORD_SUB_URL) {
+                existingDiscord.url = AppConfig.BUNKER_DISCORD_SUB_URL
+                updated = true
+            }
+            if (existingDiscord.remarks.contains("Бункер") || existingDiscord.remarks.contains("🎮")) {
+                existingDiscord.remarks = "Discord / Игры"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID, existingDiscord)
             }
         }
     }

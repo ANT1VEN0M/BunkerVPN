@@ -196,10 +196,22 @@ object AngConfigManager {
             if (count <= 0) {
                 count = parseCustomConfigServer(server, subid, append)
             }
+            if (count <= 0) {
+                val extracted = BunkerUniversalImporter.extractConfigs(server)
+                if (extracted.isNotEmpty()) {
+                    count = parseBatchConfig(extracted.joinToString("\n"), subid, append)
+                }
+            }
 
             var countSub = parseBatchSubscription(server)
             if (countSub <= 0) {
                 countSub = parseBatchSubscription(Utils.decode(server))
+            }
+            if (countSub <= 0) {
+                val extractedSubs = BunkerUniversalImporter.extractSubscriptionUrls(server)
+                for (subUrl in extractedSubs) {
+                    countSub += importUrlAsSubscription(subUrl)
+                }
             }
             if (countSub > 0) {
                 updateConfigViaSubAll()
@@ -529,41 +541,50 @@ object AngConfigManager {
             }
 
             var configText = ""
-            if (CoreServiceManager.isRunning()) {
-                configText = try {
-                    val httpPort = SettingsManager.getHttpPort()
-                    HttpUtil.getUrlContentWithUserAgent(
-                        UrlContentRequest(
-                            url = url,
-                            userAgent = userAgent,
-                            requestHeaders = requestHeaders,
-                            timeout = 10000,
-                            httpPort = httpPort,
-                            proxyUsername = proxyUsername,
-                            proxyPassword = proxyPassword
-                        ),
-                        captureUsageInfo
-                    )
-                } catch (e: Exception) {
-                    LogUtil.e(AppConfig.ANG_PACKAGE, "Update subscription: proxy attempt failed", e)
-                    ""
-                }
-            }
+            val candidateUrls = getSubscriptionMirrors(url)
 
-            if (configText.isEmpty()) {
-                configText = try {
-                    HttpUtil.getUrlContentWithUserAgent(
-                        UrlContentRequest(
-                            url = url,
-                            userAgent = userAgent,
-                            requestHeaders = requestHeaders,
-                            timeout = 15000
-                        ),
-                        captureUsageInfo
-                    )
-                } catch (e: Exception) {
-                    LogUtil.e(AppConfig.TAG, "Update subscription: Failed to get URL content with user agent", e)
-                    ""
+            for (candidateUrl in candidateUrls) {
+                if (CoreServiceManager.isRunning()) {
+                    configText = try {
+                        val httpPort = SettingsManager.getHttpPort()
+                        HttpUtil.getUrlContentWithUserAgent(
+                            UrlContentRequest(
+                                url = candidateUrl,
+                                userAgent = userAgent,
+                                requestHeaders = requestHeaders,
+                                timeout = 8000,
+                                httpPort = httpPort,
+                                proxyUsername = proxyUsername,
+                                proxyPassword = proxyPassword
+                            ),
+                            captureUsageInfo
+                        )
+                    } catch (e: Exception) {
+                        LogUtil.e(AppConfig.ANG_PACKAGE, "Update subscription: proxy attempt failed for $candidateUrl", e)
+                        ""
+                    }
+                }
+
+                if (configText.isEmpty()) {
+                    configText = try {
+                        HttpUtil.getUrlContentWithUserAgent(
+                            UrlContentRequest(
+                                url = candidateUrl,
+                                userAgent = userAgent,
+                                requestHeaders = requestHeaders,
+                                timeout = 10000
+                            ),
+                            captureUsageInfo
+                        )
+                    } catch (e: Exception) {
+                        LogUtil.e(AppConfig.TAG, "Update subscription: direct attempt failed for $candidateUrl", e)
+                        ""
+                    }
+                }
+
+                if (configText.isNotEmpty()) {
+                    LogUtil.i(AppConfig.TAG, "Successfully downloaded subscription from mirror: $candidateUrl")
+                    break
                 }
             }
             if (configText.isEmpty()) {
@@ -748,6 +769,12 @@ object AngConfigManager {
         if (count <= 0) {
             count = parseCustomConfigServer(server, subid, append)
         }
+        if (count <= 0) {
+            val extracted = BunkerUniversalImporter.extractConfigs(server)
+            if (extracted.isNotEmpty()) {
+                count = parseBatchConfig(extracted.joinToString("\n"), subid, append)
+            }
+        }
         return count
     }
 
@@ -805,5 +832,50 @@ object AngConfigManager {
         } ?: ""
 
         return "$addrPart : ${port ?: ""}"
+    }
+
+    /**
+     * Resolves a cascade of reliable mirror URLs for a subscription to guarantee 100% delivery.
+     */
+    fun getSubscriptionMirrors(primaryUrl: String): List<String> {
+        val mirrors = mutableListOf<String>()
+        val cleanUrl = primaryUrl.trim()
+        mirrors.add(cleanUrl)
+
+        val bunkerSubFiles = listOf(
+            "mix_b64.txt", "bs_b64.txt", "factory_b64.txt",
+            "fast_b64.txt", "tg_b64.txt", "discord_b64.txt",
+            "warp_masque_b64.txt", "warp_b64.txt",
+            "mix.txt", "bs.txt", "factory.txt", "fast.txt", "tg.txt", "discord.txt"
+        )
+        val matchedFile = bunkerSubFiles.firstOrNull { cleanUrl.contains(it) }
+
+        if (matchedFile != null || cleanUrl.contains("Bunker-Auto-Engine")) {
+            val fileName = matchedFile ?: cleanUrl.substringAfterLast('/')
+            val ts = System.currentTimeMillis()
+            val candidateMirrors = listOf(
+                "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
+                "https://fastly.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/$fileName?t=$ts",
+                "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/$fileName?t=$ts",
+                "https://ghproxy.net/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
+                "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName"
+            )
+            for (m in candidateMirrors) {
+                if (!mirrors.contains(m)) {
+                    mirrors.add(m)
+                }
+            }
+        } else if (cleanUrl.contains("raw.githubusercontent.com")) {
+            val ghFast = if (cleanUrl.startsWith("https://ghfast.top/")) cleanUrl else "https://ghfast.top/$cleanUrl"
+            val ghProxy = if (cleanUrl.startsWith("https://ghproxy.net/")) cleanUrl else "https://ghproxy.net/$cleanUrl"
+            if (!mirrors.contains(ghFast)) {
+                mirrors.add(0, ghFast)
+            }
+            if (!mirrors.contains(ghProxy)) {
+                mirrors.add(ghProxy)
+            }
+        }
+
+        return mirrors
     }
 }

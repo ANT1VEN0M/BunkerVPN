@@ -25,7 +25,7 @@ data class MainUiState(
     val status: MainStatus = MainStatus.Disconnected,
     val locateTarget: LocateTarget? = null,
     val confirmRemove: Boolean = false,
-    val doubleColumnDisplay: Boolean = false,
+    val doubleColumnDisplay: Boolean = true,
     val hideOfflineServers: Boolean = false,
     val shareQRCodeBitmap: android.graphics.Bitmap? = null
 )
