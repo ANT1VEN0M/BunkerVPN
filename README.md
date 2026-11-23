@@ -20,12 +20,20 @@
     <img src="https://img.shields.io/badge/👥_Аудитория-1400+_подписчиков-10B981?style=for-the-badge&logo=telegram&logoColor=white" alt="1400 Subscribers"/>
   </a>
   &nbsp;
+  <a href="https://finance.ozon.ru/apps/sbp/ozonbankpay/01a1daa7-59df-7009-9fee-796763044ce6" target="_blank">
+    <img src="https://img.shields.io/badge/💖_Донат-Озон_Банк_СБП-FF0055?style=for-the-badge&logo=heart&logoColor=white" alt="Донат по СБП"/>
+  </a>
+  &nbsp;
+  <a href="https://t.me/boost/BUNKER_KOTA" target="_blank">
+    <img src="https://img.shields.io/badge/🚀_Boost-Telegram-24A1DE?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Boost"/>
+  </a>
+  &nbsp;
   <a href="https://t.me/BUNKER_K0TA">
     <img src="https://img.shields.io/badge/💬_Чат-BUNKER__K0TA-7C3AED?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Chat"/>
   </a>
   &nbsp;
   <a href="https://github.com/ANT1VEN0M/BunkerVPN-Windows">
-    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.6_Live-00E5FF?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
+    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.7_Live-00E5FF?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
   </a>
   &nbsp;
   <a href="https://ant1ven0m.github.io/Bunker-Auto-Engine/">
@@ -58,6 +66,10 @@
 * **Защита от утечек DNS и трафика:** системные демоны Android (`netd` / `dns_resolver`) корректно авторизованы в правилах.
 * **Поддержка NDP / ICMPv6:** роутер не теряет связь со смартфоном по Wi-Fi при включенном Kill-Switch.
 
+### 🎨 5. Поддержка Themed Icon в стиле Google Pixel (Material You / Android 13+)
+* **Адаптивная векторная монохромная иконка:** силуэт кота Бункера автоматически окрашивается в акцентные цвета системной темы Google Pixel и Android 13+.
+* **Идеальная гармония:** единый визуальный стиль рабочего стола с быстрыми переключателями в шторке.
+
 ---
 
 ## 📦 Скачать BunkerVPN v1.4.1
@@ -69,18 +81,28 @@
 
 ---
 
-## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.6)
+## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.7)
 
 Теперь у Бункера есть собственный мощный и лёгкий нативный клиент для компьютеров и ноутбуков (Windows 10 / 11):
 * 👉 **[Репозиторий BunkerVPN-Windows](https://github.com/ANT1VEN0M/BunkerVPN-Windows)**
+* 🛡️ **Совместимость с Sing-box 1.11+:** TUN запускается стабильно без сбоев.
 * 🚀 **TUN-режим (WinTUN):** весь трафик ПК, онлайн-игры, торренты и фоновые службы.
 * 🎮 **Discord Voice & Full-Cone UDP:** мгновенное подключение к войсам и стримам Discord без зависания на «RTC Connecting».
 * 🛡️ **Виджет статуса сервисов ТСПУ:** живой статус разблокировки YouTube 4K, Discord, Telegram, AI, Insta/X, Банков и Госуслуг прямо на главном экране.
 * 📶 **Автосортировка по пингу & URL Тест (HTTP 204):** автоматический выбор лучших серверов.
 * 🛡️ **Умный обход (Smart Bypass Russia):** сайты РФ напрямую на скорости домашнего провайдера, заблокированные — через туннель.
 * 🔄 **1-Click Автообновление & Трей:** сворачивается возле часов, автозапуск, автообновление в один клик.
-* 🌐 **Облачный веб-десктоп:** возможность запускать и тестировать ПК-версию прямо в браузере смартфона.
-* 📥 **Скачать v1.0.6:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Portable.zip))*
+* 🌐 **Облачный веб-десктоп:** возможность запускать и тестировать ПК-версию прямо в браузере смартфона: [Открыть Web Desktop](https://spare-democracy-brought-freedom.trycloudflare.com/vnc.html?autoconnect=true&resize=scale).
+* 📥 **Скачать v1.0.7:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Portable.zip))*
+
+---
+
+## 💖 Поддержка проекта Бункер Кота (Донаты)
+
+Бункер развивается полностью независимо на чистом энтузиазме! Если BunkerVPN помогает вам оставаться на связи на максимальной скорости — поддержите проект:
+- 💳 **Перевести по СБП (Озон Банк в 1 клик):** [https://finance.ozon.ru/apps/sbp/ozonbankpay/01a1daa7-59df-7009-9fee-796763044ce6](https://finance.ozon.ru/apps/sbp/ozonbankpay/01a1daa7-59df-7009-9fee-796763044ce6)
+- 🚀 **Прокачать канал (Telegram Boost):** [https://t.me/boost/BUNKER_KOTA](https://t.me/boost/BUNKER_KOTA)
+- 💎 **Криптовалюта (USDT / TON) и связь:** [@k0tlux](https://t.me/k0tlux)
 
 ---
 
