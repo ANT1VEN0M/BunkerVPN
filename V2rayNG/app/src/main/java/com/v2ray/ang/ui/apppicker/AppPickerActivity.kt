@@ -180,6 +180,7 @@ fun AppPickerScreen(
             )
         }
     ) { innerPadding ->
+        val safeApps = remember(apps) { apps.distinctBy { it.packageName } }
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -188,7 +189,7 @@ fun AppPickerScreen(
                 .verticalScrollbar(listState),
             contentPadding = NavigationBarsBottomPadding()
         ) {
-            items(items = apps, key = { it.packageName }) { app ->
+            items(items = safeApps, key = { it.packageName }) { app ->
                 val checked = selectedPackages.contains(app.packageName)
                 AppListItem(
                     appName = app.appName,

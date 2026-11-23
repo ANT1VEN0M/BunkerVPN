@@ -339,6 +339,7 @@ fun PerAppProxyScreen(
             }
             AppDivider()
 
+            val safeApps = remember(apps) { apps.distinctBy { it.packageName } }
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -346,7 +347,7 @@ fun PerAppProxyScreen(
                     .verticalScrollbar(listState),
                 contentPadding = NavigationBarsBottomPadding()
             ) {
-                items(items = apps, key = { it.packageName }) { app ->
+                items(items = safeApps, key = { it.packageName }) { app ->
                     val checked = blacklist.contains(app.packageName)
                     AppListItem(
                         appName = app.appName,

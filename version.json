@@ -1,7 +1,7 @@
 {
-  "version": "1.4.1",
-  "versionCode": 1041,
-  "tagName": "v1.4.1",
-  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.1/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "👑 BunkerVPN v1.4.1: Новая «Золотая Выборка» (TOP-25 VIP элитных серверов с минимальным пингом), адаптивная Material You & Pixel иконка, 81 источник серверов и ускоренный обход ТСПУ."
+  "version": "1.4.2",
+  "versionCode": 1042,
+  "tagName": "v1.4.2",
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "🚀 BunkerVPN v1.4.2: Исправлен критический сбой при раздельном туннелировании (выбор приложений / списков обхода) на Android 14/15/16/17 (Private Space, Dual Apps, Work Profile) и оптимизирован Binder IPC."
 }

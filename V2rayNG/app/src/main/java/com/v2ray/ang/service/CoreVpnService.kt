@@ -319,8 +319,8 @@ class CoreVpnService : VpnService(), ServiceControl {
                     // In proxy mode, only allow the selected apps
                     builder.addAllowedApplication(it)
                 }
-            } catch (e: PackageManager.NameNotFoundException) {
-                LogUtil.e(AppConfig.TAG, "StartCore-VPN: Failed to configure app", e)
+            } catch (e: Exception) {
+                LogUtil.e(AppConfig.TAG, "StartCore-VPN: Failed to configure app $it", e)
             }
         }
     }

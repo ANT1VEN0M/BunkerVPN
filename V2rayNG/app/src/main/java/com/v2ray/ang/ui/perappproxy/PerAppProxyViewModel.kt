@@ -120,9 +120,10 @@ class PerAppProxyViewModel(application: Application) : BaseViewModel(application
 
     private fun applyFilter(query: String): List<AppInfo> {
         val apps = appsAll ?: return emptyList()
-        if (query.isEmpty()) return apps
+        val uniqueApps = apps.distinctBy { it.packageName }
+        if (query.isEmpty()) return uniqueApps
 
-        return apps.filter {
+        return uniqueApps.filter {
             it.appName.contains(query, ignoreCase = true) ||
                     it.packageName.contains(query, ignoreCase = true)
         }
@@ -131,7 +132,8 @@ class PerAppProxyViewModel(application: Application) : BaseViewModel(application
     private fun sortApps(apps: List<AppInfo>): List<AppInfo> {
         val collator = Collator.getInstance()
         val selectedPackages = _blacklist.value
-        return apps.sortedWith { p1, p2 ->
+        val uniqueApps = apps.distinctBy { it.packageName }
+        return uniqueApps.sortedWith { p1, p2 ->
             val s1 = p1.packageName in selectedPackages
             val s2 = p2.packageName in selectedPackages
             when {
@@ -139,7 +141,7 @@ class PerAppProxyViewModel(application: Application) : BaseViewModel(application
                 !s1 && s2 -> 1
                 p1.isSystemApp && !p2.isSystemApp -> 1
                 !p1.isSystemApp && p2.isSystemApp -> -1
-                else -> collator.compare(p1.appName, p2.appName)
+                else -> collator.compare(p1.appName.orEmpty(), p2.appName.orEmpty())
             }
         }
     }

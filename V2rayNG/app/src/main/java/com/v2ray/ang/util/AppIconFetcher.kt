@@ -26,8 +26,14 @@ class AppIconFetcher(
             null
         } ?: return null
 
+        val image = try {
+            drawable.asImage()
+        } catch (_: Throwable) {
+            null
+        } ?: return null
+
         return ImageFetchResult(
-            image = drawable.asImage(),
+            image = image,
             isSampled = false,
             dataSource = DataSource.DISK
         )

@@ -112,9 +112,10 @@ class AppPickerViewModel(application: Application) : BaseViewModel(application) 
 
     private fun applyFilter(query: String): List<AppInfo> {
         val apps = allApps ?: return emptyList()
-        if (query.isBlank()) return apps
+        val uniqueApps = apps.distinctBy { it.packageName }
+        if (query.isBlank()) return uniqueApps
 
-        return apps.filter {
+        return uniqueApps.filter {
             it.appName.contains(query, ignoreCase = true) ||
                     it.packageName.contains(query, ignoreCase = true)
         }
@@ -123,7 +124,8 @@ class AppPickerViewModel(application: Application) : BaseViewModel(application) 
     private fun sortApps(apps: List<AppInfo>): List<AppInfo> {
         val collator = Collator.getInstance()
         val snapshot = selectedSnapshot
-        return apps.sortedWith { p1, p2 ->
+        val uniqueApps = apps.distinctBy { it.packageName }
+        return uniqueApps.sortedWith { p1, p2 ->
             val p1Selected = snapshot.contains(p1.packageName)
             val p2Selected = snapshot.contains(p2.packageName)
             when {
@@ -131,7 +133,7 @@ class AppPickerViewModel(application: Application) : BaseViewModel(application) 
                 !p1Selected && p2Selected -> 1
                 p1.isSystemApp && !p2.isSystemApp -> 1
                 !p1.isSystemApp && p2.isSystemApp -> -1
-                else -> collator.compare(p1.appName, p2.appName)
+                else -> collator.compare(p1.appName.orEmpty(), p2.appName.orEmpty())
             }
         }
     }
