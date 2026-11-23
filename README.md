@@ -33,7 +33,7 @@
   </a>
   &nbsp;
   <a href="https://github.com/ANT1VEN0M/BunkerVPN-Windows">
-    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.7_Live-00E5FF?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
+    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.8_Live-00E676?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
   </a>
   &nbsp;
   <a href="https://ant1ven0m.github.io/Bunker-Auto-Engine/">
@@ -81,19 +81,19 @@
 
 ---
 
-## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.7)
+## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.8 — Game Booster Edition)
 
 Теперь у Бункера есть собственный мощный и лёгкий нативный клиент для компьютеров и ноутбуков (Windows 10 / 11):
 * 👉 **[Репозиторий BunkerVPN-Windows](https://github.com/ANT1VEN0M/BunkerVPN-Windows)**
+* 🎮 **Режим Game Booster & Discord Fix:** Full-Cone NAT (`endpoint_independent_nat: true`) и безопасный MTU `1340` без фрагментации UDP. Мгновенное подключение к войсам и стримам Discord без зависания на «RTC Connecting».
+* ⚡ **Умный гейминг-сплит:** голосовые каналы Discord, серверы Supercell (Brawl Stars), Roblox и Steam Community идут через VPN, а игровой трафик CS2, Dota 2, Valorant, Мир Танков и загрузки обновлений Steam CDN — напрямую с родным пингом 5–15 мс и гигабитной скоростью.
 * 🛡️ **Совместимость с Sing-box 1.11+:** TUN запускается стабильно без сбоев.
 * 🚀 **TUN-режим (WinTUN):** весь трафик ПК, онлайн-игры, торренты и фоновые службы.
-* 🎮 **Discord Voice & Full-Cone UDP:** мгновенное подключение к войсам и стримам Discord без зависания на «RTC Connecting».
 * 🛡️ **Виджет статуса сервисов ТСПУ:** живой статус разблокировки YouTube 4K, Discord, Telegram, AI, Insta/X, Банков и Госуслуг прямо на главном экране.
 * 📶 **Автосортировка по пингу & URL Тест (HTTP 204):** автоматический выбор лучших серверов.
 * 🛡️ **Умный обход (Smart Bypass Russia):** сайты РФ напрямую на скорости домашнего провайдера, заблокированные — через туннель.
 * 🔄 **1-Click Автообновление & Трей:** сворачивается возле часов, автозапуск, автообновление в один клик.
-* 🌐 **Облачный веб-десктоп:** возможность запускать и тестировать ПК-версию прямо в браузере смартфона: [Открыть Web Desktop](https://spare-democracy-brought-freedom.trycloudflare.com/vnc.html?autoconnect=true&resize=scale).
-* 📥 **Скачать v1.0.7:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.7/BunkerVPN-Windows-v1.0.7-Portable.zip))*
+* 📥 **Скачать v1.0.8:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Portable.zip))*
 
 ---
 
