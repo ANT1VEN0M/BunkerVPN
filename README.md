@@ -16,16 +16,20 @@
     <img src="https://img.shields.io/badge/📢_Канал_Бункера-BUNKER__KOTA-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Channel"/>
   </a>
   &nbsp;
+  <a href="https://t.me/BUNKER_KOTA">
+    <img src="https://img.shields.io/badge/👥_Аудитория-1400+_подписчиков-10B981?style=for-the-badge&logo=telegram&logoColor=white" alt="1400 Subscribers"/>
+  </a>
+  &nbsp;
   <a href="https://t.me/BUNKER_K0TA">
-    <img src="https://img.shields.io/badge/💬_Чат_Сообщества-BUNKER__K0TA-7C3AED?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Chat"/>
+    <img src="https://img.shields.io/badge/💬_Чат-BUNKER__K0TA-7C3AED?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Chat"/>
   </a>
   &nbsp;
   <a href="https://github.com/ANT1VEN0M/BunkerVPN-Windows">
-    <img src="https://img.shields.io/badge/💻_Клиент_для_Windows-BunkerVPN_PC-00E5FF?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
+    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.6_Live-00E5FF?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
   </a>
   &nbsp;
   <a href="https://ant1ven0m.github.io/Bunker-Auto-Engine/">
-    <img src="https://img.shields.io/badge/📲_iOS_/_Портал-Bunker_Portal-0088cc?style=for-the-badge&logo=telegram&logoColor=white" alt="Bunker Portal"/>
+    <img src="https://img.shields.io/badge/📲_iOS_/_Портал-Bunker_Portal-FF6D00?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Bunker Portal"/>
   </a>
 </p>
 
@@ -65,13 +69,18 @@
 
 ---
 
-## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.1)
+## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.6)
 
-Теперь у Бункера есть собственный нативный клиент для компьютеров и ноутбуков:
+Теперь у Бункера есть собственный мощный и лёгкий нативный клиент для компьютеров и ноутбуков (Windows 10 / 11):
 * 👉 **[Репозиторий BunkerVPN-Windows](https://github.com/ANT1VEN0M/BunkerVPN-Windows)**
-* 🚀 **TUN-режим (WinTUN):** весь трафик ПК, Discord Voice (без лагов RTC) и онлайн-игры.
-* 🛡️ **Умный обход (Bypass Russia):** сайты РФ напрямую, заблокированные — через туннель.
-* 📥 [Скачать установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.1/BunkerVPN-Windows-v1.0.1-Setup.exe) | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.1/BunkerVPN-Windows-v1.0.1-Portable.zip)
+* 🚀 **TUN-режим (WinTUN):** весь трафик ПК, онлайн-игры, торренты и фоновые службы.
+* 🎮 **Discord Voice & Full-Cone UDP:** мгновенное подключение к войсам и стримам Discord без зависания на «RTC Connecting».
+* 🛡️ **Виджет статуса сервисов ТСПУ:** живой статус разблокировки YouTube 4K, Discord, Telegram, AI, Insta/X, Банков и Госуслуг прямо на главном экране.
+* 📶 **Автосортировка по пингу & URL Тест (HTTP 204):** автоматический выбор лучших серверов.
+* 🛡️ **Умный обход (Smart Bypass Russia):** сайты РФ напрямую на скорости домашнего провайдера, заблокированные — через туннель.
+* 🔄 **1-Click Автообновление & Трей:** сворачивается возле часов, автозапуск, автообновление в один клик.
+* 🌐 **Облачный веб-десктоп:** возможность запускать и тестировать ПК-версию прямо в браузере смартфона.
+* 📥 **Скачать v1.0.6:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.6/BunkerVPN-Windows-v1.0.6-Portable.zip))*
 
 ---
 
@@ -103,7 +112,19 @@
 ---
 
 ## 💬 Сообщество и контакты
-* 📢 **Канал Бункера:** [@BUNKER_KOTA](https://t.me/BUNKER_KOTA)
+* 📢 **Канал Бункера:** [@BUNKER_KOTA](https://t.me/BUNKER_KOTA) *(1400+ подписчиков)*
 * 💬 **Чат сообщества:** [@BUNKER_K0TA](https://t.me/BUNKER_K0TA)
 * 🤖 **Telegram Бот:** [@BunkerCatOSBot](https://t.me/BunkerCatOSBot)
 * 👑 **Создатель проекта:** [@k0tlux](https://t.me/k0tlux)
+
+---
+
+## ⚡ Взаимопиар и Реклама | Открыт к сотрудничеству
+* 👥 **Аудитория канала:** 1400+ активных подписчиков
+* 🤝 **Взаимопиар:** условия обсуждаются индивидуально
+* 💰 **Прайс на рекламу в «Бункере Кота»:**
+  * ▫️ 1 рекламный пост — **50 ₽**
+  * ▫️ 2 рекламных поста — **80 ₽**
+  * ▫️ 3 рекламных поста — **120 ₽**
+  * ▫️ Закреп на 24 часа — **+30 ₽**
+* 📩 **По вопросам рекламы и сотрудничества:** [@k0tlux](https://t.me/k0tlux)
