@@ -843,6 +843,7 @@ object AngConfigManager {
         mirrors.add(cleanUrl)
 
         val bunkerSubFiles = listOf(
+            "gold_b64.txt", "gold.txt",
             "mix_b64.txt", "bs_b64.txt", "factory_b64.txt",
             "fast_b64.txt", "tg_b64.txt", "discord_b64.txt",
             "warp_masque_b64.txt", "warp_b64.txt",

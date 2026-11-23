@@ -18,6 +18,8 @@ object AppConfig {
 
     // Default subscription ID for ungrouped servers
     const val DEFAULT_SUBSCRIPTION_ID = "__bunker_subscription__"
+    const val BUNKER_GOLD_SUB_ID = "__bunker_sub_gold__"
+    const val BUNKER_GOLD_SUB_URL = "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/gold_b64.txt"
     const val BUNKER_DEFAULT_SUB_URL = "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/mix_b64.txt"
     const val BUNKER_WHITELIST_SUB_ID = "__bunker_sub_whitelist__"
     const val BUNKER_WHITELIST_SUB_URL = "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/bs_b64.txt"

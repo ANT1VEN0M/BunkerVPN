@@ -767,5 +767,30 @@ object SettingsManager {
                 encodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID, existingDiscord)
             }
         }
+
+        val existingGold = decodeSubscription(AppConfig.BUNKER_GOLD_SUB_ID)
+        if (existingGold == null) {
+            val goldSub = SubscriptionItem(
+                remarks = "👑 Золотая Выборка",
+                url = AppConfig.BUNKER_GOLD_SUB_URL,
+                enabled = true,
+                autoUpdate = true,
+                allowInsecureUrl = true
+            )
+            encodeSubscription(AppConfig.BUNKER_GOLD_SUB_ID, goldSub)
+        } else {
+            var updated = false
+            if (existingGold.url != AppConfig.BUNKER_GOLD_SUB_URL) {
+                existingGold.url = AppConfig.BUNKER_GOLD_SUB_URL
+                updated = true
+            }
+            if (existingGold.remarks != "👑 Золотая Выборка") {
+                existingGold.remarks = "👑 Золотая Выборка"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_GOLD_SUB_ID, existingGold)
+            }
+        }
     }
 }
