@@ -78,12 +78,23 @@
 
 ---
 
-## 📦 Скачать BunkerVPN v1.4.1
+## 📦 Скачать BunkerVPN v1.4.2 Hotfix
 
 | Версия APK | Назначение | Прямая ссылка (РФ без VPN) | GitHub Release |
 | :--- | :--- | :--- | :--- |
-| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.1/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.1/BunkerVPN-arm64-v8a.apk) |
-| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.1/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.1/BunkerVPN-universal.apk) |
+| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk) |
+| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-universal.apk) |
+
+---
+
+## 📡 Сетевой монитор: Bunker URL Test (v1.1.2 Universal)
+
+Автономный Live Network Monitor доступности интернет-сервисов и блокировок ТСПУ для Android:
+* 👉 **[Репозиторий Bunker-Url-Test](https://github.com/ANT1VEN0M/Bunker-Url-Test)**
+* 📐 **Edge-to-Edge UI:** нативная обработка WindowInsets под статус-бар и вырезы экрана.
+* ⚡ **Параллельная асинхронная проверка coroutines:** мгновенный опрос 4 ключевых сервисов (Google, Telegram, Instagram, YouTube) за 1–2 секунды без зависаний.
+* 🔐 **Постоянный релизный ключ:** универсальный APK с подписью V1+V2 (до 2054 года) для бесшовных обновлений поверх любых версий.
+* 📥 **Скачать APK (v1.1.2):** [Bunker-Url-Test-v1.1.2-universal.apk](https://ghfast.top/https://github.com/ANT1VEN0M/Bunker-Url-Test/releases/download/v1.1.2/Bunker-Url-Test-v1.1.2-universal.apk) *(Зеркало РФ)* | [GitHub Релиз](https://github.com/ANT1VEN0M/Bunker-Url-Test/releases/tag/v1.1.2)
 
 ---
 
@@ -114,8 +125,8 @@
 
 ## 🔌 Фирменные плагины для Telegram (AyuGram / ExteraGram / NimarkoGram)
 
-* 💫 **[Bunker Neon Loader v1.2.0](https://github.com/ANT1VEN0M/Bunker-Auto-Engine/raw/main/plugins/bunker_neon_loader.plugin)** — Неоновый RGB-спиннер/лоадер загрузки медиа, автообновление, кастомная палитра.
-* 🌐 **[Bunker Chat Translator v1.2.6](https://github.com/ANT1VEN0M/Bunker-Auto-Engine/raw/main/plugins/bunker_chat_translator.plugin)** — Инлайн-переводчик чатов в реальном времени без сторонних API-ключей.
+* 💫 **[Bunker Neon Loader v1.3.1](https://github.com/ANT1VEN0M/Bunker-Auto-Engine/raw/main/plugins/bunker_neon_loader.plugin)** — Неоновый RGB-спиннер/лоадер загрузки медиа, автообновление, кастомная палитра.
+* 🌐 **[Bunker Chat Translator v1.2.7](https://github.com/ANT1VEN0M/Bunker-Auto-Engine/raw/main/plugins/bunker_chat_translator.plugin)** — Инлайн-переводчик чатов в реальном времени (Anti-Crash Edition, плавный запуск).
 * 📋 **Репозиторий плагинов:** `https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/plugins/extera-plugins.json`
 
 ---
