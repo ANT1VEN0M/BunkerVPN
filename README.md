@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🐈‍⬛ Bunker VPN for Android (v1.4.1)
+# 🐈‍⬛ Bunker VPN for Android (v1.4.2 Hotfix)
 
 **Флагманский Android VPN-клиент экосистемы «Бункер Кота» на базе Xray Core Lite и Jetpack Compose.**  
 Создан для скоростного и безотказного обхода любых типов блокировок ТСПУ РКН в России.
 
 [![Release](https://img.shields.io/github/v/release/ANT1VEN0M/BunkerVPN?color=7C3AED&label=Релиз&style=for-the-badge)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
 [![Platform](https://img.shields.io/badge/Платформа-Android_8.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
-[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.1/BunkerVPN-arm64-v8a.apk)
+[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk)
 
 <br/>
 
@@ -45,9 +45,15 @@
 
 ---
 
-## ⚡ Что нового в версии v1.4.1
+## ⚡ Что нового в версии v1.4.2 Hotfix
 
-### 🖼️ 1. Полноценная поддержка кастомных обоев (Pixel 8 / Android 14–17)
+### 🛡️ 1. Фикс раздельного туннелирования (Split Tunneling) на Android 14 / 15 / 16 / 17
+* **Устранён вылет Jetpack Compose:** на современных Android с включённым «Частным пространством» (Private Space), Dual Apps (Xiaomi/Samsung) или Work Profile список приложений возвращал дублирующиеся пакеты, вызывая сбой уникальных ключей в LazyColumn. Внедрена трёхуровневая дедупликация.
+* **Защита IPC Binder от переполнения (1MB):** убран избыточный флаг `PackageManager.GET_PERMISSIONS`, вызывавший падение `TransactionTooLargeException`.
+* **Безопасная обработка иконок Coil 3:** перехват исключений при рендеринге системных и адаптивных значков приложений.
+* **Безопасный VpnService Builder:** перехват исключений при добавлении системных пакетов в туннель обхода.
+
+### 🖼️ 2. Полноценная поддержка кастомных обоев (Pixel 8 / Android 14–17)
 * **Исправлена установка фона из галереи:** режим Stealth больше не блокирует отображение выбранного фона.
 * **Google Photo Picker API:** интеграция современного системного контракта `PickVisualMedia` взамен устаревшего `GetContent()`.
 * **Безопасное сжатие (OOM Protection):** аппаратное масштабирование тяжелых 50-мегапиксельных снимков камер Pixel 8 во избежание переполнения памяти Android.
