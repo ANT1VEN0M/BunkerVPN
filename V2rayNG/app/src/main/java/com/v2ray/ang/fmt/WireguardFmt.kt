@@ -19,7 +19,21 @@ object WireguardFmt : FmtBase() {
     fun parse(str: String): ProfileItem? {
         val config = ProfileItem.create(EConfigType.WIREGUARD)
 
-        val uri = URI(Utils.fixIllegalUrl(str))
+        val fixedStr = if (str.startsWith("wireguard://", ignoreCase = true) && str.contains("@")) {
+            val schemeEnd = str.indexOf("://") + 3
+            val atIdx = str.indexOf('@')
+            val rawSecret = str.substring(schemeEnd, atIdx)
+            if (rawSecret.contains("/") || rawSecret.contains("+")) {
+                val encodedSecret = Utils.encodeURIComponent(rawSecret)
+                str.substring(0, schemeEnd) + encodedSecret + str.substring(atIdx)
+            } else {
+                str
+            }
+        } else {
+            str
+        }
+
+        val uri = URI(Utils.fixIllegalUrl(fixedStr))
         if (uri.rawQuery.isNullOrEmpty()) return null
         val queryParam = getQueryParam(uri)
 
@@ -52,13 +66,21 @@ object WireguardFmt : FmtBase() {
         val peerParams: MutableMap<String, String> = mutableMapOf()
 
         var currentSection: String? = null
+        var detectedRemarks: String? = null
 
         str.lines().forEach { line ->
             val trimmedLine = line.trim()
 
-            if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
+            if (trimmedLine.startsWith("#")) {
+                if (detectedRemarks == null) {
+                    val candidate = trimmedLine.removePrefix("#").trim()
+                    if (candidate.isNotBlank() && !candidate.all { it == '=' || it == '-' || it == '*' || it == '#' }) {
+                        detectedRemarks = candidate
+                    }
+                }
                 return@forEach
             }
+            if (trimmedLine.isEmpty()) return@forEach
 
             when {
                 trimmedLine.startsWith("[Interface]", ignoreCase = true) -> currentSection = "Interface"
@@ -80,7 +102,7 @@ object WireguardFmt : FmtBase() {
         }
 
         config.secretKey = interfaceParams["privatekey"].orEmpty()
-        config.remarks = System.currentTimeMillis().toString()
+        config.remarks = detectedRemarks ?: "WireGuard ${System.currentTimeMillis()}"
         config.localAddress = interfaceParams["address"] ?: ""
         config.mtu = Utils.parseInt(interfaceParams["mtu"] ?: AppConfig.WIREGUARD_LOCAL_MTU)
         config.remoteDNS = interfaceParams["dns"] ?: ""

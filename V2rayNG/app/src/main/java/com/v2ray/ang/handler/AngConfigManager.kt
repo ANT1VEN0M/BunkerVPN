@@ -410,7 +410,7 @@ object AngConfigManager {
                 LogUtil.e(AppConfig.TAG, "Failed to parse custom outbound", e)
             }
             return 0
-        } else if (server.startsWith("[Interface]") && server.contains("[Peer]")) {
+        } else if (server.contains("[Interface]", ignoreCase = true) && server.contains("[Peer]", ignoreCase = true)) {
             try {
                 val config = WireguardFmt.parseWireguardConfFile(server)
                 config.subscriptionId = subid

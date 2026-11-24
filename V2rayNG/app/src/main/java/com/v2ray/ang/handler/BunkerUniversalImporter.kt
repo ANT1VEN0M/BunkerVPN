@@ -102,6 +102,19 @@ object BunkerUniversalImporter {
             if (text.contains("\"outbounds\"")) {
                 parseSingboxOutbounds(text).forEach { results.add(it) }
             }
+
+            // WireGuard / AmneziaWG INI configurations (.conf)
+            if (text.contains("[Interface]", ignoreCase = true) && text.contains("[Peer]", ignoreCase = true)) {
+                try {
+                    val config = com.v2ray.ang.fmt.WireguardFmt.parseWireguardConfFile(text)
+                    if (!config.secretKey.isNullOrBlank() && !config.server.isNullOrBlank()) {
+                        val uri = com.v2ray.ang.fmt.WireguardFmt.toUri(config)
+                        if (uri.isNotBlank()) results.add(uri)
+                    }
+                } catch (e: Exception) {
+                    LogUtil.e(AppConfig.TAG, "Failed to parse WireGuard config block in universal importer", e)
+                }
+            }
         }
 
         return results.toList()
