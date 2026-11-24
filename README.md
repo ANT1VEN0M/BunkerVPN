@@ -33,7 +33,7 @@
   </a>
   &nbsp;
   <a href="https://github.com/ANT1VEN0M/BunkerVPN-Windows">
-    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.8_Live-00E676?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
+    <img src="https://img.shields.io/badge/💻_Windows_PC-v1.0.12_Live-00E676?style=for-the-badge&logo=windows&logoColor=white" alt="BunkerVPN Windows"/>
   </a>
   &nbsp;
   <a href="https://ant1ven0m.github.io/Bunker-Auto-Engine/">
@@ -44,6 +44,19 @@
 </div>
 
 ---
+
+## ⚡ Что нового в версии v1.4.4 (WireGuard / AmneziaWG Import Fix)
+
+### 📂 1. Нативный импорт `.conf` файлов (WireGuard / AmneziaWG)
+* **Импорт из буфера обмена:** скопировал `.conf` файл целиком — приложение автоматически распознаёт блок `[Interface]...[Peer]` и добавляет профиль без лишних шагов.
+* **Импорт из файла:** «+» ➔ «Импорт настроек из файла» — любой `.conf` (включая AmneziaWG с полями `Jc`, `Jmin`, `Jmax`, `S1`, `S2`, `I1`) добавляется корректно даже с комментарием-шапкой `# ===` в начале файла.
+* **Поддержка `wireguard://` URI:** ссылка `wireguard://...@server:port?...` вставляется из буфера обмена в 1 касание — ключи с символами `/` и `+` больше не вызывают сбой парсера.
+* **Авто-присвоение имени:** профиль получает имя из первой информативной строки комментария в `.conf` (например `# BUNKER VPN | Free Fire`).
+
+### ⚙️ 2. Технические улучшения парсера
+* `WireguardFmt.parse()` — авто-экранирование `PrivateKey` при наличии `/` или `+` перед передачей в Java URI.
+* `BunkerUniversalImporter.extractConfigs()` — добавлен детектор WireGuard INI-блоков с конвертацией в `wireguard://` URI для единого pipeline импорта.
+* `AngConfigManager.parseCustomConfigServer()` — проверка `[Interface]` теперь нечувствительна к регистру и расположению блока.
 
 ## ⚡ Что нового в версии v1.4.3 Hotfix
 
@@ -105,19 +118,17 @@
 
 ---
 
-## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.8 — Game Booster Edition)
+## 💻 Клиент для ПК: BunkerVPN for Windows (v1.0.12 — Anti-Freeze Edition)
 
 Теперь у Бункера есть собственный мощный и лёгкий нативный клиент для компьютеров и ноутбуков (Windows 10 / 11):
 * 👉 **[Репозиторий BunkerVPN-Windows](https://github.com/ANT1VEN0M/BunkerVPN-Windows)**
 * 🎮 **Режим Game Booster & Discord Fix:** Full-Cone NAT (`endpoint_independent_nat: true`) и безопасный MTU `1340` без фрагментации UDP. Мгновенное подключение к войсам и стримам Discord без зависания на «RTC Connecting».
 * ⚡ **Умный гейминг-сплит:** голосовые каналы Discord, серверы Supercell (Brawl Stars), Roblox и Steam Community идут через VPN, а игровой трафик CS2, Dota 2, Valorant, Мир Танков и загрузки обновлений Steam CDN — напрямую с родным пингом 5–15 мс и гигабитной скоростью.
-* 🛡️ **Совместимость с Sing-box 1.11+:** TUN запускается стабильно без сбоев.
-* 🚀 **TUN-режим (WinTUN):** весь трафик ПК, онлайн-игры, торренты и фоновые службы.
-* 🛡️ **Виджет статуса сервисов ТСПУ:** живой статус разблокировки YouTube 4K, Discord, Telegram, AI, Insta/X, Банков и Госуслуг прямо на главном экране.
-* 📶 **Автосортировка по пингу & URL Тест (HTTP 204):** автоматический выбор лучших серверов.
-* 🛡️ **Умный обход (Smart Bypass Russia):** сайты РФ напрямую на скорости домашнего провайдера, заблокированные — через туннель.
+* 🩺 **Сохранение и экспорт логов:** кнопки «💾 В файл», «📋 Копировать», «📂 Папка» в разделе «Консоль / Логи».
+* 🛡️ **Real TLS Handshake Ping:** заменён слепой TCP-коннект на реальное TLS-рукопожатие. Недоступные серверы получают `—` и не поднимаются наверх.
+* 🛡️ **Anti-Freeze при отключении:** процесс отключения переведён в полностью асинхронный фоновый поток.
 * 🔄 **1-Click Автообновление & Трей:** сворачивается возле часов, автозапуск, автообновление в один клик.
-* 📥 **Скачать v1.0.8:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.8/BunkerVPN-Windows-v1.0.8-Portable.zip))*
+* 📥 **Скачать v1.0.12:** [Установщик (Setup.exe)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.12/BunkerVPN-Windows-v1.0.12-Setup.exe) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.12/BunkerVPN-Windows-v1.0.12-Setup.exe))* | [Портативная версия (ZIP)](https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.12/BunkerVPN-Windows-v1.0.12-Portable.zip) *(Зеркало РФ: [ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN-Windows/releases/download/v1.0.12/BunkerVPN-Windows-v1.0.12-Portable.zip))*
 
 ---
 
