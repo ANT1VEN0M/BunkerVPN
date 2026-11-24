@@ -85,12 +85,12 @@
 
 ---
 
-## 📦 Скачать BunkerVPN v1.4.2 Hotfix
+## 📦 Скачать BunkerVPN v1.4.3 Hotfix
 
 | Версия APK | Назначение | Прямая ссылка (РФ без VPN) | GitHub Release |
 | :--- | :--- | :--- | :--- |
-| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk) |
-| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-universal.apk) |
+| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-arm64-v8a.apk) |
+| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-universal.apk) |
 
 ---
 
