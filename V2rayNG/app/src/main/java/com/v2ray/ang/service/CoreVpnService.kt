@@ -264,22 +264,71 @@ class CoreVpnService : VpnService(), ServiceControl {
     /**
      * Configures per-app proxy rules for the VPN builder.
      *
-     * - If per-app proxy is not enabled, disallow the VPN service's own package.
-     * - If no apps are selected, disallow the VPN service's own package.
-     * - If bypass mode is enabled, disallow all selected apps (including self).
-     * - If proxy mode is enabled, only allow the selected apps (excluding self).
+     * In Android OS [VpnService.Builder], [Builder.addAllowedApplication] and
+     * [Builder.addDisallowedApplication] are strictly MUTUALLY EXCLUSIVE.
+     * Calling addAllowedApplication after addDisallowedApplication throws
+     * UnsupportedOperationException and fails the entire split-tunnel configuration!
+     *
+     * Mode 1: Allowlist mode (perAppProxy = true, bypassApps = false, apps not empty)
+     * - ONLY selected apps are routed through the VPN tunnel.
+     * - Call ONLY [Builder.addAllowedApplication].
+     * - Self and banking apps are automatically excluded by omission.
+     *
+     * Mode 2: Disallowlist / Bypass mode (perAppProxy = false OR bypassApps = true)
+     * - All device apps are routed through the VPN tunnel EXCEPT excluded apps.
+     * - Call ONLY [Builder.addDisallowedApplication].
+     * - Self package is disallowed to prevent routing loops.
+     * - Banking apps are disallowed (Anti-RKN).
+     * - Selected apps are disallowed if bypassApps = true.
      *
      * @param builder The VPN Builder to configure.
      */
     private fun configurePerAppProxy(builder: Builder) {
         val selfPackageName = BuildConfig.APPLICATION_ID
+        val perAppProxyEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_PER_APP_PROXY, false)
+        val bypassApps = MmkvManager.decodeSettingsBool(AppConfig.PREF_BYPASS_APPS, false)
+        val apps = MmkvManager.decodeSettingsStringSet(AppConfig.PREF_PER_APP_PROXY_SET)
 
-        // Always disallow self
+        // Case 1: Allowlist Mode (Proxy only selected apps)
+        if (perAppProxyEnabled && !bypassApps && !apps.isNullOrEmpty()) {
+            LogUtil.i(AppConfig.TAG, "PerAppProxy: Configuring ALLOWLIST mode with ${apps.size} apps")
+            var allowedCount = 0
+            apps.forEach { pkg ->
+                if (pkg != selfPackageName) {
+                    try {
+                        builder.addAllowedApplication(pkg)
+                        allowedCount++
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        LogUtil.w(AppConfig.TAG, "PerAppProxy: App not found: $pkg")
+                    } catch (e: Exception) {
+                        LogUtil.e(AppConfig.TAG, "PerAppProxy: Failed to allow $pkg", e)
+                    }
+                }
+            }
+            // Auto-include Google Play Services if YouTube or Google apps are in allowlist,
+            // otherwise Google Play Services won't route through VPN and YouTube will hang!
+            val hasGoogleApps = apps.any { it.startsWith("com.google.android") && it != "com.google.android.gms" }
+            if (hasGoogleApps && !apps.contains("com.google.android.gms")) {
+                try {
+                    builder.addAllowedApplication("com.google.android.gms")
+                    LogUtil.i(AppConfig.TAG, "PerAppProxy: Auto-allowed com.google.android.gms for Google ecosystem")
+                } catch (_: Exception) {}
+            }
+            LogUtil.i(AppConfig.TAG, "PerAppProxy: Successfully configured allowlist with $allowedCount apps")
+            return
+        }
+
+        // Case 2: Disallowlist / Bypass Mode (Proxy all apps EXCEPT specified)
+        LogUtil.i(AppConfig.TAG, "PerAppProxy: Configuring DISALLOWLIST mode (bypassApps=$bypassApps)")
+
+        // 1. Always disallow self to prevent VPN routing loops
         try {
             builder.addDisallowedApplication(selfPackageName)
-        } catch (_: Exception) {}
+        } catch (e: Exception) {
+            LogUtil.w(AppConfig.TAG, "PerAppProxy: Failed to disallow self", e)
+        }
 
-        // Anti-RKN mode: exclude all installed Russian banking and government apps from the VPN interface
+        // 2. Anti-RKN mode: exclude all installed Russian banking and government apps from the VPN interface
         // at the OS kernel level, so they do NOT see TRANSPORT_VPN and do NOT show "VPN is enabled" warning!
         if (SettingsManager.isAntiRknRoutingEnabled()) {
             val pm = packageManager
@@ -296,31 +345,19 @@ class CoreVpnService : VpnService(), ServiceControl {
             }
         }
 
-        // If per-app proxy is not enabled, return
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_PER_APP_PROXY) == false) {
-            return
-        }
-
-        // If no apps are selected, return
-        val apps = MmkvManager.decodeSettingsStringSet(AppConfig.PREF_PER_APP_PROXY_SET)
-        if (apps.isNullOrEmpty()) {
-            return
-        }
-
-        val bypassApps = MmkvManager.decodeSettingsBool(AppConfig.PREF_BYPASS_APPS)
-
-        apps.forEach {
-            if (it == selfPackageName) return@forEach
-            try {
-                if (bypassApps) {
-                    // In bypass mode, disallow the selected apps
-                    builder.addDisallowedApplication(it)
-                } else {
-                    // In proxy mode, only allow the selected apps
-                    builder.addAllowedApplication(it)
+        // 3. User-selected bypass apps
+        if (perAppProxyEnabled && bypassApps && !apps.isNullOrEmpty()) {
+            apps.forEach { pkg ->
+                if (pkg != selfPackageName) {
+                    try {
+                        builder.addDisallowedApplication(pkg)
+                        LogUtil.i(AppConfig.TAG, "PerAppProxy: Disallowed app $pkg")
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        LogUtil.w(AppConfig.TAG, "PerAppProxy: App not found: $pkg")
+                    } catch (e: Exception) {
+                        LogUtil.e(AppConfig.TAG, "PerAppProxy: Failed to disallow $pkg", e)
+                    }
                 }
-            } catch (e: Exception) {
-                LogUtil.e(AppConfig.TAG, "StartCore-VPN: Failed to configure app $it", e)
             }
         }
     }

@@ -6,7 +6,7 @@ on:
       release_tag:
         description: 'Release Tag (e.g. v1.0.0)'
         required: false
-        default: 'v1.4.2'
+        default: 'v1.4.3'
         type: string
   push:
     branches:
@@ -111,26 +111,25 @@ jobs:
     - name: Create or Update GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ inputs.release_tag || 'v1.4.2' }}
-        name: "Бункер VPN v1.4.2 — Hotfix раздельного туннелирования (Android 14–17 / Private Space)"
+        tag_name: ${{ inputs.release_tag || 'v1.4.3' }}
+        name: "Бункер VPN v1.4.3 — Hotfix раздельного туннелирования (Split Tunneling)"
         draft: false
         prerelease: false
         make_latest: true
         body: |
-          🛡️ **Бункер VPN v1.4.2 — Hotfix раздельного туннелирования (Split Tunneling) для Android 14 / 15 / 16 / 17**
+          🛡️ **Бункер VPN v1.4.3 — Hotfix раздельного туннелирования (Split Tunneling / Выбор приложений)**
 
-          ### 🚀 Что исправлено в v1.4.2:
-          - **Устранён фатальный сбой Jetpack Compose (Duplicate Key Crash):**
-            - На Android 14+ и особенно Android 15/16/17 с включённым «Частным пространством» (Private Space), Dual Apps (Xiaomi / Samsung) или рабочим профилем (Work Profile), система возвращала дубликаты пакетов с одинаковым `packageName`.
-            - LazyColumn в Compose падал с `IllegalArgumentException` при открытии списка приложений, выборе пресетов («📱 Соцсети», «🏦 Белый РФ», «🎯 Дискорд») или клике на приложение.
-            - Внедрена трёхуровневая дедупликация (`distinctBy { it.packageName }` и `HashSet`).
-          - **Оптимизация IPC и защита от TransactionTooLargeException:**
-            - `AppManagerUtil` избавлен от избыточного флага `PackageManager.GET_PERMISSIONS`, вызывавшего переполнение буфера Binder (1MB) на современных устройствах с сотнями системных модулей.
-            - Добавлен автоматический fallback на `getInstalledApplications(0)`.
-          - **Безопасная обработка иконок и системных пакетов:**
-            - `AppIconFetcher` теперь безопасно перехватывает сбои векторных и адаптивных иконок в Coil 3.
-            - Защищены вызовы `loadLabel()` при повреждённых строковых ресурсах OEM-прошивок.
-            - Добавлен перехват исключений при добавлении приложений в VPN-туннель в `CoreVpnService`.
+          ### 🚀 Что исправлено в v1.4.3:
+          - **Исправлен режим «Только выбранные приложения» (Allowlist mode):**
+            - В Android OS ядро `VpnService` запрещает одновременный вызов `addAllowedApplication` и `addDisallowedApplication` (вызывало скрытый `UnsupportedOperationException`).
+            - Из-за этого при включении тумблера «Использовать выбор» с выключенным «Обход» списки не применялись, и весь трафик шёл через общий туннель или сбоил.
+            - Логика разделена на два чистых взаимоисключающих режима ОС:
+              - **Белый список (Только выбранные):** добавляются строго через `addAllowedApplication`. Банки и сам Бункер исключаются аппаратно на уровне ядра Android.
+              - **Чёрный список (Обход):** добавляются строго через `addDisallowedApplication`.
+          - **Автоматическая поддержка Google Play Services для YouTube:**
+            - При выборе YouTube (`com.google.android.youtube`) ядро автоматически проксирует `com.google.android.gms`, устраняя вечную загрузку и сбои авторизации аккаунта Google.
+          - **Мгновенный перезапуск при переключении тумблеров:**
+            - Изменение переключателей «Использовать выбор» и «Обход» теперь автоматически ставит флаг перезапуска службы VPN при возврате на главный экран.
 
           ---
           💬 Чат сообщества: https://t.me/BUNKER_K0TA

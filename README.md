@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🐈‍⬛ Bunker VPN for Android (v1.4.2 Hotfix)
+# 🐈‍⬛ Bunker VPN for Android (v1.4.3 Hotfix)
 
 **Флагманский Android VPN-клиент экосистемы «Бункер Кота» на базе Xray Core Lite и Jetpack Compose.**  
 Создан для скоростного и безотказного обхода любых типов блокировок ТСПУ РКН в России.
 
 [![Release](https://img.shields.io/github/v/release/ANT1VEN0M/BunkerVPN?color=7C3AED&label=Релиз&style=for-the-badge)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
 [![Platform](https://img.shields.io/badge/Платформа-Android_8.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
-[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.2/BunkerVPN-arm64-v8a.apk)
+[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-arm64-v8a.apk)
 
 <br/>
 
@@ -45,9 +45,16 @@
 
 ---
 
+## ⚡ Что нового в версии v1.4.3 Hotfix
+
+### 🛡️ 1. Исправление раздельного туннелирования (Split Tunneling / Выбор приложений)
+* **Починен режим «Только выбранные приложения» (Allowlist):** устранено исключение ядра Android `VpnService` (`UnsupportedOperationException`), блокировавшее добавление приложений в туннель при активном тумблере «Использовать выбор» и выключенном «Обход».
+* **Автоматическое подключение сервисов Google для YouTube:** выбор YouTube в списке приложений теперь автоматически проксирует `com.google.android.gms`, устраняя вечную буферизацию роликов и сбои авторизации.
+* **Авто-перезапуск сервиса:** при переключении тумблеров «Использовать выбор» и «Обход» сервис VPN автоматически перезапускается с новыми правилами маршрутизации при возврате на главный экран.
+
 ## ⚡ Что нового в версии v1.4.2 Hotfix
 
-### 🛡️ 1. Фикс раздельного туннелирования (Split Tunneling) на Android 14 / 15 / 16 / 17
+### 🛡️ 1. Фикс раздельного туннелирования на Android 14 / 15 / 16 / 17
 * **Устранён вылет Jetpack Compose:** на современных Android с включённым «Частным пространством» (Private Space), Dual Apps (Xiaomi/Samsung) или Work Profile список приложений возвращал дублирующиеся пакеты, вызывая сбой уникальных ключей в LazyColumn. Внедрена трёхуровневая дедупликация.
 * **Защита IPC Binder от переполнения (1MB):** убран избыточный флаг `PackageManager.GET_PERMISSIONS`, вызывавший падение `TransactionTooLargeException`.
 * **Безопасная обработка иконок Coil 3:** перехват исключений при рендеринге системных и адаптивных значков приложений.
