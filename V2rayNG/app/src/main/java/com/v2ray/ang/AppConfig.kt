@@ -100,6 +100,7 @@ object AppConfig {
     const val DEFAULT_ROOT_TTL_VALUE = "64"
     const val PREF_ROOT_KILL_SWITCH = "pref_root_kill_switch"
     const val PREF_ADBLOCK_ENABLED = "pref_adblock_enabled"
+    const val PREF_YOUTUBE_TURBO_ENABLED = "pref_youtube_turbo_enabled"
     const val PREF_IS_BOOTED = "pref_is_booted"
     const val PREF_CHECK_UPDATE_PRE_RELEASE = "pref_check_update_pre_release"
     const val PREF_GEO_FILES_SOURCES = "pref_geo_files_sources"

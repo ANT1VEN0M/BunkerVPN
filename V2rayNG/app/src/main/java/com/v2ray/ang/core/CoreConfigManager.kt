@@ -1212,6 +1212,24 @@ object CoreConfigManager {
         } else {
             v2rayConfig.routing.rules.removeAll { it.domain?.contains("geosite:category-ads-all") == true && it.outboundTag == AppConfig.TAG_BLOCKED }
         }
+
+        // Bunker YouTube 4K Turbo: Block outbound UDP 443 (QUIC / HTTP3) to prevent RKN/TSPU 144p video throttling
+        // and force instant high-speed TCP VLESS-Reality streaming on googlevideo and all CDN endpoints.
+        val isYtTurboEnabled = MmkvManager.decodeSettingsBool(AppConfig.PREF_YOUTUBE_TURBO_ENABLED, true) == true
+        if (isYtTurboEnabled) {
+            if (v2rayConfig.routing.rules.none { it.port == "443" && it.network == "udp" && it.outboundTag == AppConfig.TAG_BLOCKED }) {
+                v2rayConfig.routing.rules.add(
+                    0,
+                    V2rayConfig.RoutingBean.RulesBean(
+                        outboundTag = AppConfig.TAG_BLOCKED,
+                        port = "443",
+                        network = "udp"
+                    )
+                )
+            }
+        } else {
+            v2rayConfig.routing.rules.removeAll { it.port == "443" && it.network == "udp" && it.outboundTag == AppConfig.TAG_BLOCKED }
+        }
     }
 
     /**

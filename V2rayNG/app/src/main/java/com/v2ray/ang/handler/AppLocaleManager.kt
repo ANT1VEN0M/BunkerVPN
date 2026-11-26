@@ -78,9 +78,18 @@ object AppLocaleManager {
         }
     }
 
-    private fun storedLanguage(): Language = Language.fromCode(
-        MmkvManager.decodeSettingsString(AppConfig.PREF_LANGUAGE) ?: Language.AUTO.code
-    )
+    private fun storedLanguage(): Language {
+        val pref = MmkvManager.decodeSettingsString(AppConfig.PREF_LANGUAGE)
+        if (pref == null || pref == Language.AUTO.code) {
+            val defaultLang = java.util.Locale.getDefault().language
+            return if (defaultLang in setOf("ru", "be", "uk", "kk", "uz", "tg", "ky")) {
+                Language.RUSSIAN
+            } else {
+                Language.AUTO
+            }
+        }
+        return Language.fromCode(pref)
+    }
 
     private fun syncLegacyPreference(languageTag: String?) {
         persistLegacyPreference(Language.fromLanguageTag(languageTag))

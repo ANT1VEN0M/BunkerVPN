@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🐈‍⬛ Bunker VPN for Android (v1.4.3 Hotfix)
+# 🐈‍⬛ Bunker VPN for Android (v1.4.5)
 
 **Флагманский Android VPN-клиент экосистемы «Бункер Кота» на базе Xray Core Lite и Jetpack Compose.**  
 Создан для скоростного и безотказного обхода любых типов блокировок ТСПУ РКН в России.
 
 [![Release](https://img.shields.io/github/v/release/ANT1VEN0M/BunkerVPN?color=7C3AED&label=Релиз&style=for-the-badge)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
 [![Platform](https://img.shields.io/badge/Платформа-Android_8.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
-[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-arm64-v8a.apk)
+[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk)
 
 <br/>
 
@@ -44,6 +44,19 @@
 </div>
 
 ---
+
+## ⚡ Что нового в версии v1.4.5
+
+### 🇷🇺 1. 100% русификация всех экранов (устранены все недопереведённые места)
+* **Полноценный русский язык из коробки:** базовые ресурсы приложения (`res/values/`) теперь по умолчанию содержат полноценный русский язык.
+* **Фикс для Xiaomi HyperOS / MIUI и систем с языком English / CIS:** устранена проблема отката интерфейса на английский (`Config`, `Protection off`, `Collapse`, `Testing: 0 / 165`, `Auto`, `Ping`, `Filters`, `Test`, `All`, `Other`).
+* **Понятный главный экран:** заголовок заменён с «Config / Профиль» на **«Серверы»**.
+* **Отдельная локализация `values-en/`:** если пользователь явно выбирает английский язык в настройках, приложение остаётся на чистом английском.
+
+### ⚡ 2. Режим «YouTube 4K Турбо» (Блокировка QUIC UDP:443)
+* **Анти-Буферизация и пробитие 144p:** на уровне ядра Xray Core блокируются исходящие пакеты UDP:443 (QUIC/HTTP3), через которые ТСПУ РКН душит YouTube.
+* **Мгновенное переключение на TCP:** официальное приложение YouTube, ReVanced, SmartTube и браузеры мгновенно переходят на высокоскоростной TCP TLS через VLESS-Reality.
+* **Тумблер в меню «Фильтры и управление»:** включён по умолчанию с возможностью мгновенного переключения и перезапуска сервиса.
 
 ## ⚡ Что нового в версии v1.4.4 (WireGuard / AmneziaWG Import Fix)
 
@@ -98,12 +111,12 @@
 
 ---
 
-## 📦 Скачать BunkerVPN v1.4.3 Hotfix
+## 📦 Скачать BunkerVPN v1.4.5
 
 | Версия APK | Назначение | Прямая ссылка (РФ без VPN) | GitHub Release |
 | :--- | :--- | :--- | :--- |
-| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-arm64-v8a.apk) |
-| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.3/BunkerVPN-universal.apk) |
+| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk) |
+| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-universal.apk) |
 
 ---
 

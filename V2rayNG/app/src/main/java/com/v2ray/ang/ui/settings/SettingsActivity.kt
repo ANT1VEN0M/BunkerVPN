@@ -147,6 +147,7 @@ fun SettingsScreen(
     var ttlValue by rememberMmkvString(AppConfig.PREF_ROOT_TTL_VALUE, AppConfig.DEFAULT_ROOT_TTL_VALUE)
     var rootKillSwitch by rememberMmkvBool(AppConfig.PREF_ROOT_KILL_SWITCH, false)
     var adblockEnabled by rememberMmkvBool(AppConfig.PREF_ADBLOCK_ENABLED, true)
+    var ytTurboEnabled by rememberMmkvBool(AppConfig.PREF_YOUTUBE_TURBO_ENABLED, true)
 
     var hevTunLogLevel by rememberMmkvString(AppConfig.PREF_HEV_TUNNEL_LOGLEVEL, AppConfig.DEFAULT_HEV_TUNNEL_LOGLEVEL)
     var hevTunRwTimeout by rememberMmkvString(AppConfig.PREF_HEV_TUNNEL_RW_TIMEOUT, "")
@@ -467,6 +468,12 @@ fun SettingsScreen(
                     summary = stringResource(R.string.summary_pref_adblock_enabled),
                     checked = adblockEnabled,
                     onCheckedChange = { adblockEnabled = it }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.title_pref_yt_turbo_enabled),
+                    summary = stringResource(R.string.summary_pref_yt_turbo_enabled),
+                    checked = ytTurboEnabled,
+                    onCheckedChange = { ytTurboEnabled = it }
                 )
                 SettingsSwitchItem(
                     title = stringResource(R.string.title_pref_sniffing_enabled),

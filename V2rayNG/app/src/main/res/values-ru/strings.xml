@@ -28,7 +28,7 @@
     <string name="toast_services_failure">Сбой при запуске служб</string>
 
     <!--ServerActivity-->
-    <string name="title_server">Профиль</string>
+    <string name="title_server">Серверы</string>
     <string name="menu_item_add_config">Добавить профиль</string>
     <string name="menu_item_save_config">Сохранить профиль</string>
     <string name="menu_item_edit_config">Изменить профиль</string>
@@ -708,5 +708,12 @@
     <string name="bunker_update_btn_install">Установить APK 🚀</string>
     <string name="bunker_update_btn_grant_permission">Предоставить доступ</string>
     <string name="bunker_update_failed">Не удалось загрузить файл обновления</string>
+
+
+    <!-- Bunker YouTube 4K Turbo (Anti-Buffering) -->
+    <string name="bunker_filter_yt_turbo">⚡ YouTube 4K Турбо (Блок QUIC)</string>
+    <string name="bunker_filter_yt_turbo_desc">Устраняет буферизацию и 144p: мгновенный скоростной TCP TLS для видео</string>
+    <string name="title_pref_yt_turbo_enabled">⚡ YouTube 4K Турбо (Блокировка QUIC)</string>
+    <string name="summary_pref_yt_turbo_enabled">Блокирует UDP 443 для YouTube и Chrome, принудительно включая стабильный TCP VLESS без задержек</string>
 
 </resources>

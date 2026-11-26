@@ -284,6 +284,26 @@ fun BunkerFilterDialog(
                         }
                     )
 
+                    // Toggle: YouTube 4K Турбо (Блокировка QUIC UDP:443)
+                    var isYtTurboEnabled by remember {
+                        mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_YOUTUBE_TURBO_ENABLED, true) == true)
+                    }
+                    FilterSwitchItem(
+                        icon = "⚡",
+                        title = stringResource(R.string.bunker_filter_yt_turbo),
+                        subtitle = stringResource(R.string.bunker_filter_yt_turbo_desc),
+                        checked = isYtTurboEnabled,
+                        onCheckedChange = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            val newState = !isYtTurboEnabled
+                            isYtTurboEnabled = newState
+                            MmkvManager.encodeSettings(AppConfig.PREF_YOUTUBE_TURBO_ENABLED, newState)
+                            if (isRunning) {
+                                LauncherManager.restartService(context)
+                            }
+                        }
+                    )
+
                     // Toggle: Раздача VPN и фиксация TTL = 64 (Root)
                     var isFixTtlEnabled by remember {
                         mutableStateOf(MmkvManager.decodeSettingsBool(AppConfig.PREF_ROOT_FIX_TTL))
