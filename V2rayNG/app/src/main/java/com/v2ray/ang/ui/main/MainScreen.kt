@@ -105,9 +105,9 @@ fun MainScreen(
         SettingsManager.toggleAntiRknRouting(context, nextState)
         isAntiRknEnabled = nextState
         if (nextState) {
-            context.toast("⚡ Включен режим Анти-РКН: банки и РФ-сайты идут напрямую!")
+            context.toast(context.getString(R.string.toast_anti_rkn_enabled))
         } else {
-            context.toast("🌐 Включен Полный туннель: весь интернет идет через VPN")
+            context.toast(context.getString(R.string.toast_full_tunnel_enabled))
         }
         if (isRunning) {
             LauncherManager.restartService(context)

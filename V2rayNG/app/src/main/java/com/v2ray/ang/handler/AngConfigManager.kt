@@ -552,7 +552,7 @@ object AngConfigManager {
                                 url = candidateUrl,
                                 userAgent = userAgent,
                                 requestHeaders = requestHeaders,
-                                timeout = 8000,
+                                timeout = 4000,
                                 httpPort = httpPort,
                                 proxyUsername = proxyUsername,
                                 proxyPassword = proxyPassword
@@ -572,7 +572,7 @@ object AngConfigManager {
                                 url = candidateUrl,
                                 userAgent = userAgent,
                                 requestHeaders = requestHeaders,
-                                timeout = 10000
+                                timeout = 4500
                             ),
                             captureUsageInfo
                         )
@@ -856,9 +856,10 @@ object AngConfigManager {
             val ts = System.currentTimeMillis()
             val candidateMirrors = listOf(
                 "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
+                "https://raw.githack.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
+                "https://ghproxy.net/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
                 "https://fastly.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/$fileName?t=$ts",
                 "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/$fileName?t=$ts",
-                "https://ghproxy.net/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
                 "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName"
             )
             for (m in candidateMirrors) {

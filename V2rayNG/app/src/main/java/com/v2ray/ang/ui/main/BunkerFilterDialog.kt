@@ -396,7 +396,10 @@ fun BunkerFilterDialog(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.weight(1f),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(text = "💬", fontSize = 18.sp)
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Column {
@@ -414,7 +417,15 @@ fun BunkerFilterDialog(
                                     )
                                 }
                             }
-                            Text(text = "SOS ➔", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF38BDF8))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.bunker_filter_sos_action),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF38BDF8),
+                                maxLines = 1,
+                                softWrap = false
+                            )
                         }
                     }
 
@@ -436,7 +447,10 @@ fun BunkerFilterDialog(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.weight(1f),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(text = "⚡", fontSize = 18.sp)
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Column {
@@ -454,7 +468,15 @@ fun BunkerFilterDialog(
                                     )
                                 }
                             }
-                            Text(text = "WARP+ ➔", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF97316))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.bunker_filter_warp_action),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFF97316),
+                                maxLines = 1,
+                                softWrap = false
+                            )
                         }
                     }
 
@@ -476,7 +498,10 @@ fun BunkerFilterDialog(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.weight(1f),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(text = "🧹", fontSize = 18.sp)
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Column {
@@ -494,7 +519,15 @@ fun BunkerFilterDialog(
                                     )
                                 }
                             }
-                            Text(text = "Очистить ➔", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF10B981))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.bunker_filter_clean_action),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF10B981),
+                                maxLines = 1,
+                                softWrap = false
+                            )
                         }
                     }
 

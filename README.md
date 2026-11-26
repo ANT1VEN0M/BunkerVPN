@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🐈‍⬛ Bunker VPN for Android (v1.4.5)
+# 🐈‍⬛ Bunker VPN for Android (v1.4.6)
 
 **Флагманский Android VPN-клиент экосистемы «Бункер Кота» на базе Xray Core Lite и Jetpack Compose.**  
 Создан для скоростного и безотказного обхода любых типов блокировок ТСПУ РКН в России.
 
 [![Release](https://img.shields.io/github/v/release/ANT1VEN0M/BunkerVPN?color=7C3AED&label=Релиз&style=for-the-badge)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
 [![Platform](https://img.shields.io/badge/Платформа-Android_8.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ANT1VEN0M/BunkerVPN/releases/latest)
-[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk)
+[![Direct Mirror](https://img.shields.io/badge/Зеркало_РФ-ghfast.top-00ADD8?style=for-the-badge)](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-arm64-v8a.apk)
 
 <br/>
 
@@ -42,6 +42,28 @@
 </p>
 
 </div>
+
+---
+
+## ⚡ Что нового в версии v1.4.6
+
+### 🛠️ 1. Исправление верстки в меню «Фильтры и управление»
+* **Устранено сплющивание кнопок:** на карточках «Личный WARP+», «Умная чистка» и «Telegram SOS» правые кнопки действий больше не сжимаются в вертикальную колонку букв (1 символ в ширину). Теперь разметка адаптивно рассчитывает ширину и держит аккуратный горизонтальный вид на любых экранах.
+
+### 🗑️ 2. Управление подписками: перманентное удаление и отключение
+* **Встроенные каталоги больше не воскресают:** при удалении дефолтных подписок («Микс», «Белый список», «Завод» и др.) выбор пользователя сохраняется навсегда. Фоновые службы и перезапуск приложения больше не пересоздают удалённые подписки.
+* **Скрытие отключенных групп:** при отключении тумблера подписки в настройках групп вкладка моментально скрывается с главного экрана.
+* **Быстрое восстановление:** добавлена кнопка «Восстановить подписки Бункера» для возврата всех стандартных каталогов в один клик.
+
+### ⚡ 3. Устранение «✕ Таймаут» на карточке «АВТОВЫБОР»
+* **Корректный замер TCPing:** исправлена проверка доступности балансировщиков Policy Group — карточка «АВТОВЫБОР» теперь отображает реальный наименьший пинг живых узлов подписки вместо ложного таймаута при активном трафике.
+
+### 🚀 4. Стабильный спидтест без ошибки «connection closed»
+* **Отказоустойчивость и новые зеркала:** добавлены проверенные тестовые серверы (Hetzner, Yandex, CacheFly). При закрытии сокета после достаточного замера тест больше не прерывается ошибкой, а выдаёт точный расчёт скорости.
+
+### 🌐 5. Зеркала подписок и ускоренный переход
+* **Сокращение таймаутов:** таймаут ожидания зеркал уменьшен до 4 секунд для моментального переключения на резервные прокси (`ghfast.top`, `raw.githack.com`, `ghproxy.net`).
+* **Автопроверка пинга:** при ручном обновлении подписки сразу запускается замер пинга всех серверов для наглядного отображения доступности.
 
 ---
 
@@ -111,12 +133,12 @@
 
 ---
 
-## 📦 Скачать BunkerVPN v1.4.5
+## 📦 Скачать BunkerVPN v1.4.6
 
 | Версия APK | Назначение | Прямая ссылка (РФ без VPN) | GitHub Release |
 | :--- | :--- | :--- | :--- |
-| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk) |
-| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-universal.apk) |
+| **BunkerVPN-arm64-v8a.apk** | 99% современных смартфонов | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-arm64-v8a.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-arm64-v8a.apk) |
+| **BunkerVPN-universal.apk** | Все архитектуры и эмуляторы | [⚡ Скачать с ghfast.top](https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-universal.apk) | [GitHub](https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-universal.apk) |
 
 ---
 

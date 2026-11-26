@@ -717,4 +717,21 @@
     <string name="title_pref_yt_turbo_enabled">⚡ YouTube 4K Турбо (Блокировка QUIC)</string>
     <string name="summary_pref_yt_turbo_enabled">Блокирует UDP 443 для YouTube и Chrome, принудительно включая стабильный TCP VLESS без задержек</string>
 
+    <!-- Bunker Filter & Actions -->
+    <string name="bunker_filter_sos_action">SOS ➔</string>
+    <string name="bunker_filter_warp_action">WARP+ ➔</string>
+    <string name="bunker_filter_clean_action">Очистить ➔</string>
+    <string name="toast_anti_rkn_enabled">⚡ Включен режим Анти-РКН: банки и РФ-сайты идут напрямую!</string>
+    <string name="toast_full_tunnel_enabled">🌐 Включен Полный туннель: весь интернет идет через VPN</string>
+    <string name="toast_smart_clean_done">🧹 Очищено: %1$d (дубликаты и недоступные узлы)</string>
+    <string name="toast_smart_clean_empty">✨ Все узлы в списке активны и уникальны</string>
+    <string name="toast_warp_generating">🚀 Генерация личного профиля Cloudflare WARP+…</string>
+    <string name="toast_warp_success">✅ Личный WARP+ создан и выбран!</string>
+    <string name="toast_warp_failed">Не удалось зарегистрировать WARP (проверьте интернет)</string>
+    <string name="toast_warp_error">Ошибка при создании WARP</string>
+    <string name="speedtest_error_conn_closed">Таймаут соединения</string>
+    <string name="title_restore_default_subscriptions">Восстановить подписки Бункера</string>
+    <string name="summary_restore_default_subscriptions">Вернуть стандартные встроенные подписки (Микс, Турбо, Белый список и др.)</string>
+    <string name="toast_default_subscriptions_restored">Стандартные подписки Бункера восстановлены!</string>
+
 </resources>

@@ -1,7 +1,7 @@
 {
-  "version": "1.4.5",
-  "versionCode": 1045,
-  "tagName": "v1.4.5",
-  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.5/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "⚡ BunkerVPN v1.4.5: 100% русификация всех экранов (устранено выпадение на английский на HyperOS/MIUI и сторонних прошивках), режим «YouTube 4K Турбо» (блокировка QUIC UDP:443 для мгновенной буферизации видео без 144p) и поддержка импорта .conf WireGuard."
+  "version": "1.4.6",
+  "versionCode": 1046,
+  "tagName": "v1.4.6",
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "⚡ BunkerVPN v1.4.6: Исправлена верстка диалога фильтров (сплющивание кнопок), решена проблема с удалением и отключением встроенных подписок (больше не воскресают), исправлен таймаут на карточке АВТОВЫБОР, устранена ошибка спидтеста connection closed, добавлены зеркала загрузки подписок и полная поддержка английского языка."
 }

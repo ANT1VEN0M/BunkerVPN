@@ -666,6 +666,7 @@ object MmkvManager {
      * @param subid The subscription ID.
      */
     fun removeSubscription(subid: String) {
+        encodeSettings("user_deleted_sub_$subid", true)
         subStorage.remove(subid)
         val subsList = decodeSubsList()
         subsList.remove(subid)

@@ -619,6 +619,7 @@ class MainViewModel(
                     if (result.configCount > 0) {
                         setupGroupTab(forceRefresh = true)
                         refreshSelectedGuid()
+                        testAllRealPing()
                     }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
@@ -765,9 +766,9 @@ class MainViewModel(
                     setupGroupTab(forceRefresh = true)
                     val count = toRemove.size
                     if (count > 0) {
-                        toast("🧹 Очищено: $count (дубликаты и недоступные узлы)")
+                        toast(dataSource.getString(R.string.toast_smart_clean_done, count))
                     } else {
-                        toast("✨ Все узлы в списке активны и уникальны")
+                        toast(R.string.toast_smart_clean_empty)
                     }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
@@ -783,18 +784,18 @@ class MainViewModel(
         launchLoading {
             withContext(ioDispatcher) {
                 try {
-                    toast("🚀 Генерация личного профиля Cloudflare WARP+...")
+                    toast(R.string.toast_warp_generating)
                     val success = BunkerWarpManager.generateWarpConfig(getApplication())
                     if (success) {
                         cacheMutex.withLock { groupDataCache.clear() }
                         setupGroupTab(forceRefresh = true)
-                        toastSuccess("✅ Личный WARP+ создан и выбран!")
+                        toastSuccess(R.string.toast_warp_success)
                     } else {
-                        toastError("Не удалось зарегистрировать WARP (проверьте интернет)")
+                        toastError(R.string.toast_warp_failed)
                     }
                 } catch (e: Exception) {
                     LogUtil.e(AppConfig.TAG, "WARP creation failed", e)
-                    toastError("Ошибка при создании WARP")
+                    toastError(R.string.toast_warp_error)
                 }
             }
         }
@@ -1033,6 +1034,23 @@ class MainViewModel(
         viewModelScope.launch(ioDispatcher) {
             // Automatically sort available servers by ping (fastest first, offline to bottom)
             sortByTestResultsInternal()
+            // Update policy groups with the lowest ping of their members
+            val currentGroupIds = _uiState.value.groups.map { it.id }
+            for (subId in currentGroupIds) {
+                val serverGuids = MmkvManager.decodeServerList(subId)
+                val policyGroupGuid = serverGuids.firstOrNull {
+                    MmkvManager.decodeServerConfig(it)?.configType == EConfigType.POLICYGROUP
+                }
+                if (policyGroupGuid != null) {
+                    val minPing = serverGuids.mapNotNull { g ->
+                        if (g == policyGroupGuid) null
+                        else MmkvManager.decodeServerAffiliationInfo(g)?.testDelayMillis?.takeIf { it > 0 }
+                    }.minOrNull()
+                    if (minPing != null) {
+                        MmkvManager.encodeServerTestDelayMillis(policyGroupGuid, minPing)
+                    }
+                }
+            }
             cacheMutex.withLock { groupDataCache.clear() }
             reloadAllGroups(_uiState.value.groups.map { it.id })
             setupGroupTab(forceRefresh = true)

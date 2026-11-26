@@ -258,6 +258,7 @@ object SettingsManager {
      * it creates a new default subscription to ensure that ungroup
      **/
     fun removeSubscriptionWithDefault(subid: String) {
+        MmkvManager.encodeSettings("user_deleted_sub_$subid", true)
         SubscriptionUpdater.cancelOne(subId = subid)
         // Remove the subscription
         removeSubscription(subid)
@@ -272,6 +273,24 @@ object SettingsManager {
             remarks = "Default",
         )
         encodeSubscription(DEFAULT_SUBSCRIPTION_ID, defaultSub)
+    }
+
+    /**
+     * Restores default built-in Bunker subscriptions if user explicitly requests it.
+     */
+    fun restoreDefaultSubscriptions() {
+        val defaultIds = listOf(
+            DEFAULT_SUBSCRIPTION_ID,
+            AppConfig.BUNKER_WHITELIST_SUB_ID,
+            AppConfig.BUNKER_FACTORY_SUB_ID,
+            AppConfig.BUNKER_TURBO_SUB_ID,
+            AppConfig.BUNKER_TG_SOS_SUB_ID,
+            AppConfig.BUNKER_DISCORD_SUB_ID
+        )
+        for (id in defaultIds) {
+            MmkvManager.encodeSettings("user_deleted_sub_$id", false)
+        }
+        ensureDefaultSubscription()
     }
 
     /**
@@ -612,21 +631,24 @@ object SettingsManager {
      * Made public for migration in SettingsManager.
      */
     private fun ensureDefaultSubscription() {
+        val deletedDefault = MmkvManager.decodeSettingsBool("user_deleted_sub_" + DEFAULT_SUBSCRIPTION_ID, false)
         val existingDefault = decodeSubscription(DEFAULT_SUBSCRIPTION_ID)
         if (existingDefault == null) {
-            val defaultSub = SubscriptionItem(
-                remarks = "Микс",
-                url = AppConfig.BUNKER_DEFAULT_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(DEFAULT_SUBSCRIPTION_ID, defaultSub)
+            if (!deletedDefault) {
+                val defaultSub = SubscriptionItem(
+                    remarks = "Микс",
+                    url = AppConfig.BUNKER_DEFAULT_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(DEFAULT_SUBSCRIPTION_ID, defaultSub)
 
-            // Move to the top
-            val subsList = decodeSubsList()
-            if (subsList.moveItem(subsList.lastIndex, 0)) {
-                MmkvManager.encodeSubsList(subsList)
+                // Move to the top
+                val subsList = decodeSubsList()
+                if (subsList.moveItem(subsList.lastIndex, 0)) {
+                    MmkvManager.encodeSubsList(subsList)
+                }
             }
         } else {
             var updated = false
@@ -643,16 +665,19 @@ object SettingsManager {
             }
         }
 
+        val deletedWL = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_WHITELIST_SUB_ID, false)
         val existingWL = decodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID)
         if (existingWL == null) {
-            val whiteListSub = SubscriptionItem(
-                remarks = "Белый список",
-                url = AppConfig.BUNKER_WHITELIST_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, whiteListSub)
+            if (!deletedWL) {
+                val whiteListSub = SubscriptionItem(
+                    remarks = "Белый список",
+                    url = AppConfig.BUNKER_WHITELIST_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_WHITELIST_SUB_ID, whiteListSub)
+            }
         } else {
             var updated = false
             if (existingWL.url.contains("hub.mos.ru") || existingWL.url.contains("@latest") || existingWL.url.contains("jsdelivr.net") || existingWL.url != AppConfig.BUNKER_WHITELIST_SUB_URL) {
@@ -668,16 +693,19 @@ object SettingsManager {
             }
         }
 
+        val deletedFactory = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_FACTORY_SUB_ID, false)
         val existingFactory = decodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID)
         if (existingFactory == null) {
-            val factorySub = SubscriptionItem(
-                remarks = "Завод 443/53",
-                url = AppConfig.BUNKER_FACTORY_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID, factorySub)
+            if (!deletedFactory) {
+                val factorySub = SubscriptionItem(
+                    remarks = "Завод 443/53",
+                    url = AppConfig.BUNKER_FACTORY_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_FACTORY_SUB_ID, factorySub)
+            }
         } else {
             var updated = false
             if (existingFactory.url.contains("@latest") || existingFactory.url.contains("jsdelivr.net") || existingFactory.url != AppConfig.BUNKER_FACTORY_SUB_URL) {
@@ -693,16 +721,19 @@ object SettingsManager {
             }
         }
 
+        val deletedTurbo = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_TURBO_SUB_ID, false)
         val existingTurbo = decodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID)
         if (existingTurbo == null) {
-            val turboSub = SubscriptionItem(
-                remarks = "Турбо",
-                url = AppConfig.BUNKER_TURBO_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, turboSub)
+            if (!deletedTurbo) {
+                val turboSub = SubscriptionItem(
+                    remarks = "Турбо",
+                    url = AppConfig.BUNKER_TURBO_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, turboSub)
+            }
         } else {
             var updated = false
             if (existingTurbo.url.contains("@latest") || existingTurbo.url.contains("jsdelivr.net") || existingTurbo.url != AppConfig.BUNKER_TURBO_SUB_URL) {
@@ -718,16 +749,19 @@ object SettingsManager {
             }
         }
 
+        val deletedTg = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_TG_SOS_SUB_ID, false)
         val existingTg = decodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID)
         if (existingTg == null) {
-            val tgSosSub = SubscriptionItem(
-                remarks = "Telegram SOS",
-                url = AppConfig.BUNKER_TG_SOS_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, tgSosSub)
+            if (!deletedTg) {
+                val tgSosSub = SubscriptionItem(
+                    remarks = "Telegram SOS",
+                    url = AppConfig.BUNKER_TG_SOS_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_TG_SOS_SUB_ID, tgSosSub)
+            }
         } else {
             var updated = false
             if (existingTg.url.contains("@latest") || existingTg.url.contains("jsdelivr.net") || existingTg.url != AppConfig.BUNKER_TG_SOS_SUB_URL) {
@@ -743,16 +777,19 @@ object SettingsManager {
             }
         }
 
+        val deletedDiscord = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_DISCORD_SUB_ID, false)
         val existingDiscord = decodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID)
         if (existingDiscord == null) {
-            val discordSub = SubscriptionItem(
-                remarks = "Discord / Игры",
-                url = AppConfig.BUNKER_DISCORD_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID, discordSub)
+            if (!deletedDiscord) {
+                val discordSub = SubscriptionItem(
+                    remarks = "Discord / Игры",
+                    url = AppConfig.BUNKER_DISCORD_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_DISCORD_SUB_ID, discordSub)
+            }
         } else {
             var updated = false
             if (existingDiscord.url.contains("@latest") || existingDiscord.url.contains("jsdelivr.net") || existingDiscord.url != AppConfig.BUNKER_DISCORD_SUB_URL) {
@@ -768,16 +805,19 @@ object SettingsManager {
             }
         }
 
+        val deletedGold = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_GOLD_SUB_ID, false)
         val existingGold = decodeSubscription(AppConfig.BUNKER_GOLD_SUB_ID)
         if (existingGold == null) {
-            val goldSub = SubscriptionItem(
-                remarks = "👑 Золотая Выборка",
-                url = AppConfig.BUNKER_GOLD_SUB_URL,
-                enabled = true,
-                autoUpdate = true,
-                allowInsecureUrl = true
-            )
-            encodeSubscription(AppConfig.BUNKER_GOLD_SUB_ID, goldSub)
+            if (!deletedGold) {
+                val goldSub = SubscriptionItem(
+                    remarks = "👑 Золотая Выборка",
+                    url = AppConfig.BUNKER_GOLD_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_GOLD_SUB_ID, goldSub)
+            }
         } else {
             var updated = false
             if (existingGold.url != AppConfig.BUNKER_GOLD_SUB_URL) {

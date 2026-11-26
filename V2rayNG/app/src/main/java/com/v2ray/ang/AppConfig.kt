@@ -195,7 +195,7 @@ object AppConfig {
         "ru.nspk.sbp",                 // СБПэй
         "ru.wildberries.bank"          // WB Банк
     )
-    const val DELAY_TEST_URL = "http://cp.cloudflare.com/generate_204"
+    const val DELAY_TEST_URL = "http://connect.rom.miui.com/generate_204"
     const val DELAY_TEST_URL2 = "https://www.google.com/generate_204"
     const val OBSERVATORY_LEAST_PING_INTERVAL = "3m"
     const val OBSERVATORY_LEAST_LOAD_INTERVAL = "5m"

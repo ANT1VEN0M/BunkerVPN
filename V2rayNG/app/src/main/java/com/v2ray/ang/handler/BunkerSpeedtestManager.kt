@@ -42,13 +42,17 @@ data class SpeedEndpoint(
 object BunkerSpeedtestManager {
     // Prioritized list of global Anycast CDN endpoints with zero bot-blocking/rate-limiting
     private val ENDPOINTS = listOf(
-        // 1. CacheFly Anycast Global CDN (Ultra-high speed, Anycast, verified HTTP 200, no rate-limiting, 10MB test file)
+        // 1. Hetzner Tier-1 Global CDN (Ultra-stable, doesn't throttle or reset connections)
+        SpeedEndpoint("https://speed.hetzner.de/10MB.bin", "speed.hetzner.de", 443, 10485760L),
+        // 2. CacheFly Anycast Global CDN (Ultra-high speed, Anycast, verified HTTP 200, 10MB test file)
         SpeedEndpoint("https://cachefly.cachefly.net/10mb.test", "cachefly.cachefly.net", 443, 10485760L),
-        // 2. OVH Telecom Global CDN (Verified HTTP 200, 10MB payload)
+        // 3. OVH Telecom Global CDN (Verified HTTP 200, 10MB payload)
         SpeedEndpoint("https://proof.ovh.net/files/10Mb.dat", "proof.ovh.net", 443, 10485760L),
-        // 3. Fastly jsDelivr Global Anycast CDN (High reliability)
+        // 4. Yandex Mirror (Ultra-fast direct peering in RU/CIS, rock solid)
+        SpeedEndpoint("https://mirror.yandex.ru/pub/apache/kafka/3.7.0/RELEASE_NOTES.html", "mirror.yandex.ru", 443, 500000L),
+        // 5. Fastly jsDelivr Global Anycast CDN (High reliability)
         SpeedEndpoint("https://fastly.jsdelivr.net/gh/ANT1VEN0M/BunkerVPN@main/subscriptions/bunker_full_clash.yaml", "fastly.jsdelivr.net", 443, 500000L),
-        // 4. Cloudflare Speedtest fallback
+        // 6. Cloudflare Speedtest fallback
         SpeedEndpoint("https://speed.cloudflare.com/__down?bytes=10485760", "speed.cloudflare.com", 443, 10485760L)
     )
 
@@ -123,7 +127,16 @@ object BunkerSpeedtestManager {
                 var lastReadBytes = 0L
 
                 while (true) {
-                    val read = stream.read(buffer)
+                    val read = try {
+                        stream.read(buffer)
+                    } catch (e: Exception) {
+                        if (totalRead >= 256 * 1024) {
+                            LogUtil.w(AppConfig.TAG, "Speedtest stream closed early after $totalRead bytes, using sample")
+                            -1
+                        } else {
+                            throw e
+                        }
+                    }
                     if (read <= 0) break
                     totalRead += read
 
@@ -171,7 +184,14 @@ object BunkerSpeedtestManager {
                 break
             } catch (e: Exception) {
                 LogUtil.w(AppConfig.TAG, "Speedtest endpoint ${endpoint.url} failed: ${e.message}, trying next...")
-                lastError = e.message ?: "Ошибка загрузки"
+                val rawMsg = e.message.orEmpty()
+                lastError = when {
+                    rawMsg.contains("connection closed", ignoreCase = true) || rawMsg.contains("reset", ignoreCase = true) ->
+                        "Таймаут соединения"
+                    rawMsg.contains("timed out", ignoreCase = true) ->
+                        "Превышено время ожидания"
+                    else -> rawMsg.ifEmpty { "Сбой соединения" }
+                }
             } finally {
                 try {
                     inputStream?.close()

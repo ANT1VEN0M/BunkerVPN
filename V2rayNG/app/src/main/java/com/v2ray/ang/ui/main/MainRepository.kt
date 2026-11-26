@@ -140,7 +140,7 @@ class MainRepository(
                 }
             )
         }
-        result += MmkvManager.decodeSubscriptions()
+        result += MmkvManager.decodeSubscriptions().filter { it.subscription.enabled }
         return result
     }
 

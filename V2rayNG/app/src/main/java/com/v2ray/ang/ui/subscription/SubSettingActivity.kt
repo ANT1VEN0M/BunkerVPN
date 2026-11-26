@@ -37,6 +37,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.platform.LocalContext
+import com.v2ray.ang.extension.toast
+import com.v2ray.ang.handler.SettingsChangeManager
+import com.v2ray.ang.handler.SettingsManager
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.extension.toast
@@ -113,6 +117,7 @@ fun SubSettingScreen(
     onShareQRCode: (String) -> Unit,
     onShareClipboard: (String) -> Unit
 ) {
+    val context = LocalContext.current
     val subscriptions by viewModel.subsFlow.collectAsStateWithLifecycle()
     var showUpdateDialog by remember { mutableStateOf(false) }
     var removeTarget by remember { mutableStateOf<SubscriptionDeleteTarget?>(null) }
@@ -318,6 +323,22 @@ fun SubSettingScreen(
                         enabled = autoTestAfterUpdateSubscription,
                         onCheckedChange = { autoSortAfterTest = it }
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextButton(
+                        onClick = {
+                            SettingsManager.restoreDefaultSubscriptions()
+                            viewModel.reload()
+                            SettingsChangeManager.makeSetupGroupTab()
+                            showUpdateDialog = false
+                            context.toast(context.getString(R.string.toast_default_subscriptions_restored))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.title_restore_default_subscriptions),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             },
             confirmButton = {

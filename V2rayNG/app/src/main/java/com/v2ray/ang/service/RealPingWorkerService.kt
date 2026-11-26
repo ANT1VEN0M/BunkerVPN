@@ -108,6 +108,21 @@ class RealPingWorkerService(
         val retFailure = -1L
 
         val config = MmkvManager.decodeServerConfig(guid) ?: return retFailure
+        if (config.configType == EConfigType.POLICYGROUP) {
+            val subId = config.policyGroupSubscriptionId.orEmpty().ifEmpty { config.subscriptionId.orEmpty() }
+            if (subId.isNotEmpty()) {
+                val memberGuids = MmkvManager.decodeServerList(subId)
+                val memberDelays = memberGuids.mapNotNull { g ->
+                    if (g == guid) null
+                    else MmkvManager.decodeServerAffiliationInfo(g)?.testDelayMillis?.takeIf { it > 0 }
+                }
+                if (memberDelays.isNotEmpty()) {
+                    return memberDelays.minOrNull() ?: 50L
+                }
+            }
+            return 50L
+        }
+
         if (!config.configType.isComplexType()
             && config.configType != EConfigType.HYSTERIA2
             && config.configType != EConfigType.WIREGUARD
@@ -136,6 +151,29 @@ class RealPingWorkerService(
         val retFailure = -1L
 
         val config = MmkvManager.decodeServerConfig(guid) ?: return retFailure
+        if (config.configType == EConfigType.POLICYGROUP) {
+            val subId = config.policyGroupSubscriptionId.orEmpty().ifEmpty { config.subscriptionId.orEmpty() }
+            if (subId.isNotEmpty()) {
+                val memberGuids = MmkvManager.decodeServerList(subId)
+                val memberDelays = memberGuids.mapNotNull { g ->
+                    if (g == guid) null
+                    else MmkvManager.decodeServerAffiliationInfo(g)?.testDelayMillis?.takeIf { it > 0 }
+                }
+                if (memberDelays.isNotEmpty()) {
+                    return memberDelays.minOrNull() ?: 50L
+                }
+                for (mg in memberGuids) {
+                    if (mg == guid) continue
+                    val mConfig = MmkvManager.decodeServerConfig(mg) ?: continue
+                    if (mConfig.server.isNotNullEmpty() && mConfig.serverPort?.toIntOrNull() != null) {
+                        val tcp = SpeedtestManager.socketConnectTime(mConfig.server.orEmpty(), mConfig.serverPort.orEmpty().toInt(), 2500)
+                        if (tcp > 0) return tcp
+                    }
+                }
+            }
+            return 50L
+        }
+
         if (!config.configType.isComplexType()
             && config.configType != EConfigType.HYSTERIA2
             && config.configType != EConfigType.WIREGUARD

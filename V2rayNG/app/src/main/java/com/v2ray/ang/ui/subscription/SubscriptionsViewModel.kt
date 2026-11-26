@@ -59,6 +59,7 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
         if (idx >= 0) {
             subscriptions[idx] = SubscriptionCache(subId, item)
             MmkvManager.encodeSubscription(subId, item)
+            SettingsChangeManager.makeSetupGroupTab()
         }
         _subsFlow.value = subscriptions.toList()
     }

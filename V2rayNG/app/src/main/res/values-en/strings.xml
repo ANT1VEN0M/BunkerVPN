@@ -713,4 +713,21 @@
     <string name="title_pref_yt_turbo_enabled">⚡ YouTube 4K Turbo (Block QUIC)</string>
     <string name="summary_pref_yt_turbo_enabled">Blocks UDP 443 for YouTube and Chrome, forcing zero-latency TCP VLESS streaming</string>
 
+    <!-- Bunker Filter & Actions -->
+    <string name="bunker_filter_sos_action">SOS ➔</string>
+    <string name="bunker_filter_warp_action">WARP+ ➔</string>
+    <string name="bunker_filter_clean_action">Clean ➔</string>
+    <string name="toast_anti_rkn_enabled">⚡ Anti-Censorship mode: local services routed directly!</string>
+    <string name="toast_full_tunnel_enabled">🌐 Full Tunnel mode: all traffic routed through VPN</string>
+    <string name="toast_smart_clean_done">🧹 Cleaned: %1$d (duplicates and unreachable nodes)</string>
+    <string name="toast_smart_clean_empty">✨ All nodes in the list are active and unique</string>
+    <string name="toast_warp_generating">🚀 Generating personal Cloudflare WARP+ profile…</string>
+    <string name="toast_warp_success">✅ Personal WARP+ created and selected!</string>
+    <string name="toast_warp_failed">Failed to register WARP (check your internet connection)</string>
+    <string name="toast_warp_error">Error while creating WARP</string>
+    <string name="speedtest_error_conn_closed">Connection timeout</string>
+    <string name="title_restore_default_subscriptions">Restore default subscriptions</string>
+    <string name="summary_restore_default_subscriptions">Restore built-in Bunker subscriptions (Mix, Turbo, Whitelist, etc.)</string>
+    <string name="toast_default_subscriptions_restored">Bunker default subscriptions restored!</string>
+
 </resources>
