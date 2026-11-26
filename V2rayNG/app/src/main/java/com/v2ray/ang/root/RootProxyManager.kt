@@ -322,6 +322,11 @@ object RootProxyManager {
             // The MARK survives a later RETURN, so the marked query still routes into the tun.
             appendLine("$cmd -t mangle -A $CHAIN -p udp --dport 53 -j MARK --set-xmark $MARK")
             appendLine("$cmd -t mangle -A $CHAIN -p tcp --dport 53 -j MARK --set-xmark $MARK")
+            // Also intercept port 853 (DNS-over-TLS / Private DNS) so Android & Firefox DoT is routed via proxy
+            appendLine("$cmd -t mangle -A $CHAIN -p tcp --dport 853 -j MARK --set-xmark $MARK")
+            appendLine("$cmd -t mangle -A $CHAIN -p udp --dport 853 -j MARK --set-xmark $MARK")
+            // Clamp TCP MSS on device OUTPUT to eliminate Path MTU truncation hangs during TLS handshake (Firefox ECH, heavy ClientHello)
+            appendLine("$cmd -t mangle -A $CHAIN -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 2>/dev/null || $cmd -t mangle -A $CHAIN -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1350 2>/dev/null || true")
             // keep LAN / private destinations direct (per-family CIDR list)
             val cidrs = if (cmd == "ip6tables") bypassCidrsV6 else bypassCidrs
             cidrs.forEach { appendLine("$cmd -t mangle -A $CHAIN -d $it -j RETURN") }
@@ -405,7 +410,10 @@ object RootProxyManager {
         val chain = AppConfig.ROOT_V6_CHAIN
         val allowMode = perAppEnabled && !bypassApps
         val bypassSelected = perAppEnabled && bypassApps && selectedUids.isNotEmpty()
-        val reject = "-j REJECT --reject-with icmp6-adm-prohibited"
+        fun appendRejectOrDrop(sb: java.lang.StringBuilder, match: String = "") {
+            val prefix = if (match.isNotBlank()) "ip6tables -t filter -A $chain $match" else "ip6tables -t filter -A $chain"
+            sb.appendLine("$prefix -j REJECT --reject-with icmp6-port-unreachable 2>/dev/null || $prefix -j REJECT --reject-with adm-prohibited 2>/dev/null || $prefix -j DROP")
+        }
         return buildString {
             appendLine("ip6tables -t filter -N $chain 2>/dev/null || true")
             appendLine("ip6tables -t filter -F $chain")
@@ -421,10 +429,10 @@ object RootProxyManager {
             if (allowMode) {
                 // proxy mode: only the selected apps lose v6 (so they fall back to v4-via-proxy).
                 // None resolved -> reject nothing, mirroring the v4 chain's fail-closed handling.
-                selectedUids.forEach { appendLine("ip6tables -t filter -A $chain -m owner --uid-owner $it $reject") }
+                selectedUids.forEach { appendRejectOrDrop(this, "-m owner --uid-owner $it") }
             } else {
-                // all-apps / bypass: reject everyone left
-                appendLine("ip6tables -t filter -A $chain $reject")
+                // all-apps / bypass: reject everyone left with reliable fallback to DROP
+                appendRejectOrDrop(this)
             }
             appendLine("ip6tables -t filter -D OUTPUT -j $chain 2>/dev/null || true")
             appendLine("ip6tables -t filter -A OUTPUT -j $chain")

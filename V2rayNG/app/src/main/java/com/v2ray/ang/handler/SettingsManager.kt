@@ -284,6 +284,7 @@ object SettingsManager {
             AppConfig.BUNKER_WHITELIST_SUB_ID,
             AppConfig.BUNKER_FACTORY_SUB_ID,
             AppConfig.BUNKER_TURBO_SUB_ID,
+            AppConfig.BUNKER_YOUTUBE_SUB_ID,
             AppConfig.BUNKER_TG_SOS_SUB_ID,
             AppConfig.BUNKER_DISCORD_SUB_ID
         )
@@ -746,6 +747,34 @@ object SettingsManager {
             }
             if (updated) {
                 encodeSubscription(AppConfig.BUNKER_TURBO_SUB_ID, existingTurbo)
+            }
+        }
+
+        val deletedYt = MmkvManager.decodeSettingsBool("user_deleted_sub_" + AppConfig.BUNKER_YOUTUBE_SUB_ID, false)
+        val existingYt = decodeSubscription(AppConfig.BUNKER_YOUTUBE_SUB_ID)
+        if (existingYt == null) {
+            if (!deletedYt) {
+                val ytSub = SubscriptionItem(
+                    remarks = "YouTube 4K",
+                    url = AppConfig.BUNKER_YOUTUBE_SUB_URL,
+                    enabled = true,
+                    autoUpdate = true,
+                    allowInsecureUrl = true
+                )
+                encodeSubscription(AppConfig.BUNKER_YOUTUBE_SUB_ID, ytSub)
+            }
+        } else {
+            var updated = false
+            if (existingYt.url != AppConfig.BUNKER_YOUTUBE_SUB_URL) {
+                existingYt.url = AppConfig.BUNKER_YOUTUBE_SUB_URL
+                updated = true
+            }
+            if (existingYt.remarks.contains("Бункер") || existingYt.remarks != "YouTube 4K") {
+                existingYt.remarks = "YouTube 4K"
+                updated = true
+            }
+            if (updated) {
+                encodeSubscription(AppConfig.BUNKER_YOUTUBE_SUB_ID, existingYt)
             }
         }
 

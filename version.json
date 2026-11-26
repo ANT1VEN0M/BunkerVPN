@@ -1,7 +1,7 @@
 {
-  "version": "1.4.6",
-  "versionCode": 1046,
-  "tagName": "v1.4.6",
-  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.6/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "⚡ BunkerVPN v1.4.6: Исправлена верстка диалога фильтров (сплющивание кнопок), решена проблема с удалением и отключением встроенных подписок (больше не воскресают), исправлен таймаут на карточке АВТОВЫБОР, устранена ошибка спидтеста connection closed, добавлены зеркала загрузки подписок и полная поддержка английского языка."
+  "version": "1.4.7",
+  "versionCode": 1047,
+  "tagName": "v1.4.7",
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.7/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "⚡ BunkerVPN v1.4.7: Исправлена работа Firefox и браузеров в Root-режиме (Magisk) — добавлен TCP MSS Clamping и перехват DNS/DoT (853), надежный сброс утечек IPv6, внедрен анти-детект VPN от трекеров и сканеров интерфейсов (AppsFlyer/2GIS), и добавлен отдельный встроенный каталог серверов «YouTube 4K»."
 }

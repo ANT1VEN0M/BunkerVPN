@@ -706,13 +706,13 @@ object CoreConfigManager {
     private fun configureRootModeDns(v2rayConfig: V2rayConfig) {
         if (!SettingsManager.isRootMode()) return
 
-        if (v2rayConfig.routing.rules.none { it.outboundTag == "dns-out" && it.port == "53" }) {
+        if (v2rayConfig.routing.rules.none { it.outboundTag == "dns-out" && (it.port == "53" || it.port == "53,853") }) {
             v2rayConfig.routing.rules.add(
                 0,
                 V2rayConfig.RoutingBean.RulesBean(
                     inboundTag = arrayListOf("socks"),
                     outboundTag = "dns-out",
-                    port = "53",
+                    port = "53,853",
                 )
             )
         }

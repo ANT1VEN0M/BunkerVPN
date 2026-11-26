@@ -31,6 +31,8 @@ object AppConfig {
     const val BUNKER_TG_SOS_SUB_URL = "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/tg_b64.txt"
     const val BUNKER_DISCORD_SUB_ID = "__bunker_sub_discord__"
     const val BUNKER_DISCORD_SUB_URL = "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/discord_b64.txt"
+    const val BUNKER_YOUTUBE_SUB_ID = "__bunker_sub_youtube__"
+    const val BUNKER_YOUTUBE_SUB_URL = "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/youtube_b64.txt"
     const val PREF_STEALTH_MODE = "pref_stealth_mode"
 
     /** Preferences mapped to MMKV storage. */
@@ -297,7 +299,8 @@ object AppConfig {
     const val ROOT_MARK_ROUTE = 1          // packets we want pushed into the tun device
     const val ROOT_ROUTE_TABLE = 2024
     const val ROOT_RULE_PRIORITY = 1000
-    const val ROOT_TUN_NAME = "utun7788"
+    // Stealth tunnel interface name (no "tun", "wg", "ppp", "ipsec" keywords to bypass AppsFlyer / 2GIS anti-fraud)
+    const val ROOT_TUN_NAME = "bkr0"
     const val ROOT_TUN_ADDR_V4 = "198.18.0.1/15"
     const val ROOT_TUN_ADDR_V6 = "fdfe:dcba:9876::1/64"
 
@@ -310,7 +313,7 @@ object AppConfig {
     const val ROOT_V6_CHAIN = "CORE6_FILTER"       // ip6tables filter/OUTPUT chain: blackhole native IPv6 when it isn't tunneled
     const val ROOT_V6_FWD_CHAIN = "CORE6_FWD" // ip6tables FORWARD chain: route or reject tethered clients' native IPv6
     const val ROOT_V6_PRE_CHAIN = "CORE6_PRE" // ip6tables mangle/PREROUTING chain: mark forwarded clients' IPv6 into the tun
-    const val ROOT_LAN_DNS = "77.88.8.8"          // fallback resolver for tethered clients when no plain-IPv4 DNS is configured
+    const val ROOT_LAN_DNS = "1.1.1.1"            // Clean Anycast DNS (replaces 77.88.8.8) to prevent ISP DNS pollution and Firefox DoH canary stalls
     const val ROOT_OOM_SCORE = "-1000"          // oom_score_adj that makes the LMK never kill us
     const val ROOT_TTL_CHAIN = "BUNKER_TTL"     // iptables mangle chain for TTL fixation
     const val ROOT_HL_CHAIN = "BUNKER_HL"       // ip6tables mangle chain for Hop Limit fixation

@@ -13,8 +13,8 @@ android {
         applicationId = "com.bunker.vpn"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1046
-        versionName = "1.4.6"
+        versionCode = 1047
+        versionName = "1.4.7"
 
         val abiFilterList = (properties["ABI_FILTERS"] as? String)?.split(';')
         splits {
