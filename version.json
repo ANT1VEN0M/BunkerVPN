@@ -1,7 +1,7 @@
 {
-  "version": "1.4.8",
-  "versionCode": 1048,
-  "tagName": "v1.4.8",
-  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.8/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "⚡ BunkerVPN v1.4.8: Авто-подключение к лучшему серверу по кнопке пуска в 1 клик (без обязательного выбора плашки вручную); переименован каталог «Белый список» в «РФ / Банки (Белый список)» для исключения путаницы с Brawl Stars; оптимизирована стабильность служб на Android 15–17."
+  "version": "1.4.9",
+  "versionCode": 1049,
+  "tagName": "v1.4.9",
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.9/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "⚡ BunkerVPN v1.4.9: Внедрен мульти-зеркальный загрузчик обновлений (ghfast, ghproxy, jsdelivr) с авто-обходом блокировок GitHub в РФ (In-App обновление скачивается мгновенно даже с отключенным VPN!); 1-Click авто-подключение по кнопке запуска; переименован каталог «РФ / Банки (Белый список)»."
 }

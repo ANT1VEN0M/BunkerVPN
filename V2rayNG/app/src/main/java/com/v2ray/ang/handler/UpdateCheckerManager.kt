@@ -22,42 +22,50 @@ data class BunkerVersionPayload(
 )
 
 object UpdateCheckerManager {
+    private val VERSION_JSON_URLS = listOf(
+        AppConfig.VERSION_INFO_URL,
+        "https://cdn.jsdelivr.net/gh/ANT1VEN0M/BunkerVPN@main/version.json",
+        "https://raw.githubusercontent.com/ANT1VEN0M/BunkerVPN/main/version.json"
+    )
+
     suspend fun checkForUpdate(includePreRelease: Boolean = false): CheckUpdateResult = withContext(Dispatchers.IO) {
         val proxyUsername = SettingsManager.getSocksUsername()
         val proxyPassword = SettingsManager.getSocksPassword()
         val httpPort = SettingsManager.getHttpPort()
 
-        // 1. Fast direct check via raw version.json (no GitHub API rate limits)
-        runCatching {
-            var rawJson = HttpUtil.getUrlContent(
-                UrlContentRequest(
-                    url = AppConfig.VERSION_INFO_URL,
-                    timeout = 4000,
-                    userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME}"
-                )
-            )
-            if (rawJson.isNullOrBlank() && httpPort != 0) {
-                rawJson = HttpUtil.getUrlContent(
+        // 1. Fast direct check via raw version.json through fast CDN mirrors (no GitHub API rate limits)
+        for (versionUrl in VERSION_JSON_URLS) {
+            runCatching {
+                var rawJson = HttpUtil.getUrlContent(
                     UrlContentRequest(
-                        url = AppConfig.VERSION_INFO_URL,
-                        timeout = 4000,
-                        httpPort = httpPort,
-                        proxyUsername = proxyUsername,
-                        proxyPassword = proxyPassword,
+                        url = versionUrl,
+                        timeout = 3500,
                         userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME}"
                     )
                 )
-            }
-            if (!rawJson.isNullOrBlank()) {
-                val info = JsonUtil.fromJsonSafe(rawJson, BunkerVersionPayload::class.java)
-                if (info != null && compareVersions(info.version, BuildConfig.VERSION_NAME) > 0) {
-                    LogUtil.i(AppConfig.TAG, "UpdateChecker: Found newer version via version.json: ${info.version}")
-                    return@withContext CheckUpdateResult(
-                        hasUpdate = true,
-                        latestVersion = info.tagName.ifBlank { "v${info.version}" },
-                        releaseNotes = info.releaseNotes,
-                        downloadUrl = info.downloadUrl
+                if (rawJson.isNullOrBlank() && httpPort != 0) {
+                    rawJson = HttpUtil.getUrlContent(
+                        UrlContentRequest(
+                            url = versionUrl,
+                            timeout = 3500,
+                            httpPort = httpPort,
+                            proxyUsername = proxyUsername,
+                            proxyPassword = proxyPassword,
+                            userAgent = "BunkerVPN/${BuildConfig.VERSION_NAME}"
+                        )
                     )
+                }
+                if (!rawJson.isNullOrBlank()) {
+                    val info = JsonUtil.fromJsonSafe(rawJson, BunkerVersionPayload::class.java)
+                    if (info != null && compareVersions(info.version, BuildConfig.VERSION_NAME) > 0) {
+                        LogUtil.i(AppConfig.TAG, "UpdateChecker: Found newer version via $versionUrl: ${info.version}")
+                        return@withContext CheckUpdateResult(
+                            hasUpdate = true,
+                            latestVersion = info.tagName.ifBlank { "v${info.version}" },
+                            releaseNotes = info.releaseNotes,
+                            downloadUrl = info.downloadUrl
+                        )
+                    }
                 }
             }
         }
@@ -142,8 +150,16 @@ object UpdateCheckerManager {
             ?: release.assets.firstOrNull { it.name.contains("universal", ignoreCase = true) }
             ?: release.assets.firstOrNull { it.name.endsWith(".apk", ignoreCase = true) }
 
-        return asset?.browserDownloadUrl
+        val rawUrl = asset?.browserDownloadUrl
             ?: release.htmlUrl.takeIf { it.isNotBlank() }
             ?: "https://github.com/ANT1VEN0M/BunkerVPN/releases/latest"
+
+        // For Russian users, GitHub Release Assets (*.githubusercontent.com) are blocked by RKN/TSPU.
+        // Wrap with fast CDN mirror by default so in-app update always succeeds without VPN.
+        return if (rawUrl.startsWith("https://github.com/")) {
+            "https://ghfast.top/$rawUrl"
+        } else {
+            rawUrl
+        }
     }
 }

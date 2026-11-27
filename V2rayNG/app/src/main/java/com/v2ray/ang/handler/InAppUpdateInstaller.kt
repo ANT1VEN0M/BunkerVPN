@@ -83,7 +83,7 @@ enum class UpdateDownloadState {
 object InAppUpdateInstaller {
 
     private val httpClient = OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
         .followRedirects(true)
         .followSslRedirects(true)
@@ -149,30 +149,70 @@ object InAppUpdateInstaller {
         downloadUrl: String,
         onProgress: (percent: Int, downloadedMb: Float, totalMb: Float) -> Unit
     ): File? = withContext(Dispatchers.IO) {
+        val cacheDir = context.externalCacheDir ?: context.cacheDir
+        cacheDir.listFiles { f -> f.name.startsWith("bunker_update") }?.forEach { it.delete() }
+
+        val targetFile = File(cacheDir, "bunker_update_${System.currentTimeMillis()}.apk")
+
+        // Build list of high-speed anti-blocking mirrors for Russian users
+        val urlsToTry = mutableListOf<String>()
+
+        val rawGithubUrl = when {
+            downloadUrl.contains("ghfast.top/") -> downloadUrl.substringAfter("ghfast.top/")
+            downloadUrl.contains("ghproxy.net/") -> downloadUrl.substringAfter("ghproxy.net/")
+            downloadUrl.contains("mirror.ghproxy.com/") -> downloadUrl.substringAfter("mirror.ghproxy.com/")
+            else -> downloadUrl
+        }
+
+        if (rawGithubUrl.contains("github.com/")) {
+            urlsToTry.add("https://ghfast.top/$rawGithubUrl")
+            urlsToTry.add("https://ghproxy.net/$rawGithubUrl")
+            urlsToTry.add("https://mirror.ghproxy.com/$rawGithubUrl")
+        }
+        if (!urlsToTry.contains(downloadUrl)) {
+            urlsToTry.add(downloadUrl)
+        }
+        if (!urlsToTry.contains(rawGithubUrl)) {
+            urlsToTry.add(rawGithubUrl)
+        }
+
+        for (candidateUrl in urlsToTry) {
+            if (!isActive) break
+            LogUtil.i(AppConfig.TAG, "InAppUpdateInstaller: Attempting download via: $candidateUrl")
+            val downloaded = tryDownloadCandidate(candidateUrl, targetFile, onProgress)
+            if (downloaded) {
+                return@withContext targetFile
+            }
+            targetFile.delete()
+        }
+
+        return@withContext null
+    }
+
+    private suspend fun tryDownloadCandidate(
+        url: String,
+        targetFile: File,
+        onProgress: (percent: Int, downloadedMb: Float, totalMb: Float) -> Unit
+    ): Boolean = withContext(Dispatchers.IO) {
         try {
-            val cacheDir = context.externalCacheDir ?: context.cacheDir
-            cacheDir.listFiles { f -> f.name.startsWith("bunker_update") }?.forEach { it.delete() }
-
-            val targetFile = File(cacheDir, "bunker_update_${System.currentTimeMillis()}.apk")
-
             val request = Request.Builder()
-                .url(downloadUrl)
+                .url(url)
                 .header("User-Agent", "BunkerVPN/${BuildConfig.VERSION_NAME} (Android; Linux)")
                 .build()
 
             val response = httpClient.newCall(request).execute()
             if (!response.isSuccessful) {
-                LogUtil.e(AppConfig.TAG, "Download failed: HTTP ${response.code}")
-                return@withContext null
+                LogUtil.e(AppConfig.TAG, "Download attempt failed: HTTP ${response.code} from $url")
+                return@withContext false
             }
 
             val contentType = response.header("Content-Type")
             if (contentType != null && (contentType.contains("text/html") || contentType.contains("application/json"))) {
-                LogUtil.e(AppConfig.TAG, "Download URL returned non-APK content-type: $contentType")
-                return@withContext null
+                LogUtil.e(AppConfig.TAG, "Download URL returned non-APK content-type: $contentType ($url)")
+                return@withContext false
             }
 
-            val body = response.body ?: return@withContext null
+            val body = response.body ?: return@withContext false
             val contentLength = body.contentLength()
 
             val inputStream = body.byteStream()
@@ -181,8 +221,8 @@ object InAppUpdateInstaller {
             val buffer = ByteArray(8192)
             var totalRead = 0L
             var lastReportTime = 0L
-
             var completedCleanly = false
+
             inputStream.use { input ->
                 outputStream.use { output ->
                     while (isActive) {
@@ -208,15 +248,10 @@ object InAppUpdateInstaller {
                 }
             }
 
-            if (completedCleanly && targetFile.exists() && targetFile.length() > 0) {
-                targetFile
-            } else {
-                targetFile.delete()
-                null
-            }
+            completedCleanly && targetFile.exists() && targetFile.length() > 5 * 1024 * 1024
         } catch (e: Exception) {
-            LogUtil.e(AppConfig.TAG, "Error downloading APK update", e)
-            null
+            LogUtil.e(AppConfig.TAG, "Error downloading from $url: ${e.message}")
+            false
         }
     }
 }

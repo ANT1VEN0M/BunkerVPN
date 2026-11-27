@@ -162,7 +162,7 @@ object AppConfig {
     const val TG_CHANNEL_URL = "https://t.me/BUNKER_KOTA"
     const val TG_CHAT_URL = "https://t.me/BUNKER_K0TA"
     const val TG_K0TLUX_URL = "https://t.me/k0tlux"
-    const val VERSION_INFO_URL = "$GITHUB_RAW_URL/ANT1VEN0M/BunkerVPN/main/version.json"
+    const val VERSION_INFO_URL = "https://ghfast.top/$GITHUB_RAW_URL/ANT1VEN0M/BunkerVPN/main/version.json"
 
     val RUSSIAN_BANKING_APPS = listOf(
         "ru.sberbankmobile",           // СберБанк
