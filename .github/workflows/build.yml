@@ -109,7 +109,7 @@ jobs:
         path: dist/BunkerVPN-universal.apk
 
     - name: Create or Update GitHub Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         tag_name: ${{ inputs.release_tag || 'v1.4.9' }}
         name: "Бункер VPN v1.4.9 — Мульти-зеркальный In-App загрузчик и обход блокировок GitHub"
