@@ -671,7 +671,7 @@ object SettingsManager {
         if (existingWL == null) {
             if (!deletedWL) {
                 val whiteListSub = SubscriptionItem(
-                    remarks = "Белый список",
+                    remarks = "РФ / Банки (Белый список)",
                     url = AppConfig.BUNKER_WHITELIST_SUB_URL,
                     enabled = true,
                     autoUpdate = true,
@@ -685,8 +685,8 @@ object SettingsManager {
                 existingWL.url = AppConfig.BUNKER_WHITELIST_SUB_URL
                 updated = true
             }
-            if (existingWL.remarks.contains("Бункер") || existingWL.remarks.contains("🛡")) {
-                existingWL.remarks = "Белый список"
+            if (existingWL.remarks == "Белый список" || existingWL.remarks.contains("Бункер") || existingWL.remarks.contains("🛡")) {
+                existingWL.remarks = "РФ / Банки (Белый список)"
                 updated = true
             }
             if (updated) {

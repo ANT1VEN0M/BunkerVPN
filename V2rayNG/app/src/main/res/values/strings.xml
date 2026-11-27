@@ -731,7 +731,7 @@
     <string name="toast_warp_error">Ошибка при создании WARP</string>
     <string name="speedtest_error_conn_closed">Таймаут соединения</string>
     <string name="title_restore_default_subscriptions">Восстановить подписки Бункера</string>
-    <string name="summary_restore_default_subscriptions">Вернуть стандартные встроенные подписки (Микс, Турбо, Белый список и др.)</string>
+    <string name="summary_restore_default_subscriptions">Вернуть стандартные встроенные подписки (Микс, Турбо, РФ / Банки и др.)</string>
     <string name="toast_default_subscriptions_restored">Стандартные подписки Бункера восстановлены!</string>
 
 </resources>

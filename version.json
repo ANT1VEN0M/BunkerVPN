@@ -1,7 +1,7 @@
 {
-  "version": "1.4.7",
-  "versionCode": 1047,
-  "tagName": "v1.4.7",
-  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.7/BunkerVPN-arm64-v8a.apk",
-  "releaseNotes": "⚡ BunkerVPN v1.4.7: Исправлена работа Firefox и браузеров в Root-режиме (Magisk) — добавлен TCP MSS Clamping и перехват DNS/DoT (853), надежный сброс утечек IPv6, внедрен анти-детект VPN от трекеров и сканеров интерфейсов (AppsFlyer/2GIS), и добавлен отдельный встроенный каталог серверов «YouTube 4K»."
+  "version": "1.4.8",
+  "versionCode": 1048,
+  "tagName": "v1.4.8",
+  "downloadUrl": "https://ghfast.top/https://github.com/ANT1VEN0M/BunkerVPN/releases/download/v1.4.8/BunkerVPN-arm64-v8a.apk",
+  "releaseNotes": "⚡ BunkerVPN v1.4.8: Авто-подключение к лучшему серверу по кнопке пуска в 1 клик (без обязательного выбора плашки вручную); переименован каталог «Белый список» в «РФ / Банки (Белый список)» для исключения путаницы с Brawl Stars; оптимизирована стабильность служб на Android 15–17."
 }

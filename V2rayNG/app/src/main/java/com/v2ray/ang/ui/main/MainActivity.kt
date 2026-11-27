@@ -306,13 +306,28 @@ class MainActivity : HelperBaseComponentActivity() {
     }
 
     private fun startV2Ray() {
-        val currentGuid = mainViewModel.uiState.value.selectedGuid
-        if (currentGuid.isNullOrEmpty()) {
-            toast(R.string.title_file_chooser)
-            return
-        }
+        var currentGuid = mainViewModel.uiState.value.selectedGuid
         val groupId = mainViewModel.uiState.value.selectedGroupId
         val groupState = mainViewModel.serverGroupState(groupId).value
+
+        // 1-Click Auto-Fallback: If no server is currently selected, pick best tested server or first available
+        if (currentGuid.isNullOrEmpty()) {
+            if (!mainViewModel.autoSelectBestServer()) {
+                val candidate = groupState.servers.find { it.profile.configType == EConfigType.POLICYGROUP }
+                    ?: groupState.servers.firstOrNull()
+                if (candidate != null) {
+                    currentGuid = candidate.guid
+                    mainViewModel.updateSelectedGuid(currentGuid)
+                    toastInfo("⚡ Выбран узел: ${candidate.profile.remarks}")
+                } else {
+                    toast(R.string.title_file_chooser)
+                    return
+                }
+            } else {
+                currentGuid = mainViewModel.uiState.value.selectedGuid
+            }
+        }
+
         val currentServer = groupState.servers.find { it.guid == currentGuid }
         if (currentServer != null && currentServer.testDelayMillis < 0L) {
             val working = groupState.servers.filter {
@@ -320,6 +335,7 @@ class MainActivity : HelperBaseComponentActivity() {
             }
             if (working.isNotEmpty()) {
                 val best = working.minByOrNull { it.testDelayMillis }!!
+                currentGuid = best.guid
                 mainViewModel.updateSelectedGuid(best.guid)
                 toastInfo("⚡ Выбран рабочий узел: ${best.profile.remarks} (${best.testDelayMillis} мс)")
             }
@@ -328,7 +344,7 @@ class MainActivity : HelperBaseComponentActivity() {
         ) {
             checkAndRequestPermission(PermissionType.ACCESS_LOCAL_NETWORK) {}
         }
-        LauncherManager.startService(this)
+        LauncherManager.startService(this, currentGuid)
     }
 
     private fun importManually(createConfigType: Int) {
