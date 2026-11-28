@@ -840,26 +840,25 @@ object AngConfigManager {
     fun getSubscriptionMirrors(primaryUrl: String): List<String> {
         val mirrors = mutableListOf<String>()
         val cleanUrl = primaryUrl.trim()
-        mirrors.add(cleanUrl)
 
         val bunkerSubFiles = listOf(
             "gold_b64.txt", "gold.txt",
             "mix_b64.txt", "bs_b64.txt", "factory_b64.txt",
             "fast_b64.txt", "tg_b64.txt", "discord_b64.txt",
+            "youtube_b64.txt", "youtube.txt",
             "warp_masque_b64.txt", "warp_b64.txt",
             "mix.txt", "bs.txt", "factory.txt", "fast.txt", "tg.txt", "discord.txt"
         )
         val matchedFile = bunkerSubFiles.firstOrNull { cleanUrl.contains(it) }
 
         if (matchedFile != null || cleanUrl.contains("Bunker-Auto-Engine")) {
-            val fileName = matchedFile ?: cleanUrl.substringAfterLast('/')
-            val ts = System.currentTimeMillis()
+            val fileName = matchedFile ?: cleanUrl.substringAfterLast('?').substringAfterLast('/')
+            // STRICT: Never use cached/stale CDNs like jsdelivr or raw.githack for dynamic subscription files!
+            // Fastly/jsDelivr and GitHack cache branches for 12h-infinity, serving dead/purged servers.
+            // Only use real-time transparent reverse proxies and direct GitHub:
             val candidateMirrors = listOf(
                 "https://ghfast.top/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
-                "https://raw.githack.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
                 "https://ghproxy.net/https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName",
-                "https://fastly.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/$fileName?t=$ts",
-                "https://cdn.jsdelivr.net/gh/ANT1VEN0M/Bunker-Auto-Engine@main/sub/$fileName?t=$ts",
                 "https://raw.githubusercontent.com/ANT1VEN0M/Bunker-Auto-Engine/main/sub/$fileName"
             )
             for (m in candidateMirrors) {
@@ -867,14 +866,17 @@ object AngConfigManager {
                     mirrors.add(m)
                 }
             }
-        } else if (cleanUrl.contains("raw.githubusercontent.com")) {
-            val ghFast = if (cleanUrl.startsWith("https://ghfast.top/")) cleanUrl else "https://ghfast.top/$cleanUrl"
-            val ghProxy = if (cleanUrl.startsWith("https://ghproxy.net/")) cleanUrl else "https://ghproxy.net/$cleanUrl"
-            if (!mirrors.contains(ghFast)) {
-                mirrors.add(0, ghFast)
-            }
-            if (!mirrors.contains(ghProxy)) {
-                mirrors.add(ghProxy)
+        } else {
+            mirrors.add(cleanUrl)
+            if (cleanUrl.contains("raw.githubusercontent.com")) {
+                val ghFast = if (cleanUrl.startsWith("https://ghfast.top/")) cleanUrl else "https://ghfast.top/$cleanUrl"
+                val ghProxy = if (cleanUrl.startsWith("https://ghproxy.net/")) cleanUrl else "https://ghproxy.net/$cleanUrl"
+                if (!mirrors.contains(ghFast)) {
+                    mirrors.add(0, ghFast)
+                }
+                if (!mirrors.contains(ghProxy)) {
+                    mirrors.add(ghProxy)
+                }
             }
         }
 
